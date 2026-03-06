@@ -1,0 +1,167 @@
+/* ============================================================
+   login.css  –  DataPet
+   Ubicación sugerida: public/css/login.css
+   Depende de: Bootstrap 5, Nunito (Google Fonts)
+   ============================================================ */
+
+/* ── Variables (extraídas de theme.css) ── */
+:root {
+    --background:       #f8f9fa;
+    --card:             #ffffff;
+    --foreground:       #111827;
+    --muted-foreground: #717182;
+    --border:           rgba(0, 0, 0, 0.15);
+    --input-background: #f3f3f5;
+    --radius:           0.625rem;
+    --font-weight-medium: 500;
+    --font-weight-normal: 400;
+
+    /* Color de marca */
+    --green:            #6CA651;
+    --green-dark:       #5a8f43;
+    --green-light:      #f0f7ec;
+}
+
+/* ── Body / fondo ── */
+body {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #e8f5e0 60%, #d4edca 100%);
+    color: var(--foreground);
+}
+
+/* ── Animación de entrada ── */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Card ── */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background-color: var(--card);
+    animation: slideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Logo ── */
+.logo-wrap {
+    width: 160px;
+}
+
+.logo-placeholder {
+    width: 72px;
+    height: 72px;
+    background-color: var(--green-light);
+}
+
+.logo-icon {
+    width: 38px;
+    height: 38px;
+    color: var(--green);
+}
+
+/* ── Tipografía de cabecera ── */
+.card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--foreground);
+}
+
+.card-description {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+    line-height: 1.4;
+    margin-bottom: 0;
+}
+
+/* ── Labels ── */
+.form-label {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+    color: var(--foreground);
+}
+
+/* ── Inputs ── */
+.form-control {
+    background-color: var(--input-background);
+    border: 1.5px solid var(--border);
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 0.95rem;
+    font-weight: var(--font-weight-normal);
+    color: var(--foreground);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(108, 166, 81, 0.15);
+    background-color: #ffffff;
+}
+
+.form-control.is-invalid {
+    border-color: #d4183d;
+}
+
+/* ── Botón principal ── */
+.btn-primary-green {
+    background-color: var(--green);
+    color: #ffffff;
+    border: none;
+    border-radius: calc(var(--radius) - 2px);
+    font-weight: 700;
+    padding: 0.65rem 1rem;
+    box-shadow: 0 4px 12px rgba(108, 166, 81, 0.35);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary-green:hover {
+    background-color: var(--green-dark);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(108, 166, 81, 0.45);
+}
+
+.btn-primary-green:active {
+    transform: scale(0.98);
+}
+
+/* ── Botones outline (acceso rápido) ── */
+.btn-outline-green {
+    background-color: transparent;
+    color: var(--green);
+    border: 1.5px solid var(--green);
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.45rem 0.4rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-outline-green:hover {
+    background-color: var(--green);
+    color: #ffffff;
+}
+
+/* ── Divider ── */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--border);
+}
+
+.divider-text {
+    font-size: 0.78rem;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+}
