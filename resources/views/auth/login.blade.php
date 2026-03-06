@@ -1,73 +1,72 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+    <title>@yield('title' , 'DataPet')</title>
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet">
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+    <title>Document</title>
+</head>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+<body>
+    <div class="container d-flex justify-content-center align-items-center"">
+        <div class="card shadow-sm border-0 p-4" style="width: 100%; max-width: 450px; border-radius: 15px;">
+            <div class="card-body text-center">
+                <img src="{{ asset('images/logo.jpeg') }}" alt="DataPet Logo" class="img-fluid mb-3" style="max-height: 100px;">
 
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                <h2 class="fw-bold mb-1">DataPet</h2>
+                <p class="text-muted small mb-4">Hospital Veterinario - Especialistas en Mascotas No Convencionales</p>
 
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
+                <form method="POST" action="{{ route('login') }}" class="text-start">
+                    @csrf
 
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-bold small">{{ __('Correo electrónico') }}</label>
+                        <input id="email" type="email" class="form-control bg-light border-0 py-2 @error('email') is-invalid @enderror" name="email" placeholder="ejemplo@correo.com" value="{{ old('email') }}" required autofocus>
+                        @error('email')
+                        <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-bold small">{{ __('Contraseña') }}</label>
+                        <input id="password" type="password" class="form-control bg-light border-0 py-2 @error('password') is-invalid @enderror" name="password" placeholder="********" required>
+                        @error('password')
+                        <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="btn btn-pet-primary w-100 py-2 fw-bold text-white mb-4">
+                        {{ __('Iniciar Sesión') }}
+                    </button>
+                </form>
+
+                <hr class="text-muted">
+
+                <p class="text-muted small">Acceso rápido de prueba:</p>
+                <div class="d-flex justify-content-between gap-2">
+                    <button class="btn btn-outline-success btn-sm w-100 py-2 border-pet">Cliente</button>
+                    <button class="btn btn-outline-success btn-sm w-100 py-2 border-pet">Doctor</button>
+                    <button class="btn btn-outline-success btn-sm w-100 py-2 border-pet">Admin</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
+</body>
+
+</html>

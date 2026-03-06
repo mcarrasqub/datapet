@@ -15,6 +15,8 @@
     <title>@yield('title' , 'DataPet')</title>
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/register.css') }}" rel="stylesheet">
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -23,7 +25,7 @@
 </head>
 
 <body>
-        <div class="container-fluid py-2 border-bottom bg-white">
+        <div class="container-fluid py-4 border-bottom bg-white shadow-sm">
             <div class="d-flex justify-content-between align-items-center px-4">
                 <div class="d-flex align-items-center">
                     <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" width="90" class="me-3">
