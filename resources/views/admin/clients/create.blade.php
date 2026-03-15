@@ -1,23 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
+
+@section('title', 'Crear Nuevo Cliente')
+
 @section('content')
     <link href="{{ asset('css/register.css') }}" rel="stylesheet">
     <div class="container py-4">
         <div class="mb-4">
-            <h2 class="fw-bold mb-1">Registrar Nuevo Cliente</h2>
-            <p class="text-muted small">Registra un nuevo cliente y su mascota en el sistema</p>
-        </div>
-
-        <div class="d-flex justify-content-center align-items-center mb-4">
-            <div class="d-flex align-items-center">
-                <span class="badge rounded-circle bg-pet-green p-2 me-2" style="width: 30px; height: 30px;">1</span>
-                <span class="fw-bold text-pet-green">Datos del Cliente</span>
-            </div>
-            <div class="mx-3" style="width: 50px; height: 1px; background-color: #dee2e6;"></div>
-            <div class="d-flex align-items-center">
-                <span class="badge rounded-circle bg-light text-muted border p-2 me-2"
-                    style="width: 30px; height: 30px;">2</span>
-                <span class="text-muted">Datos de la Mascota</span>
-            </div>
+            <h2 class="fw-bold mb-1">Crear Nuevo Cliente</h2>
+            <p class="text-muted small">Registra un nuevo cliente en el sistema</p>
         </div>
 
         <div class="card register-container shadow-sm" style="border-radius: 15px;">
@@ -25,9 +15,9 @@
                 <h5 class="card-title text-pet-green mb-1">
                     <i class="bi bi-person me-2"></i>Información del Cliente
                 </h5>
-                <p class="text-muted small mb-4">Completa los datos personales del propietario</p>
+                <p class="text-muted small mb-4">Completa los datos personales del nuevo cliente</p>
 
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" action="{{ route('clients.store') }}">
                     @csrf
 
                     <div class="row g-3">
@@ -99,7 +89,7 @@
 
                     <div class="mt-4">
                         <button type="submit" class="btn btn-pet-primary w-100 py-2 fw-bold text-white">
-                            Continuar a Datos de Mascota
+                            Crear Cliente
                         </button>
                     </div>
                 </form>
