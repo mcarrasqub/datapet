@@ -31,12 +31,28 @@
                     <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" width="90" class="me-3">
                     <div class="lh-1">
                         <h5 class="fw-bold mb-0">DataPet</h5>
-                        <small class="text-muted">Bienvenido/a, María González</small>
+                        <small class="text-muted">
+                            @auth
+                                Bienvenido/a, {{ auth()->user()->name }}
+                            @else
+                                Bienvenido/a
+                            @endauth
+                        </small>
                     </div>
                 </div>
-                <button class="btn btn-outline-secondary rounded-3 d-flex align-items-center px-3 py-1">
-                    <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
-                </button>
+
+                @auth
+                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-secondary rounded-3 d-flex align-items-center px-3 py-1">
+                            <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-secondary rounded-3 d-flex align-items-center px-3 py-1">
+                        <i class="bi bi-box-arrow-right me-2"></i> Iniciar Sesión
+                    </a>
+                @endauth
             </div>
         </div>
 
@@ -49,7 +65,7 @@
                 <div class="collapse navbar-collapse" id="navLinks">
                     <ul class="navbar-nav w-100 justify-content-around align-items-center">
                         <li class="nav-item">
-                            <a class="nav-link active-pill" href="#"><i class="bi bi-house-door me-2"></i>Inicio</a>
+                            <a class="nav-link {{ request()->routeIs('home.index') ? 'active-pill' : 'text-dark fw-medium' }}" href="{{ route('home.index') }}"><i class="bi bi-house-door me-2"></i>Inicio</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark fw-medium" href="#"><i class="bi bi-file-earmark-text me-2"></i>Historial Clínico</a>
@@ -63,7 +79,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark fw-medium position-relative" href="#">
                                 <i class="bi bi-bell me-2"></i>Notificaciones
-                                <span class="badge rounded-circle bg-danger badge-custom">3</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -77,6 +92,8 @@
         <main class="py-4">
             @yield('content')
         </main>
-</body>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    </body>
 
 </html>
