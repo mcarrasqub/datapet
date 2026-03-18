@@ -55,15 +55,6 @@
                         {{ __('Iniciar Sesión') }}
                     </button>
                 </form>
-
-                <hr class="text-muted">
-
-                <p class="text-muted small">Acceso rápido de prueba:</p>
-                <div class="d-flex justify-content-between gap-2">
-                    <button class="btn btn-outline-success btn-sm w-100 py-2 border-pet">Cliente</button>
-                    <button class="btn btn-outline-success btn-sm w-100 py-2 border-pet">Doctor</button>
-                    <button class="btn btn-outline-success btn-sm w-100 py-2 border-pet">Admin</button>
-                </div>
             </div>
         </div>
     </div>

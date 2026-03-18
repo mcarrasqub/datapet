@@ -13,14 +13,33 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * ATTRIBUTES USER
+     * this->attributes['id']
+     * this->attributes['name']
+     * this->attributes['phone']
+     * this->attributes['address']
+     * this->attributes['specialty']
+     * this->attributes['email']
+     * this->attributes['email_verified_at']
+     * this->attributes['password']
+     * this->attributes['status']
+     * this->attributes['role']
+     */
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
         'name',
+        'lastname',
+        'address',
         'email',
+        'phone',
         'password',
+        'status',
+        'role',
     ];
 
     /**

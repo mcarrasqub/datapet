@@ -33,29 +33,16 @@ class RegisterController extends Controller
 
     protected function createUser(array $data): User
     {
-        $user = User::create([
-            'name' => $data['name'] . ' ' . $data['apellido'],
+        return User::create([
+            'name' => $data['name'],
+            'lastname' => $data['lastname'] ?? null,
+            'phone' => $data['phone'] ?? null,
+            'address' => $data['address'] ?? null,
+            'specialty' => $data['specialty'] ?? null,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'status' => $data['status'] ?? 1,
+            'role' => $data['role'] ?? 'client',
         ]);
-
-        $photoPath = null;
-        if (request()->hasFile('photo')) {
-            $photoPath = request()->file('photo')->store('pets', 'public');
-        }
-
-        Pet::create([
-            'user_id' => $user->id,
-            'name' => $data['pet_name'],
-            'species' => $data['species'],
-            'breed' => $data['breed'] ?? null,
-            'birth_date' => $data['birth_date'] ?? null,
-            'gender' => $data['gender'],
-            'weight' => $data['weight'] ?? null,
-            'photo' => $photoPath,
-            'notes' => $data['notes'] ?? null,
-        ]);
-
-        return $user;
     }
 }

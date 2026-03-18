@@ -27,6 +27,16 @@
     background-color: #638c4d;
 }
 
+/* Botón outline personalizado */
+.btn-outline-pet-primary {
+    color: var(--pet-green);
+    border-color: var(--pet-green);
+}
+
+.btn-outline-pet-primary:hover {
+    background-color: rgba(118, 167, 93, 0.1);
+}
+
 /* Estilo de los Inputs */
 .form-control.bg-light {
     background-color: #f1f3f5 !important;

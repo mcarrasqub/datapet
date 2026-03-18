@@ -1,4 +1,9 @@
-@extends('layouts.app')
+@php
+    $layout = auth()->check() && auth()->user()->role !== 'client' ? 'layouts.dashboard' : 'layouts.app';
+@endphp
+
+@extends($layout)
+
 @section('content')
 <div class="container py-4">
   <div class="row">
