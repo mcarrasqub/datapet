@@ -4,94 +4,79 @@ namespace App\Http\Controllers;
 
 use App\Models\Pet;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\PetRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
 
 class PetController extends Controller
 {
-    public function index()
-    {
-        $pets = Pet::with('owner')->get();
-        return view('pets.index', compact('pets'));
+  public function index(): View
+  {
+    $viewData = [];
+    $viewData['pets'] = Pet::with('owner')->get();
+    return view('pets.index')->with('viewData', $viewData);
+  }
+
+  public function create(): View
+  {
+    $viewData = [];
+    $viewData['clients'] = User::all();
+    return view('pets.create')->with('viewData', $viewData);
+  }
+
+  public function store(PetRequest $request): RedirectResponse
+  {
+    $data = $request->validated();
+
+    if ($request->hasFile('photo')) {
+      $data['photo'] = $request->file('photo')->store('pets', 'public');
     }
 
-    public function create()
-    {
-        $clients = User::all();
-        return view('pets.create', compact('clients'));
+    Pet::create($data);
+
+    return redirect()->route('home.index')->with('success', 'Mascota registrada exitosamente');
+  }
+
+  public function show(Pet $pet): View
+  {
+    $viewData = [];
+    $viewData['pet'] = $pet;
+    return view('pets.show')->with('viewData', $viewData);
+  }
+
+  public function edit(Pet $pet): View
+  {
+    $viewData = [];
+    $viewData['pet'] = $pet;
+    $viewData['clients'] = User::all();
+    return view('pets.edit')->with('viewData', $viewData);
+  }
+
+  public function update(PetRequest $request, Pet $pet): RedirectResponse
+  {
+    $data = $request->validated();
+
+    if ($request->hasFile('photo')) {
+      if ($pet->getPhoto()) {
+        Storage::disk('public')->delete($pet->getPhoto());
+      }
+      $data['photo'] = $request->file('photo')->store('pets', 'public');
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'name' => 'required|string|max:255',
-            'species' => 'required|string|max:255',
-            'breed' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date',
-            'gender' => 'required|in:male,female,unknown',
-            'color' => 'nullable|string|max:255',
-            'weight' => 'nullable|numeric|min:0',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'notes' => 'nullable|string'
-        ]);
+    $pet->update($data);
 
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('pets', 'public');
-        }
+    return redirect()->route('home.index')->with('success', 'Mascota actualizada');
+  }
 
-        Pet::create($validated);
-
-        return redirect()->route('home.index')->with('success', 'Mascota registrada exitosamente');
+  public function destroy(Pet $pet): RedirectResponse
+  {
+    if ($pet->getPhoto()) {
+      Storage::disk('public')->delete($pet->getPhoto());
     }
-
-    public function show(Pet $pet)
-    {
-        return view('pets.show', compact('pet'));
-    }
-
-    public function edit(Pet $pet)
-    {
-        $clients = User::all();
-        return view('pets.edit', compact('pet', 'clients'));
-    }
-
-    public function update(Request $request, Pet $pet)
-    {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'name' => 'required|string|max:255',
-            'species' => 'required|string|max:255',
-            'breed' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date',
-            'gender' => 'required|in:male,female,unknown',
-            'color' => 'nullable|string|max:255',
-            'weight' => 'nullable|numeric|min:0',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'notes' => 'nullable|string'
-        ]);
-
-        if ($request->hasFile('photo')) {
-            if ($pet->photo) {
-                Storage::disk('public')->delete($pet->photo);
-            }
-            $validated['photo'] = $request->file('photo')->store('pets', 'public');
-        }
-
-        $pet->update($validated);
-
-        return redirect()->route('home.index')->with('success', 'Mascota actualizada');
-    }
-
-    public function destroy(Pet $pet)
-    {
-        if ($pet->photo) {
-            Storage::disk('public')->delete($pet->photo);
-        }
-        
-        $pet->delete();
-        
-        return redirect()->route('home.index')->with('success', 'Mascota eliminada');
-    }
+    
+    $pet->delete();
+    
+    return redirect()->route('home.index')->with('success', 'Mascota eliminada');
+  }
 }

@@ -3,17 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('home.index');
-    }
-    return redirect()->route('login');
-});
+Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home.index');
 
 Auth::routes();
-
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home.index');
-
 Route::get('/pets', 'App\Http\Controllers\PetController@index')->name('pets.index');
 Route::get('/pets/create', 'App\Http\Controllers\PetController@create')->name('pets.create');
 Route::post('/pets', 'App\Http\Controllers\PetController@store')->name('pets.store');

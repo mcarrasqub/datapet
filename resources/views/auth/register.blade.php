@@ -2,7 +2,6 @@
 @section('content')
 <link href="{{ asset('css/register.css') }}" rel="stylesheet">
 <div class="container py-4">
-    <!-- Indicador de Pasos -->
     <div class="d-flex justify-content-center align-items-center mb-4">
         <div class="d-flex align-items-center">
             <span class="badge rounded-circle p-2 me-2" id="step1-indicator" style="width: 30px; height: 30px; background-color: #28a745;">1</span>
@@ -17,7 +16,6 @@
 
     <div class="card register-container shadow-sm" style="border-radius: 15px;">
         <div class="card-body p-4">
-            <!-- PASO 1: TU FORMULARIO ORIGINAL DEL CLIENTE -->
             <div id="step1" class="step-content">
                 <h5 class="card-title text-pet-green mb-1">
                     <i class="bi bi-person me-2"></i>Información del Cliente
@@ -91,104 +89,103 @@
                 </form>
             </div>
 
-            <!-- PASO 2: FORMULARIO DE MASCOTA -->
-            <div id="step2" class="step-content" style="display: none;">
-                <h5 class="card-title text-pet-green mb-1">
-                    <i class="bi bi-clipboard-heart me-2"></i>Información de la Mascota
-                </h5>
-                <p class="text-muted small mb-4">Completa los datos de tu mascota</p>
+<div id="step2" class="step-content" style="display: none;">
+    <h5 class="card-title text-pet-green mb-1">
+        <i class="bi bi-clipboard-heart me-2"></i>Información de la Mascota
+    </h5>
+    <p class="text-muted small mb-4">Completa los datos de tu mascota</p>
 
-                <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" id="registerFormStep2">
-                    @csrf
-                    
-                    <!-- Campos ocultos con datos del paso 1 -->
-                    <input type="hidden" name="name" id="hidden_name">
-                    <input type="hidden" name="apellido" id="hidden_apellido">
-                    <input type="hidden" name="email" id="hidden_email">
-                    <input type="hidden" name="telefono" id="hidden_telefono">
-                    <input type="hidden" name="password" id="hidden_password">
-                    <input type="hidden" name="password_confirmation" id="hidden_password_confirmation">
-                    <input type="hidden" name="direccion" id="hidden_direccion">
-                    <input type="hidden" name="contacto_emergencia" id="hidden_contacto_emergencia">
-                    <input type="hidden" name="tel_emergencia" id="hidden_tel_emergencia">
+    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" id="registerFormStep2">
+        @csrf
+        
+        <input type="hidden" name="name" id="hidden_name">
+        <input type="hidden" name="apellido" id="hidden_apellido">
+        <input type="hidden" name="email" id="hidden_email">
+        <input type="hidden" name="telefono" id="hidden_telefono">
+        <input type="hidden" name="password" id="hidden_password">
+        <input type="hidden" name="password_confirmation" id="hidden_password_confirmation">
+        <input type="hidden" name="direccion" id="hidden_direccion">
+        <input type="hidden" name="contacto_emergencia" id="hidden_contacto_emergencia">
+        <input type="hidden" name="tel_emergencia" id="hidden_tel_emergencia">
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="pet_name" class="form-label fw-bold small">Nombre de la Mascota *</label>
-                            <input id="pet_name" type="text" class="form-control bg-light border-0 py-2" name="pet_name" placeholder="Ej: Max" required>
-                        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="pet_name" class="form-label fw-bold small">Nombre de la Mascota *</label>
+                <input id="pet_name" type="text" class="form-control bg-light border-0 py-2" name="pet_name" placeholder="Ej: Max" required>
+            </div>
 
-                        <div class="col-md-6">
-                            <label for="species" class="form-label fw-bold small">Especie *</label>
-                            <select id="species" class="form-select bg-light border-0 py-2" name="species" required>
-                                <option value="">Seleccione</option>
-                                <option value="Perro">Perro</option>
-                                <option value="Gato">Gato</option>
-                                <option value="Ave">Ave</option>
-                                <option value="Conejo">Conejo</option>
-                                <option value="Hamster">Hamster</option>
-                                <option value="Reptil">Reptil</option>
-                                <option value="Otro">Otro</option>
-                            </select>
-                        </div>
+            <div class="col-md-6">
+                <label for="species" class="form-label fw-bold small">Especie *</label>
+                <select id="species" class="form-select bg-light border-0 py-2" name="species" required>
+                    <option value="">Seleccione</option>
+                    <option value="Perro">Perro</option>
+                    <option value="Gato">Gato</option>
+                    <option value="Ave">Ave</option>
+                    <option value="Conejo">Conejo</option>
+                    <option value="Hamster">Hamster</option>
+                    <option value="Reptil">Reptil</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
 
-                        <div class="col-md-6">
-                            <label for="breed" class="form-label fw-bold small">Raza</label>
-                            <input id="breed" type="text" class="form-control bg-light border-0 py-2" name="breed" placeholder="Ej: Golden Retriever">
-                        </div>
+            <div class="col-md-6">
+                <label for="breed" class="form-label fw-bold small">Raza</label>
+                <input id="breed" type="text" class="form-control bg-light border-0 py-2" name="breed" placeholder="Ej: Golden Retriever">
+            </div>
 
-                        <div class="col-md-6">
-                            <label for="birth_date" class="form-label fw-bold small">Fecha de Nacimiento</label>
-                            <input id="birth_date" type="date" class="form-control bg-light border-0 py-2" name="birth_date">
-                        </div>
+            <div class="col-md-6">
+                <label for="birth_date" class="form-label fw-bold small">Edad</label>
+                <input id="birth_date" type="text" class="form-control bg-light border-0 py-2" name="birth_date" placeholder="Ej: 2 años, 6 meses">
+            </div>
 
-                        <div class="col-md-4">
-                            <label for="gender" class="form-label fw-bold small">Género *</label>
-                            <select id="gender" class="form-select bg-light border-0 py-2" name="gender" required>
-                                <option value="male">Macho</option>
-                                <option value="female">Hembra</option>
-                                <option value="unknown">Desconocido</option>
-                            </select>
-                        </div>
+            <div class="col-md-6">
+                <label for="weight" class="form-label fw-bold small">Peso</label>
+                <input id="weight" type="text" class="form-control bg-light border-0 py-2" name="weight" placeholder="Ej: 5 kg">
+            </div>
 
-                        <div class="col-md-4">
-                            <label for="color" class="form-label fw-bold small">Color</label>
-                            <input id="color" type="text" class="form-control bg-light border-0 py-2" name="color" placeholder="Ej: Café">
-                        </div>
+            <div class="col-md-6">
+                <label for="gender" class="form-label fw-bold small">Género *</label>
+                <select id="gender" class="form-select bg-light border-0 py-2" name="gender" required>
+                    <option value="">Seleccione</option>
+                    <option value="male">Macho</option>
+                    <option value="female">Hembra</option>
+                    <option value="unknown">Desconocido</option>
+                </select>
+            </div>
 
-                        <div class="col-md-4">
-                            <label for="weight" class="form-label fw-bold small">Peso (kg)</label>
-                            <input id="weight" type="number" step="0.01" class="form-control bg-light border-0 py-2" name="weight" placeholder="5.5">
-                        </div>
+            <div class="col-md-6">
+                <label for="microchip" class="form-label fw-bold small">Número de Microchip</label>
+                <input id="microchip" type="text" class="form-control bg-light border-0 py-2" name="microchip" placeholder="Si aplica">
+            </div>
 
-                        <div class="col-md-6">
-                            <label for="photo" class="form-label fw-bold small">Foto de la Mascota</label>
-                            <input id="photo" type="file" class="form-control bg-light border-0 py-2" name="photo" accept="image/*">
-                        </div>
+            <div class="col-md-6">
+                <label for="vaccinated" class="form-label fw-bold small">¿Vacunado?</label>
+                <select id="vaccinated" class="form-select bg-light border-0 py-2" name="vaccinated">
+                    <option value="">Seleccione</option>
+                    <option value="yes">Sí</option>
+                    <option value="no">No</option>
+                    <option value="unknown">Desconocido</option>
+                </select>
+            </div>
 
-                        <div class="col-12">
-                            <label for="notes" class="form-label fw-bold small">Notas Adicionales</label>
-                            <textarea id="notes" class="form-control bg-light border-0" name="notes" rows="3" placeholder="Información adicional sobre la mascota"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 d-flex gap-2">
-                        <button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="goToStep1(); return false;">
-                            Volver
-                        </button>
-                        <button type="submit" class="btn btn-pet-primary flex-fill py-2 fw-bold text-white">
-                            Completar Registro
-                        </button>
-                    </div>
-                </form>
+            <div class="col-12">
+                <label for="notes" class="form-label fw-bold small">Alergias Conocidas</label>
+                <textarea id="notes" class="form-control bg-light border-0" name="notes" rows="3" placeholder="Describe cualquier alergia conocida..."></textarea>
             </div>
         </div>
-    </div>
-</div>
 
+        <div class="mt-4 d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="goToStep1(); return false;">
+                Volver
+            </button>
+            <button type="submit" class="btn btn-pet-primary flex-fill py-2 fw-bold text-white">
+                Completar Registro
+            </button>
+        </div>
+    </form>
+</div>
 <script>
 function goToStep2() {
-    // Validar campos obligatorios del paso 1
     const name = document.getElementById('name').value.trim();
     const apellido = document.getElementById('apellido').value.trim();
     const email = document.getElementById('email').value.trim();
@@ -211,7 +208,6 @@ function goToStep2() {
         return false;
     }
 
-    // Copiar valores a campos ocultos
     document.getElementById('hidden_name').value = name;
     document.getElementById('hidden_apellido').value = apellido;
     document.getElementById('hidden_email').value = email;
@@ -222,11 +218,9 @@ function goToStep2() {
     document.getElementById('hidden_contacto_emergencia').value = document.getElementById('contacto_emergencia').value;
     document.getElementById('hidden_tel_emergencia').value = document.getElementById('tel_emergencia').value;
 
-    // Cambiar de paso
     document.getElementById('step1').style.display = 'none';
     document.getElementById('step2').style.display = 'block';
 
-    // Actualizar indicadores
     document.getElementById('step2-indicator').style.backgroundColor = '#28a745';
     document.getElementById('step2-indicator').classList.remove('bg-light', 'text-muted', 'border');
     document.getElementById('step2-text').style.color = '#28a745';
@@ -239,7 +233,6 @@ function goToStep1() {
     document.getElementById('step1').style.display = 'block';
     document.getElementById('step2').style.display = 'none';
 
-    // Actualizar indicadores
     document.getElementById('step2-indicator').style.backgroundColor = '';
     document.getElementById('step2-indicator').classList.add('bg-light', 'text-muted', 'border');
     document.getElementById('step2-text').style.color = '';

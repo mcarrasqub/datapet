@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Pet;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -20,24 +21,17 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    protected function validator(array $data)
+    public function register(RegisterRequest $request)
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'apellido' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'telefono' => ['required', 'string', 'max:20'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'direccion' => ['nullable', 'string', 'max:255'],
-            'contacto_emergencia' => ['nullable', 'string', 'max:255'],
-            'tel_emergencia' => ['nullable', 'string', 'max:20'],
-            'pet_name' => ['required', 'string', 'max:255'],
-            'species' => ['required', 'string', 'max:255'],
-            'gender' => ['required', 'in:male,female,unknown'],
-        ]);
+        $user = $this->createUser($request->validated());
+        
+        $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
     }
 
-    protected function create(array $data)
+    protected function createUser(array $data): User
     {
         $user = User::create([
             'name' => $data['name'] . ' ' . $data['apellido'],
@@ -57,7 +51,6 @@ class RegisterController extends Controller
             'breed' => $data['breed'] ?? null,
             'birth_date' => $data['birth_date'] ?? null,
             'gender' => $data['gender'],
-            'color' => $data['color'] ?? null,
             'weight' => $data['weight'] ?? null,
             'photo' => $photoPath,
             'notes' => $data['notes'] ?? null,

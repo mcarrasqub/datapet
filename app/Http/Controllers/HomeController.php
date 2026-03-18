@@ -7,16 +7,17 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+  public function __construct()
+  {
+    $this->middleware('auth');
+  }
 
-    public function index(): View
-    {
-        $user = Auth::user();
-        $pets = $user->pets;
-        
-        return view('home.index', compact('user', 'pets'));
-    }
+  public function index(): View
+  {
+    $viewData = [];
+    $viewData['user'] = Auth::user();
+    $viewData['pets'] = $viewData['user']->pets;
+    
+    return view('home.index')->with('viewData', $viewData);
+  }
 }
