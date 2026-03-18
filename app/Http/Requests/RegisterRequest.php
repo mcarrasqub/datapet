@@ -15,13 +15,13 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'apellido' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'telefono' => ['required', 'string', 'max:20'],
+            'phone' => ['required', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'direccion' => ['nullable', 'string', 'max:255'],
-            'contacto_emergencia' => ['nullable', 'string', 'max:255'],
-            'tel_emergencia' => ['nullable', 'string', 'max:20'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'emergency_contact' => ['nullable', 'string', 'max:255'],
+            'emergency_phone' => ['nullable', 'string', 'max:20'],
             'pet_name' => ['required', 'string', 'max:255'],
             'species' => ['required', 'string', 'max:255'],
             'gender' => ['required', 'in:male,female,unknown'],

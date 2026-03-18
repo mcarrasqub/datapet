@@ -24,8 +24,6 @@
         </h5>
         <p class="text-muted small mb-4">Completa los datos personales del propietario</p>
 
-        <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" id="registerForm">
-          @csrf
           <div class="row g-3">
             <div class="col-md-6">
               <label for="name" class="form-label fw-bold small">Nombre *</label>
@@ -36,7 +34,7 @@
             </div>
             <div class="col-md-6">
               <label for="apellido" class="form-label fw-bold small">Apellido *</label>
-              <input id="apellido" type="text" class="form-control bg-light border-0 py-2" name="apellido" value="{{ old('apellido') }}" placeholder="Apellido" required>
+              <input id="apellido" type="text" class="form-control bg-light border-0 py-2" name="lastname" value="{{ old('apellido') }}" placeholder="Apellido" required>
             </div>
             <div class="col-md-6">
               <label for="email" class="form-label fw-bold small">Correo Electrónico *</label>
@@ -47,7 +45,7 @@
             </div>
             <div class="col-md-6">
               <label for="telefono" class="form-label fw-bold small">Teléfono *</label>
-              <input id="telefono" type="text" class="form-control bg-light border-0 py-2" name="telefono" value="{{ old('telefono') }}" placeholder="(123) 456-7890" required>
+              <input id="telefono" type="text" class="form-control bg-light border-0 py-2" name="phone" value="{{ old('telefono') }}" placeholder="(123) 456-7890" required>
             </div>
             <div class="col-md-6">
               <label for="password" class="form-label fw-bold small">Contraseña *</label>
@@ -62,15 +60,15 @@
             </div>
             <div class="col-12">
               <label for="direccion" class="form-label fw-bold small">Dirección</label>
-              <input id="direccion" type="text" class="form-control bg-light border-0 py-2" name="direccion" value="{{ old('direccion') }}" placeholder="Dirección completa">
+              <input id="direccion" type="text" class="form-control bg-light border-0 py-2" name="address" value="{{ old('direccion') }}" placeholder="Dirección completa">
             </div>
             <div class="col-md-6">
-              <label for="contacto_emergencia" class="form-label fw-bold small">Contacto de Emergencia</label>
-              <input id="contacto_emergencia" type="text" class="form-control bg-light border-0 py-2" name="contacto_emergencia" value="{{ old('contacto_emergencia') }}" placeholder="Nombre completo">
+              <label for="emergency_contact" class="form-label fw-bold small">Contacto de Emergencia</label>
+              <input id="emergency_contact" type="text" class="form-control bg-light border-0 py-2" name="emergency_contact" value="{{ old('emergency_contact') }}" placeholder="Nombre completo">
             </div>
             <div class="col-md-6">
-              <label for="tel_emergencia" class="form-label fw-bold small">Teléfono de Emergencia</label>
-              <input id="tel_emergencia" type="text" class="form-control bg-light border-0 py-2" name="tel_emergencia" value="{{ old('tel_emergencia') }}" placeholder="(123) 456-7890">
+              <label for="emergency_phone" class="form-label fw-bold small">Teléfono de Emergencia</label>
+              <input id="emergency_phone" type="text" class="form-control bg-light border-0 py-2" name="emergency_phone" value="{{ old('emergency_phone') }}" placeholder="(123) 456-7890">
             </div>
           </div>
           <div class="mt-4">
@@ -78,7 +76,6 @@
               Continuar a Datos de Mascota
             </button>
           </div>
-        </form>
       </div>
 
       <div id="step2" class="step-content" style="display: none;">
@@ -86,18 +83,6 @@
           <i class="bi bi-clipboard-heart me-2"></i>Información de la Mascota
         </h5>
         <p class="text-muted small mb-4">Completa los datos de tu mascota</p>
-
-        <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" id="registerFormStep2">
-          @csrf
-          <input type="hidden" name="name" id="hidden_name">
-          <input type="hidden" name="apellido" id="hidden_apellido">
-          <input type="hidden" name="email" id="hidden_email">
-          <input type="hidden" name="telefono" id="hidden_telefono">
-          <input type="hidden" name="password" id="hidden_password">
-          <input type="hidden" name="password_confirmation" id="hidden_password_confirmation">
-          <input type="hidden" name="direccion" id="hidden_direccion">
-          <input type="hidden" name="contacto_emergencia" id="hidden_contacto_emergencia">
-          <input type="hidden" name="tel_emergencia" id="hidden_tel_emergencia">
 
           <div class="row g-3">
             <div class="col-md-6">
@@ -154,7 +139,6 @@
               Completar Registro
             </button>
           </div>
-        </form>
       </form>
       </div>
     </div>
