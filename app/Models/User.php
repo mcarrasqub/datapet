@@ -16,6 +16,7 @@ class User extends Authenticatable
      * ATTRIBUTES USER
      * this->attributes['id']
      * this->attributes['name']
+     * this->attributes['lastname']
      * this->attributes['phone']
      * this->attributes['address']
      * this->attributes['specialty']

@@ -6,15 +6,15 @@
     <link href="{{ asset('css/register.css') }}" rel="stylesheet">
     <div class="container py-4">
         <div class="mb-4">
-            <h2 class="fw-bold mb-1 text-pet-green">Gestión de Usuarios</h2>
+            <h2 class="fw-bold mb-1 ">Gestión de Usuarios</h2>
             <p class="text-muted small">Administra los usuarios y permisos del sistema</p>
         </div>
 
         <div class="d-flex align-items-start justify-content-between mb-4">
             <div></div>
 
-            <button class="btn btn-pet-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#createUserModal">
-                <i class="bi bi-person-plus me-2"></i>Crear Usuario
+            <button class="btn btn-pet-primary rounded-pill px-4 py-2 fw-bold text-white" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                <i class="bi bi-person-plus me-2 "></i>Crear Usuario
             </button>
         </div>
 
@@ -29,7 +29,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="text-muted mb-3">Total Usuarios</h6>
-                        <p class="fs-1 fw-bold text-success mb-0">{{ $counts['total'] }}</p>
+                        <p class="fs-1 fw-bold text-pet-green mb-0">{{ $counts['total'] }}</p>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="text-muted mb-3">Administradores</h6>
-                        <p class="fs-1 fw-bold text-success mb-0">{{ $counts['admin'] }}</p>
+                        <p class="fs-1 fw-bold text-pet-green mb-0">{{ $counts['admin'] }}</p>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="text-muted mb-3">Doctores</h6>
-                        <p class="fs-1 fw-bold text-success mb-0">{{ $counts['doctor'] }}</p>
+                        <p class="fs-1 fw-bold text-pet-green mb-0">{{ $counts['doctor'] }}</p>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="text-muted mb-3">Clientes</h6>
-                        <p class="fs-1 fw-bold text-success mb-0">{{ $counts['client'] }}</p>
+                        <p class="fs-1 fw-bold text-pet-green mb-0">{{ $counts['client'] }}</p>
                     </div>
                 </div>
             </div>
@@ -62,32 +62,42 @@
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <h5 class="fw-semibold mb-3">Filtros</h5>
-                <form class="row gy-3 gx-3 align-items-end" method="GET" action="{{ route('users.index') }}">
-                    <div class="col-md-6">
+                <form id="filterForm" class="row gy-3 gx-3 align-items-end" method="GET" action="{{ route('users.index') }}">
+                    <div class="col-md-8">
                         <label class="form-label">Buscar Usuario</label>
                         <div class="input-group">
                             <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
-                            <input name="search" value="{{ request('search') }}" type="text"
+                            <input name="search" value="{{ $searchInput }}" type="text"
                                 class="form-control border-start-0" placeholder="Buscar por nombre o correo...">
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label">Filtrar por Rol</label>
-                        <select name="role" class="form-select">
+                        <select name="role" id="roleFilter" class="form-select">
                             <option value="">Todos los roles</option>
                             @foreach($roles as $key => $label)
-                                <option value="{{ $key }}" {{ request('role') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                                <option value="{{ $key }}" {{ $roleInput === $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
-                    </div>
-
-                    <div class="col-md-2 text-end">
-                        <button type="submit" class="btn btn-pet-primary w-100">Filtrar</button>
                     </div>
                 </form>
             </div>
         </div>
+
+        <script>
+            document.getElementById('roleFilter').addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+
+            // Hacer que el campo de búsqueda envíe el formulario con Enter
+            document.querySelector('input[name="search"]').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('filterForm').submit();
+                }
+            });
+        </script>
 
         <div class="row gy-4">
             @forelse($users as $user)
@@ -106,11 +116,11 @@
                                     @php
                                         $roleLabel = $roles[$user->role] ?? ucfirst($user->role);
                                     @endphp
-                                    <span class="badge bg-success">{{ $roleLabel }}</span>
+                                    <span class="badge bg-pet-green">{{ $roleLabel }}</span>
                                     @if($user->status)
-                                        <span class="badge bg-success">Activo</span>
+                                        <span class="badge  bg-pet-green">Activo</span>
                                     @else
-                                        <span class="badge bg-secondary">Inactivo</span>
+                                        <span class="badge bg-pet-green">Inactivo</span>
                                     @endif
                                 </div>
                             </div>
@@ -181,10 +191,13 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small">Apellidos</label>
-                                <input name="lastname" value="{{ old('lastname') }}" type="text"
+                                <label for="lastname" class="form-label fw-bold small">Apellidos</label>
+                                <input id="lastname" name="lastname" value="{{ old('lastname') }}" type="text"
                                     class="form-control bg-light border-0 py-2 @error('lastname') is-invalid @enderror"
                                     placeholder="Apellidos" required>
+                                @error('lastname')
+                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                @enderror
                             </div>
 
                             <div class="col-md-6">

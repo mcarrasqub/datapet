@@ -106,7 +106,7 @@
                             <a class="nav-link {{ request()->routeIs('users.*') ? 'active-pill' : 'text-dark fw-medium' }}" href="{{ route('users.index') }}"><i class="bi bi-people me-2"></i>Usuarios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark fw-medium" href="#"><i class="bi bi-person-lines-fill me-2"></i>Clientes</a>
+                            <a class="nav-link text-dark fw-medium" href="{{ route('clients.create') }}"><i class="bi bi-person-lines-fill me-2"></i>Clientes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark fw-medium" href="#"><i class="bi bi-calendar3 me-2"></i>Agenda</a>
