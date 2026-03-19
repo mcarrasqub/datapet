@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Doctor\MedicalRecordController;
 
 Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home.index');
 
@@ -16,6 +17,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     Route::get('/clients/create', [ClientController::class, 'create'])->name('clients.create');
-    Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+    Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');  
+
+    Route::get('/medical-records', 'App\Http\Controllers\Doctor\MedicalRecordController@index')->name('medical-records.index');
 });
 
