@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Pet;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-    /*
+        /*
     |--------------------------------------------------------------------------
     | Register Controller
     |--------------------------------------------------------------------------
@@ -28,6 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
+
     protected $redirectTo = '/';
 
     /**
@@ -35,12 +39,13 @@ class RegisterController extends Controller
      *
      * @return void
      */
+
     public function __construct()
     {
         $this->middleware('guest');
     }
 
-    /**
+        /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
