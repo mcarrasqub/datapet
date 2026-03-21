@@ -81,7 +81,7 @@
                             <a class="nav-link text-dark fw-medium" href="#"><i class="bi bi-calendar4-event me-2"></i>Mis Citas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark fw-medium" href="#"><i class="bi bi-file-earmark-text me-2"></i>Historiales</a>
+                            <a class="nav-link {{ request()->routeIs('medical_records.*') ? 'active-pill' : 'text-dark fw-medium' }}" href="{{ route('medical_records.index') }}"><i class="bi bi-file-earmark-text me-2"></i>Historiales</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark fw-medium" href="{{ route('clients.create') }}"><i class="bi bi-person-plus me-2"></i>Nuevo Cliente</a>

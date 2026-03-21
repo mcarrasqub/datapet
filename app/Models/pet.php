@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Modelo Pet
@@ -47,6 +48,11 @@ class Pet extends Model
   public function owner(): BelongsTo
   {
     return $this->belongsTo(User::class, 'user_id');
+  }
+
+  public function medicalRecords(): HasMany
+  {
+    return $this->hasMany(MedicalRecord::class, 'pet_id');
   }
 
   // Getters
