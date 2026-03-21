@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('diagnosis')->nullable();
             $table->text('treatment')->nullable();
             $table->text('notes')->nullable();
+            $table->json('photos')->nullable();
             $table->timestamps();
         });
     }
