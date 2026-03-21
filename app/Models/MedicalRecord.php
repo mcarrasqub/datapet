@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MedicalRecord extends Model
 {
@@ -27,14 +28,17 @@ class MedicalRecord extends Model
         'notes',
     ];
 
-    /** 
-    *public function pet()
-    *{
-    *    return $this->belongsTo(Pet::class);
-    *}
-    */
-    
-    public function doctor()
+    protected $casts = [
+        'visited_at' => 'datetime',
+    ];
+
+    public function pet(): BelongsTo
+    {
+        return $this->belongsTo(Pet::class, 'pet_id');
+    }
+
+   
+    public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'doctor_id');
     }
