@@ -13,7 +13,7 @@
                         <i class="bi bi-paw-fill me-2"></i><strong>Paciente:</strong> {{ $pet->name }} - {{ $pet->species }}
                     </p>
 
-                    <form action="{{ route('medical_records.store', $pet) }}" method="POST">
+                    <form action="{{ route('medical_records.store', $pet) }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-4">
@@ -70,6 +70,22 @@
                             @error('notes')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                         </div>
 
+                        <div class="mb-4">
+                            <label for="photos" class="form-label fw-bold">
+                                <i class="bi bi-image me-2" style="color: #76a75d;"></i>Fotos (Máximo 3)
+                            </label>
+                            <input type="file" class="form-control @error('photos.*') is-invalid @enderror" 
+                                   id="photos" name="photos[]" multiple accept="image/*"
+                                   style="border-color: #76a75d;">
+                            <small class="text-muted d-block mt-2">
+                                <i class="bi bi-info-circle me-1"></i>Puedes subir hasta 3 fotos (JPG, PNG, GIF)
+                            </small>
+                            @error('photos.*')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                        </div>
+
+                        <!-- Vista previa de fotos -->
+                        <div id="photoPreview" class="mb-4"></div>
+
                         <div class="d-flex gap-2 mt-5">
                             <button type="submit" class="btn" style="background-color: #76a75d; color: white; font-weight: bold;">
                                 <i class="bi bi-check-circle me-2"></i>Guardar Registro
@@ -84,4 +100,33 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('photos').addEventListener('change', function(e) {
+        const preview = document.getElementById('photoPreview');
+        preview.innerHTML = '';
+        
+        if (this.files.length > 3) {
+            alert('Máximo 3 fotos permitidas');
+            this.value = '';
+            return;
+        }
+
+        Array.from(this.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '150px';
+                img.style.height = '150px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '10px';
+                img.style.marginRight = '10px';
+                img.style.marginBottom = '10px';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
 @endsection

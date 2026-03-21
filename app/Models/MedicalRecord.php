@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -16,6 +17,7 @@ class MedicalRecord extends Model
         * this->attributes['diagnosis'] - string - contains the diagnosis made by the doctor.
         * this->attributes['treatment'] - string - contains the treatment plan.
         * this->attributes['notes'] - string - contains any additional notes.
+        * this->attributes['photos'] - array - contains an array of photo URLs related to the medical record.
         */
     
     protected $fillable = [
@@ -26,10 +28,12 @@ class MedicalRecord extends Model
         'diagnosis',
         'treatment',
         'notes',
+        'photos',
     ];
 
     protected $casts = [
         'visited_at' => 'datetime',
+        'photos' => 'array',
     ];
 
     public function pet(): BelongsTo
@@ -37,7 +41,6 @@ class MedicalRecord extends Model
         return $this->belongsTo(Pet::class, 'pet_id');
     }
 
-   
     public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'doctor_id');

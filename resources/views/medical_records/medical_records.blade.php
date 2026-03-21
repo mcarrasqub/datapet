@@ -13,7 +13,7 @@
                     
                     <!-- BUSCADOR -->
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Buscar paciente..." id="searchPets" style="border-color: #76a75d;">
+                        <input type="text" class="form-control" placeholder="Buscar paciente o dueño..." id="searchPets" style="border-color: #76a75d;">
                         <button class="btn" type="button" style="background-color: #76a75d; color: white;">
                             <i class="bi bi-search"></i>
                         </button>
@@ -26,10 +26,15 @@
                            class="list-group-item list-group-item-action pet-item"
                            style="border-radius: 10px; margin-bottom: 8px; border-left: 4px solid transparent; transition: all 0.2s;"
                            data-pet-name="{{ $pet->name }}"
+                           data-owner-name="{{ $pet->owner->name }} {{ $pet->owner->lastname }}"
                            @if($selectedPet && $selectedPet->id === $pet->id)
                            style="border-radius: 10px; margin-bottom: 8px; border-left: 4px solid #76a75d; background-color: #f8fff3; color: #76a75d;"
                            @endif>
-                            <strong>{{ $pet->name }}</strong><br>
+                            <strong>{{ $pet->name }}</strong>
+                            @if($pet->birth_date)
+                                <span class="badge bg-success" style="margin-left: auto; display: inline-block;">{{ \Carbon\Carbon::parse($pet->birth_date)->age }} años</span>
+                            @endif
+                            <br>
                             <small class="text-muted">
                                 <i class="bi bi-paw-fill me-1"></i>{{ $pet->species }}
                                 @if($pet->breed)
@@ -37,7 +42,7 @@
                                 @endif
                             </small><br>
                             <small class="text-muted">
-                                <i class="bi bi-person me-1"></i>{{ $pet->owner->name }}
+                                <i class="bi bi-person me-1"></i>{{ $pet->owner->name }} {{ $pet->owner->lastname }}
                             </small>
                         </a>
                         @empty
@@ -71,7 +76,7 @@
                                 </p>
                                 <p class="mb-2">
                                     <strong><i class="bi bi-person-circle me-2" style="color: #76a75d;"></i>Propietario:</strong> 
-                                    {{ $selectedPet->owner->name }}
+                                    {{ $selectedPet->owner->name }} {{ $selectedPet->owner->lastname }}
                                 </p>
                             </div>
                             <div class="col-md-4 text-end">
@@ -136,7 +141,7 @@
                                                     <i class="bi bi-calendar-event me-2" style="color: #76a75d;"></i>{{ $record->visited_at->format('d M Y') }}
                                                 </h6>
                                                 <small class="text-muted">
-                                                    <i class="bi bi-person-circle me-1"></i>Dr. {{ $record->doctor->name }}
+                                                    <i class="bi bi-person-circle me-1"></i>Dr. {{ $record->doctor->name }} {{ $record->doctor->lastname }}
                                                 </small>
                                             </div>
                                             <div class="btn-group btn-group-sm" role="group">
@@ -170,9 +175,26 @@
                                         </div>
 
                                         @if($record->notes)
-                                        <div>
+                                        <div class="mb-3">
                                             <small class="text-muted"><i class="bi bi-chat-left-text me-1" style="color: #76a75d;"></i>Notas</small>
                                             <p class="mb-0 fw-medium">{{ $record->notes }}</p>
+                                        </div>
+                                        @endif
+
+                                        <!-- FOTOS -->
+                                        @if($record->photos && count($record->photos) > 0)
+                                        <div class="mt-3 pt-3" style="border-top: 1px solid #e9ecef;">
+                                            <small class="text-muted"><i class="bi bi-image me-1" style="color: #76a75d;"></i>Fotos</small>
+                                            <div class="d-flex gap-2 mt-2" style="overflow-x: auto;">
+                                                @foreach($record->photos as $photo)
+                                                <a href="{{ asset('storage/' . $photo) }}" target="_blank">
+                                                    <img src="{{ asset('storage/' . $photo) }}" alt="Foto médica" 
+                                                         style="width: 120px; height: 120px; object-fit: cover; border-radius: 10px; border: 2px solid #76a75d; cursor: pointer; transition: transform 0.2s;"
+                                                         onmouseover="this.style.transform='scale(1.05)'"
+                                                         onmouseout="this.style.transform='scale(1)'">
+                                                </a>
+                                                @endforeach
+                                            </div>
                                         </div>
                                         @endif
                                     </div>
@@ -213,14 +235,16 @@
 </div>
 
 <script>
-    // Búsqueda de mascotas por nombre
+    // Búsqueda de mascotas por nombre O nombre del dueño
     document.getElementById('searchPets').addEventListener('keyup', function(e) {
         const searchTerm = e.target.value.toLowerCase();
         const petItems = document.querySelectorAll('.pet-item');
         
         petItems.forEach(item => {
             const petName = item.getAttribute('data-pet-name').toLowerCase();
-            if (petName.includes(searchTerm)) {
+            const ownerName = item.getAttribute('data-owner-name').toLowerCase();
+            
+            if (petName.includes(searchTerm) || ownerName.includes(searchTerm)) {
                 item.style.display = 'flex';
             } else {
                 item.style.display = 'none';
