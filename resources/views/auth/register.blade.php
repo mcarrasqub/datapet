@@ -1,11 +1,17 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 @section('content')
 <link href="{{ asset('css/register.css') }}" rel="stylesheet">
 <div class="container py-4">
+  @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  @endif
   <div class="d-flex justify-content-center align-items-center mb-4">
     <div class="d-flex align-items-center">
-      <span class="badge rounded-circle p-2 me-2" id="step1-indicator" style="width: 30px; height: 30px; background-color: #28a745;">1</span>
-      <span class="fw-bold" id="step1-text" style="color: #28a745;">Datos del Cliente</span>
+      <span class="badge rounded-circle p-2 me-2 bg-pet-green" id="step1-indicator" style="width: 30px; height: 30px; background-color: #28a745;">1</span>
+      <span class="fw-bold text-pet-green" id="step1-text" >Datos del Cliente</span>
     </div>
     <div class="mx-3" style="width: 50px; height: 1px; background-color: #dee2e6;"></div>
     <div class="d-flex align-items-center">

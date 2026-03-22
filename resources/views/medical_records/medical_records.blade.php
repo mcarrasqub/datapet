@@ -32,7 +32,7 @@
                            @endif>
                             <strong>{{ $pet->name }}</strong>
                             @if($pet->birth_date)
-                                <span class="badge bg-success" style="margin-left: auto; display: inline-block;">{{ \Carbon\Carbon::parse($pet->birth_date)->age }} años</span>
+                                <span class="badge bg-pet-green" style="margin-left: auto; display: inline-block;">{{ \Carbon\Carbon::parse($pet->birth_date)->age }} años</span>
                             @endif
                             <br>
                             <small class="text-muted">
