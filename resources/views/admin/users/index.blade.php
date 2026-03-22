@@ -202,7 +202,9 @@
                                 <select name="role" class="form-select @error('role') is-invalid @enderror" required>
                                     <option value="" disabled selected>Selecciona un rol</option>
                                     @foreach($roles as $key => $label)
-                                        <option value="{{ $key }}" {{ old('role') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @if($key !== 'client')
+                                            <option value="{{ $key }}" {{ old('role') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 @error('role')
