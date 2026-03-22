@@ -44,13 +44,13 @@
                 @auth
                     <form action="{{ route('logout') }}" method="POST" class="m-0">
                         @csrf
-                        <button type="submit" class="btn btn-outline-secondary rounded-3 d-flex align-items-center px-3 py-1">
+                        <button type="submit" class="btn btn-outline-pet-green fw-medium rounded-pill d-flex align-items-center px-3 py-1">
                             <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-outline-secondary rounded-3 d-flex align-items-center px-3 py-1">
-                        <i class="bi bi-box-arrow-right me-2"></i> Iniciar Sesión
+                    <a href="{{ route('login') }}" class="btn btn-outline-pet-green fw-medium rounded-pill d-flex align-items-center px-3 py-1">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar Sesión
                     </a>
                 @endauth
             </div>

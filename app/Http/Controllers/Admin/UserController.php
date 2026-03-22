@@ -63,7 +63,18 @@ class UserController extends Controller
      */
     public function store(UserRequest $request): RedirectResponse
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'role' => ['required', 'in:admin,doctor'],
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+
+        // Split full name into name and lastname if possible.
+        $fullName = trim($data['name']);
+        $parts = preg_split('/\s+/', $fullName);
+        $firstName = $parts[0] ?? '';
+        $lastName = count($parts) > 1 ? implode(' ', array_slice($parts, 1)) : '';
 
         $user = User::create([
             'name' => $data['name'],

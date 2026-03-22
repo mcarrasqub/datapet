@@ -4,61 +4,52 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Pet;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
     use RegistersUsers;
 
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
     protected $redirectTo = '/';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth');
     }
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * Handle a registration request.
+     * Overridden to prevent auto-login of the new user.
      */
-    protected function validator(array $data)
+    public function register(RegisterRequest $request)
     {
-        $formRequest = new RegisterRequest();
-        return Validator::make($data, $formRequest->rules());
+        $user = $this->create($request->validated());
+
+        // Create pet if pet data was provided
+        if ($request->filled('pet_name')) {
+            $pet = new Pet();
+            $pet->name = $request->pet_name;
+            $pet->species = $request->species;
+            $pet->breed = $request->breed;
+            $pet->birth_date = $request->birth_date;
+            $pet->gender = $request->gender;
+            $pet->weight = $request->weight;
+            $pet->notes = $request->notes;
+            $pet->user_id = $user->id;
+
+            if ($request->hasFile('photo')) {
+                $pet->photo = $request->file('photo')->store('pets', 'public');
+            }
+
+            $pet->save();
+        }
+
+        return redirect()->route('register')->with('success', 'Cliente registrado exitosamente.');
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
-     */
     protected function create(array $data)
     {
         return User::create([

@@ -6,7 +6,7 @@
     <link href="{{ asset('css/register.css') }}" rel="stylesheet">
     <div class="container py-4">
         <div class="mb-4">
-            <h2 class="fw-bold mb-1 ">Gestión de Usuarios</h2>
+            <h2 class="fw-bold mb-1 text-pet-green">Gestión de Usuarios</h2>
             <p class="text-muted small">Administra los usuarios y permisos del sistema</p>
         </div>
 
@@ -118,7 +118,7 @@
                                     @endphp
                                     <span class="badge bg-pet-green">{{ $roleLabel }}</span>
                                     @if($user->status)
-                                        <span class="badge  bg-pet-green">Activo</span>
+                                        <span class="badge bg-success">Activo</span>
                                     @else
                                         <span class="badge bg-pet-green">Inactivo</span>
                                     @endif
@@ -215,7 +215,9 @@
                                 <select name="role" class="form-select @error('role') is-invalid @enderror" required>
                                     <option value="" disabled selected>Selecciona un rol</option>
                                     @foreach($roles as $key => $label)
-                                        <option value="{{ $key }}" {{ old('role') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @if($key !== 'client')
+                                            <option value="{{ $key }}" {{ old('role') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 @error('role')
