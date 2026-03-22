@@ -2,15 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\ClientController;
-use App\Http\Controllers\Doctor\MedicalRecordController;
+
 
 Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home.index');
 
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index')->name('dashboard.index');
 
     Route::get('/users', 'App\Http\Controllers\Admin\UserController@index')->name('users.index');
     Route::post('/users', 'App\Http\Controllers\Admin\UserController@store')->name('users.store');

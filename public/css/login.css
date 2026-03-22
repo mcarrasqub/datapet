@@ -6,6 +6,7 @@
 /* Botón principal */
 .btn-pet-primary {
     background-color: var(--pet-green);
+    color: white;
     border: none;
     border-radius: 8px;
     transition: background 0.3s;

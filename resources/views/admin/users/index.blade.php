@@ -6,7 +6,7 @@
     <link href="{{ asset('css/register.css') }}" rel="stylesheet">
     <div class="container py-4">
         <div class="mb-4">
-            <h2 class="fw-bold mb-1 text-pet-green">Gestión de Usuarios</h2>
+            <h2 class="fw-bold mb-1">Gestión de Usuarios</h2>
             <p class="text-muted small">Administra los usuarios y permisos del sistema</p>
         </div>
 
@@ -29,7 +29,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="text-muted mb-3">Total Usuarios</h6>
-                        <p class="fs-1 fw-bold text-success mb-0">{{ $counts['total'] }}</p>
+                        <p class="fs-1 fw-bold text-pet-green mb-0">{{ $counts['total'] }}</p>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="text-muted mb-3">Administradores</h6>
-                        <p class="fs-1 fw-bold text-success mb-0">{{ $counts['admin'] }}</p>
+                        <p class="fs-1 fw-bold text-pet-green mb-0">{{ $counts['admin'] }}</p>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="text-muted mb-3">Doctores</h6>
-                        <p class="fs-1 fw-bold text-success mb-0">{{ $counts['doctor'] }}</p>
+                        <p class="fs-1 fw-bold text-pet-green mb-0">{{ $counts['doctor'] }}</p>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h6 class="text-muted mb-3">Clientes</h6>
-                        <p class="fs-1 fw-bold text-success mb-0">{{ $counts['client'] }}</p>
+                        <p class="fs-1 fw-bold text-pet-green mb-0">{{ $counts['client'] }}</p>
                     </div>
                 </div>
             </div>
@@ -106,9 +106,9 @@
                                     @php
                                         $roleLabel = $roles[$user->role] ?? ucfirst($user->role);
                                     @endphp
-                                    <span class="badge bg-success">{{ $roleLabel }}</span>
+                                    <span class="badge bg-pet-green">{{ $roleLabel }}</span>
                                     @if($user->status)
-                                        <span class="badge bg-success">Activo</span>
+                                        <span class="badge bg-pet-green">Activo</span>
                                     @else
                                         <span class="badge bg-secondary">Inactivo</span>
                                     @endif

@@ -18,6 +18,8 @@ class HomeController extends Controller
     $viewData['user'] = Auth::user();
     $viewData['pets'] = $viewData['user']->pets;
     
-    return view('home.index')->with('viewData', $viewData);
+    $layout = Auth::check() && Auth::user()->role !== 'client' ? 'layouts.dashboard' : 'layouts.app';
+
+    return view('home.index')->with('viewData', $viewData)->with('layout', $layout);
   }
 }
