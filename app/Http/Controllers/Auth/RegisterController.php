@@ -21,12 +21,26 @@ class RegisterController extends Controller
     }
 
     /**
+     * Show the application registration form.
+     * Overridden to pass existing clients.
+     */
+    public function showRegistrationForm()
+    {
+        $clients = User::where('role', 'client')->get();
+        return view('auth.register', compact('clients'));
+    }
+
+    /**
      * Handle a registration request.
      * Overridden to prevent auto-login of the new user.
      */
     public function register(RegisterRequest $request)
     {
-        $user = $this->create($request->validated());
+        if ($request->registration_type === 'existing_client') {
+            $user = User::findOrFail($request->user_id);
+        } else {
+            $user = $this->create($request->validated());
+        }
 
         // Create pet if pet data was provided
         if ($request->filled('pet_name')) {
@@ -47,7 +61,11 @@ class RegisterController extends Controller
             $pet->save();
         }
 
-        return redirect()->route('register')->with('success', 'Cliente registrado exitosamente.');
+        $message = ($request->registration_type === 'existing_client') 
+            ? 'Mascota agregada al cliente exitosamente.' 
+            : 'Cliente y mascota registrados exitosamente.';
+
+        return redirect()->route('register')->with('success', $message);
     }
 
     protected function create(array $data)
