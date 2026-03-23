@@ -67,13 +67,6 @@
                 <a href="{{ route('pets.edit', $pet->getId()) }}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" style="border-radius: 8px; padding: 10px;" title="Editar">
                   <i class="bi bi-pencil"></i>
                 </a>
-                <form action="{{ route('pets.destroy', $pet->getId()) }}" method="POST" class="d-inline mb-0" onsubmit="return confirm('¿Eliminar esta mascota?')">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="btn btn-outline-danger d-flex align-items-center justify-content-center h-100" style="border-radius: 8px; padding: 10px;" title="Eliminar">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </form>
               </div>
             </div>
           </div>

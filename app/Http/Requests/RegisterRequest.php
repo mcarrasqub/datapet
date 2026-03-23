@@ -14,12 +14,14 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'                  => ['required', 'string', 'max:255'],
-            'lastname'              => ['required', 'string', 'max:255'],
-            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone'                 => ['required', 'string', 'max:20'],
-            'password'              => ['required', 'string', 'min:8', 'confirmed'],
-            'password_confirmation' => ['required'],
+            'registration_type'     => ['required', 'in:new_client,existing_client'],
+            'user_id'               => ['required_if:registration_type,existing_client'],
+            'name'                  => ['required_if:registration_type,new_client', 'string', 'max:255'],
+            'lastname'              => ['required_if:registration_type,new_client', 'string', 'max:255'],
+            'email'                 => ['required_if:registration_type,new_client', 'string', 'email', 'max:255', 'unique:users,email'],
+            'phone'                 => ['required_if:registration_type,new_client', 'string', 'max:20'],
+            'password'              => ['required_if:registration_type,new_client', 'string', 'min:8', 'confirmed'],
+            'password_confirmation' => ['required_if:registration_type,new_client'],
             'address'               => ['nullable', 'string', 'max:255'],
             'emergency_contact'     => ['nullable', 'string', 'max:255'],
             'emergency_phone'       => ['nullable', 'string', 'max:20'],
@@ -39,12 +41,13 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required'     => 'El nombre es obligatorio.',
-            'lastname.required' => 'El apellido es obligatorio.',
-            'email.required'    => 'El correo electrónico es obligatorio.',
+            'user_id.required_if' => 'Debe seleccionar un cliente existente.',
+            'name.required_if'     => 'El nombre es obligatorio para nuevos clientes.',
+            'lastname.required_if' => 'El apellido es obligatorio para nuevos clientes.',
+            'email.required_if'    => 'El correo electrónico es obligatorio para nuevos clientes.',
             'email.unique'      => 'Este correo electrónico ya está registrado.',
-            'phone.required'    => 'El teléfono es obligatorio.',
-            'password.required' => 'La contraseña es obligatoria.',
+            'phone.required_if'    => 'El teléfono es obligatorio para nuevos clientes.',
+            'password.required_if' => 'La contraseña es obligatoria para nuevos clientes.',
             'password.min'      => 'La contraseña debe tener al menos 8 caracteres.',
             'password.confirmed'=> 'Las contraseñas no coinciden.',
             'pet_name.required' => 'El nombre de la mascota es obligatorio.',
