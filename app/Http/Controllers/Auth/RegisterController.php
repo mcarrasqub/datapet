@@ -48,7 +48,7 @@ class RegisterController extends Controller
             $pet->name = $request->pet_name;
             $pet->species = $request->species;
             $pet->breed = $request->breed;
-            $pet->birth_date = $request->birth_date;
+            $pet->age = $request->age;
             $pet->gender = $request->gender;
             $pet->weight = $request->weight;
             $pet->notes = $request->notes;

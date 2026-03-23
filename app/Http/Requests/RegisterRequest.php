@@ -30,7 +30,7 @@ class RegisterRequest extends FormRequest
             'pet_name'   => ['required', 'string', 'max:255'],
             'species'    => ['required', 'string'],
             'breed'      => ['nullable', 'string', 'max:255'],
-            'birth_date' => ['nullable', 'date'],
+            'age'        => ['nullable', 'integer', 'min:0', 'max:200'],
             'gender'     => ['required', 'in:male,female,unknown'],
             'weight'     => ['nullable', 'numeric', 'min:0'],
             'photo'      => ['nullable', 'image', 'max:2048'],
