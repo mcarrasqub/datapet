@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * - name: string - Nombre de la mascota
  * - species: string - Especie (Perro, Gato, etc.)
  * - breed: string|null - Raza
- * - birth_date: date|null - Fecha de nacimiento
+ * - age: integer|null - Edad en años
  * - gender: string - Género (male, female, unknown)
  * - weight: decimal|null - Peso en kilogramos
  * - photo: string|null - Ruta de la foto
@@ -33,7 +33,7 @@ class Pet extends Model
     'name',
     'species',
     'breed',
-    'birth_date',
+    'age',
     'gender',
     'weight',
     'photo',
@@ -41,7 +41,7 @@ class Pet extends Model
   ];
 
   protected $casts = [
-    'birth_date' => 'date',
+    'age' => 'integer',
     'weight' => 'decimal:2'
   ];
 
@@ -81,9 +81,9 @@ class Pet extends Model
     return $this->attributes['breed'] ?? null;
   }
 
-  public function getBirthDate(): ?string
+  public function getAge(): ?int
   {
-    return $this->attributes['birth_date'] ?? null;
+    return $this->attributes['age'] ?? null;
   }
 
   public function getGender(): string
@@ -127,9 +127,9 @@ class Pet extends Model
     $this->attributes['breed'] = $breed;
   }
 
-  public function setBirthDate(?string $birthDate): void
+  public function setAge(?int $age): void
   {
-    $this->attributes['birth_date'] = $birthDate;
+    $this->attributes['age'] = $age;
   }
 
   public function setGender(string $gender): void

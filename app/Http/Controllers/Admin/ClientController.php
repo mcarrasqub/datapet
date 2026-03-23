@@ -2,36 +2,32 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ClientRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
+
 
 class ClientController extends Controller
 {
-    public function create()
+    public function create(): View
     {
         return view('admin.clients.create');
     }
 
-    public function store(Request $request)
+    public function store(ClientRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        $data = $request->validated();
 
         User::create([
-            'name' => $request->name,
-            'lastname' => $request->lastname,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'password' => Hash::make($request->password),
+            'name' => $data['name'],
+            'lastname' => $data['lastname'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'address' => $data['address'] ?? null,
+            'password' => Hash::make($data['password']),
             'role' => 'client',
             'status' => true,
         ]);

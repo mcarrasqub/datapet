@@ -18,7 +18,7 @@ class PetRequest extends FormRequest
             'name' => 'required|string|max:255',
             'species' => 'required|string|max:255',
             'breed' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date',
+            'age' => 'nullable|integer|min:0|max:200',
             'gender' => 'required|in:male,female,unknown',
             'weight' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',

@@ -31,8 +31,8 @@
                            style="border-radius: 10px; margin-bottom: 8px; border-left: 4px solid #76a75d; background-color: #f8fff3; color: #76a75d;"
                            @endif>
                             <strong>{{ $pet->name }}</strong>
-                            @if($pet->birth_date)
-                                <span class="badge bg-pet-green" style="margin-left: auto; display: inline-block;">{{ \Carbon\Carbon::parse($pet->birth_date)->age }} años</span>
+                            @if($pet->age)
+                                <span class="badge bg-pet-green" style="margin-left: auto; display: inline-block;">{{ $pet->age }} años</span>
                             @endif
                             <br>
                             <small class="text-muted">

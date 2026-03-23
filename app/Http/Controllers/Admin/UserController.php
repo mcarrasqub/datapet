@@ -4,15 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;      
+
+
 
 class UserController extends Controller
 {
     /**
      * Display a listing of users.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $roles = [
             'admin' => 'Administrador',
@@ -21,9 +26,12 @@ class UserController extends Controller
         ];
 
         $query = User::query();
+        $searchInput = $request->input('search', '');
+        $roleInput = $request->input('role', '');
 
-        if ($request->filled('search')) {
-            $search = trim($request->input('search'));
+        // Filtro de búsqueda
+        if (!empty($searchInput)) {
+            $search = trim($searchInput);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('lastname', 'like', "%{$search}%")
@@ -31,8 +39,9 @@ class UserController extends Controller
             });
         }
 
-        if ($request->filled('role') && array_key_exists($request->input('role'), $roles)) {
-            $query->where('role', $request->input('role'));
+        // Filtro por rol
+        if (!empty($roleInput) && array_key_exists($roleInput, $roles)) {
+            $query->where('role', $roleInput);
         }
 
         $users = $query->orderBy('created_at', 'desc')
@@ -46,13 +55,13 @@ class UserController extends Controller
             'client' => User::where('role', 'client')->count(),
         ];
 
-        return view('admin.users.index', compact('users', 'roles', 'counts'));
+        return view('admin.users.index', compact('users', 'roles', 'counts', 'searchInput', 'roleInput'));
     }
 
     /**
      * Store a newly created user in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -68,8 +77,8 @@ class UserController extends Controller
         $lastName = count($parts) > 1 ? implode(' ', array_slice($parts, 1)) : '';
 
         $user = User::create([
-            'name' => $firstName,
-            'lastname' => $lastName,
+            'name' => $data['name'],
+            'lastname' => $data['lastname'],
             'email' => $data['email'],
             'role' => $data['role'],
             'status' => true,
@@ -83,7 +92,7 @@ class UserController extends Controller
     /**
      * Toggle the user's active status.
      */
-    public function toggleStatus(User $user)
+    public function toggleStatus(User $user): RedirectResponse
     {
         $user->status = ! (bool) $user->status;
         $user->save();
@@ -96,7 +105,7 @@ class UserController extends Controller
     /**
      * Remove the specified user.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
         $user->delete();
 

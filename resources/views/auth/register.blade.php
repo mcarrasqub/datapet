@@ -158,8 +158,8 @@
               <input id="breed" type="text" class="form-control bg-light border-0 py-2" name="breed" placeholder="Ej: Golden Retriever">
             </div>
             <div class="col-md-6">
-              <label for="birth_date" class="form-label fw-bold small">Fecha de Nacimiento</label>
-              <input id="birth_date" type="date" class="form-control bg-light border-0 py-2" name="birth_date">
+              <label for="age" class="form-label fw-bold small">Edad (años)</label>
+              <input id="age" type="number" class="form-control bg-light border-0 py-2" name="age" min="0" max="200">
             </div>
             <div class="col-md-6">
               <label for="gender" class="form-label fw-bold small">Género *</label>
