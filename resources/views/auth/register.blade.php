@@ -8,7 +8,38 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   @endif
-  <div class="d-flex justify-content-center align-items-center mb-4">
+  <style>
+    .cursor-pointer { cursor: pointer; transition: all 0.3s ease; }
+    .cursor-pointer:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+  </style>
+
+  <div class="mb-4">
+    <h5 class="text-pet-green fw-bold mb-3"><i class="bi bi-question-circle me-2"></i>¿Qué deseas hacer?</h5>
+    <p class="text-muted small mb-3">Elige si registras un nuevo cliente o agregas una mascota a un cliente existente</p>
+    <div class="row g-3" id="registration-type-selection">
+      <div class="col-md-6">
+        <div class="card h-100 border text-center cursor-pointer type-card" onclick="selectType('new_client')" id="card-new-client">
+          <div class="card-body py-4">
+            <i class="bi bi-person-plus fs-1 text-muted mb-2" id="icon-new"></i>
+            <h5 class="fw-bold text-muted" id="title-new">Nuevo Cliente</h5>
+            <p class="text-muted small mb-0">Registrar un cliente nuevo con su primera mascota</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100 border text-center cursor-pointer type-card" onclick="selectType('existing_client')" id="card-existing-client">
+          <div class="card-body py-4">
+            <i class="bi bi-suit-heart fs-1 text-muted mb-2" id="icon-existing"></i>
+            <h5 class="fw-bold text-muted" id="title-existing">Agregar Mascota</h5>
+            <p class="text-muted small mb-0">Agregar una mascota a un cliente existente</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="form-wrapper" style="display: none;">
+  <div class="d-flex justify-content-center align-items-center mb-4" id="step-indicators">
     <div class="d-flex align-items-center">
       <span class="badge rounded-circle p-2 me-2 bg-pet-green" id="step1-indicator" style="width: 30px; height: 30px; background-color: #28a745;">1</span>
       <span class="fw-bold text-pet-green" id="step1-text" >Datos del Cliente</span>
@@ -24,6 +55,7 @@
     <div class="card-body p-4">
       <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" id="registerForm">
         @csrf
+        <input type="hidden" name="registration_type" id="registration_type" value="new_client">
       <div id="step1" class="step-content">
         <h5 class="card-title text-pet-green mb-1">
           <i class="bi bi-person me-2"></i>Información del Cliente
@@ -91,6 +123,19 @@
         <p class="text-muted small mb-4">Completa los datos de tu mascota</p>
 
           <div class="row g-3">
+            <div class="col-md-12" id="client_selection_div" style="display: none;">
+              <label for="user_id" class="form-label fw-bold small">Seleccionar Cliente Existente *</label>
+              <select id="user_id" class="form-select bg-light border-0 py-2" name="user_id">
+                <option value="">Seleccione un cliente...</option>
+                @foreach($clients as $client)
+                  <option value="{{ $client->id }}">{{ $client->name }} {{ $client->lastname }} ({{ $client->email }})</option>
+                @endforeach
+              </select>
+              @error('user_id')
+                <span class="text-danger small"><strong>{{ $message }}</strong></span>
+              @enderror
+            </div>
+
             <div class="col-md-6">
               <label for="pet_name" class="form-label fw-bold small">Nombre de la Mascota *</label>
               <input id="pet_name" type="text" class="form-control bg-light border-0 py-2" name="pet_name" placeholder="Ej: Max" required>
@@ -138,7 +183,7 @@
             </div>
           </div>
           <div class="mt-4 d-flex gap-2">
-            <button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="goToStep1(); return false;">
+            <button type="button" id="btn-volver" class="btn btn-outline-secondary px-4 py-2" onclick="goToStep1(); return false;">
               Volver
             </button>
             <button type="submit" class="btn btn-pet-primary flex-fill py-2 fw-bold text-white">
@@ -149,6 +194,7 @@
       </div>
     </div>
   </div>
-</div>
+  </div> <!-- form-wrapper -->
+</div> <!-- container -->
 <script src="{{ asset('js/register.js') }}"></script>
 @endsection
