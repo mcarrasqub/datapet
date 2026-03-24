@@ -1,0 +1,46 @@
+/* Color verde de DataPet */
+:root {
+    --pet-green: #76a75d;
+}
+
+/* Botón principal */
+.btn-pet-primary {
+    background-color: var(--pet-green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.btn-pet-primary:hover {
+    background-color: #638c4d;
+}
+
+/* Inputs con fondo gris claro como la imagen */
+.form-control.bg-light {
+    background-color: #f0f2f5 !important;
+    border-radius: 8px;
+}
+
+/* Botones de acceso rápido */
+.border-pet {
+    border-color: var(--pet-green) !important;
+    color: var(--pet-green) !important;
+    border-radius: 8px;
+    background-color: transparent;
+}
+
+.border-pet:hover {
+    background-color: var(--pet-green);
+    color: white !important;
+}
+
+/* Centrado del contenedor */
+body {
+    background-color: #f8fafc;
+    min-height: 100vh;
+}
+
+.container {
+    min-height: 100vh;
+}

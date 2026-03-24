@@ -1,0 +1,94 @@
+
+:root {
+    --pet-green: #76a75d;
+}
+
+.text-pet-green {
+    color: var(--pet-green) !important;
+}
+
+.bg-pet-green {
+    background-color: var(--pet-green) !important;
+}
+
+.bg-pet-green-10 {
+    background-color: rgba(118, 167, 93, 0.1) !important;
+}
+
+.btn-pet-green {
+    background-color: var(--pet-green) !important;
+    border-color: var(--pet-green) !important;
+    color: white !important;
+}
+
+.btn-pet-green:hover {
+    background-color: #5e864a !important;
+    border-color: #5e864a !important;
+    color: white !important;
+}
+
+
+/* Estilo para el botón de Inicio (Activo) */
+.active-pill {
+    background-color: var(--pet-green) !important;
+    color: white !important;
+    border-radius: 25px;
+    padding: 2px 50px !important;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+/* Ajustes generales de los links */
+.navbar-nav .nav-link {
+    font-size: 0.95rem;
+    transition: 0.2s;
+}
+
+.custom-nav .nav-link:hover:not(.active) {
+    background-color: #f8f9fa;
+    border-radius: 50px;
+}
+
+
+/* Círculos con iconos para que sean simétricos */
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Quitar bordes de Bootstrap que no necesitamos */
+.navbar {
+    border-bottom: 1px solid #eee;
+}
+
+/* Botón principal */
+.btn-pet-primary {
+    background-color: var(--pet-green);
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.btn-pet-primary:hover {
+    background-color: #638c4d;
+}
+
+/* Botón Outline Pet Green (Ej: Cerrar sesión) */
+.btn-outline-pet-green {
+    color: var(--pet-green) !important;
+    border: 1px solid var(--pet-green) !important;
+    background-color: transparent !important;
+    transition: all 0.2s;
+}
+
+.btn-outline-pet-green:hover {
+    color: white !important;
+    background-color: var(--pet-green) !important;
+    border-color: var(--pet-green) !important;
+}

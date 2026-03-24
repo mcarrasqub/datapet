@@ -1,0 +1,50 @@
+:root {
+    --pet-green: #76a75d;
+}
+
+/* Bordes y colores temáticos */
+.register-container {
+    border: 2px solid var(--pet-green) !important;
+}
+
+.text-pet-green, .bg-pet-green {
+    color: var(--pet-green) !important;
+}
+
+.bg-pet-green {
+    background-color: var(--pet-green) !important;
+    color: white !important;
+}
+
+/* Botón principal */
+.btn-pet-primary {
+    background-color: var(--pet-green);
+    border: none;
+    border-radius: 10px;
+}
+
+.btn-pet-primary:hover {
+    background-color: #638c4d;
+}
+
+/* Botón outline personalizado */
+.btn-outline-pet-primary {
+    color: var(--pet-green);
+    border-color: var(--pet-green);
+}
+
+.btn-outline-pet-primary:hover {
+    background-color: rgba(118, 167, 93, 0.1);
+}
+
+/* Estilo de los Inputs */
+.form-control.bg-light {
+    background-color: #f1f3f5 !important;
+    border-radius: 8px;
+}
+
+.form-control:focus {
+    background-color: #e9ecef !important;
+    box-shadow: none;
+    border: 1px solid var(--pet-green);
+}
