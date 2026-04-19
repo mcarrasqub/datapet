@@ -1,269 +1,255 @@
 @extends('layouts.dashboard')
 
 @section('content')
-<div class="container py-4">
-    <div class="row">
-        <!-- SIDEBAR DE MASCOTAS (BÚSQUEDA Y LISTADO) -->
-        <div class="col-md-3 mb-4">
-            <div class="card shadow-sm" style="border-radius: 15px; border-top: 4px solid #76a75d;">
-                <div class="card-body">
-                    <h5 class="fw-bold mb-3">
-                        <i class="bi bi-hospital me-2"></i>Pacientes
-                    </h5>
-                    
-                    <!-- BUSCADOR -->
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Buscar paciente o dueño..." id="searchPets" style="border-color: #76a75d;">
-                        <button class="btn" type="button" style="background-color: #76a75d; color: white;">
-                            <i class="bi bi-search"></i>
+<div class="container-fluid px-4 py-3">
+    <!-- Volver a Clientes -->
+    <div class="mb-3">
+        <a href="{{ route('clients.index') }}" class="btn btn-outline-pet-green bg-white text-pet-green-dark border-pet-green-dark fw-medium px-3 py-1 rounded-3 d-inline-flex align-items-center">
+            <i class="bi bi-chevron-left me-1"></i> Volver a Clientes
+        </a>
+    </div>
+
+    @if($selectedPet)
+    <div class="row g-4">
+        <!-- MENU LATERAL IZQUIERDO -->
+        <div class="col-md-2 min-w-250">
+            <div class="card border-0 shadow rounded-4">
+                <div class="list-group list-group-flush rounded-4 py-2 px-2 fs-90">
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center active fw-medium py-3 px-3 rounded-3 mb-1 bg-pet-green-dark text-white">
+                        <span><i class="bi bi-file-earmark-medical me-3"></i>Historia</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-stethoscope me-3"></i>Consultas</span>
+                        <span class="badge bg-pet-green rounded-pill">{{ count($medicalRecords) }}</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-droplet me-3"></i>Vacunaciones</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-capsule me-3"></i>Fórmulas médicas</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-bug me-3"></i>Desparasitaciones</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-hospital me-3"></i>Hospitalizaciones/a...</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-scissors me-3"></i>Cirugías/procedimie...</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-card-text me-3"></i>Órdenes</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-activity me-3"></i>Exámenes de laboratorio</span>
+                        @if(count($medicalRecords) > 0)
+                            <span class="badge bg-pet-green rounded-pill">2</span>
+                        @endif
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-image me-3"></i>Imágenes diagnósticas</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-house-door me-3"></i>Guardería</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-journal-check me-3"></i>Seguimientos</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-file-earmark me-3"></i>Documentos</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                        <span><i class="bi bi-send me-3"></i>Remisiones</span>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 text-secondary">
+                        <span><i class="bi bi-calendar3 me-3"></i>Citas</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- AREA PRINCIPAL -->
+        <div class="col">
+            <!-- TARJETA INFO MASCOTA -->
+            <div class="card border-0 shadow rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="row gx-5 border-bottom pb-4 mb-4">
+                        <div class="col-md-2 d-flex justify-content-center align-items-center position-relative">
+                            <div class="position-relative">
+                                @if($selectedPet->getPhoto())
+                                    <img src="{{ asset('storage/' . $selectedPet->getPhoto()) }}" alt="Foto" class="rounded-circle object-fit-cover shadow-sm avatar-140">
+                                @else
+                                    <div class="bg-light text-secondary rounded-circle shadow-sm d-flex align-items-center justify-content-center fw-bold avatar-140 fs-200">
+                                        {{ strtoupper(substr($selectedPet->getName(), 0, 2)) }}
+                                    </div>
+                                @endif
+                                <button class="btn btn-pet-green btn-sm rounded-circle position-absolute avatar-edit-btn">
+                                    <i class="bi bi-pencil text-white fs-80"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="row gy-3">
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Especie:</small>
+                                    <span class="fw-medium text-dark">{{ $selectedPet->getSpecies() }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Raza/Subespecie:</small>
+                                    <span class="fw-medium text-dark">{{ $selectedPet->getBreed() ?? 'No especificada' }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Género:</small>
+                                    <span class="fw-medium text-dark">{{ ucfirst($selectedPet->getGender()) }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Color:</small>
+                                    <span class="fw-medium text-dark">N/A</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Peso:</small>
+                                    <span class="fw-medium text-dark">{{ $selectedPet->getWeight() ? $selectedPet->getWeight() . ' Kilogramos' : 'N/A' }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Talla:</small>
+                                    <span class="fw-medium text-dark">N/A</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">E. Reproductivo:</small>
+                                    <span class="fw-medium text-dark">N/A</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Edad:</small>
+                                    <span class="fw-medium text-dark">{{ $selectedPet->getAge() ? $selectedPet->getAge() . ' años' : 'N/A' }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Fallecido:</small>
+                                    <span class="fw-medium text-dark">{{ strtolower(trim($selectedPet->getNotes() ?? '')) === 'fallecido' ? 'Sí' : 'No' }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Apoyo emocional:</small>
+                                    <span class="fw-medium text-dark">No</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted d-block mb-1 fs-75">Animal de servicio:</small>
+                                    <span class="fw-medium text-dark">No</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Datos extra -->
+                    <div class="row gy-3">
+                        <div class="col-md-3">
+                            <small class="text-muted d-block mb-1 fs-75">Alimento:</small>
+                            <span class="fw-medium text-dark">N/A</span>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted d-block mb-1 fs-75">Cantidad de alimento:</small>
+                            <span class="fw-medium text-dark">N/D</span>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted d-block mb-1 fs-75">Frecuencia de alimento:</small>
+                            <span class="fw-medium text-dark">N/D</span>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted d-block mb-1 fs-75">Vivienda:</small>
+                            <span class="fw-medium text-dark">N/D</span>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted d-block mb-1 fs-75">Frecuencia baño:</small>
+                            <span class="fw-medium text-dark">N/D</span>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted d-block mb-1 fs-75">Productos de baño:</small>
+                            <span class="fw-medium text-dark">N/D</span>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted d-block mb-1 fs-75">Otras mascotas, ¿cuales?:</small>
+                            <span class="fw-medium text-dark">N/D</span>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted d-block mb-1 fs-75">Último calor:</small>
+                            <span class="fw-medium text-dark">N/D</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TARJETA TAB INFO (CONSULTAS, KARDEX, VACUNAS) -->
+            <div class="card border-0 shadow rounded-4">
+                <div class="card-body p-4">
+                    <!-- TABS Píldoras -->
+                    <div class="d-flex bg-light rounded-pill p-1 mb-4 max-w-100">
+                        <button class="btn btn-pet-green text-white rounded-pill flex-grow-1 fw-medium py-2 shadow-sm border-0 fs-90">
+                            <i class="bi bi-stethoscope me-2"></i> Visitas/Consultas
+                        </button>
+                        <button class="btn text-secondary rounded-pill flex-grow-1 fw-medium py-2 border-0 fs-90">
+                            <i class="bi bi-journal-text me-2"></i> Kardex
+                        </button>
+                        <button class="btn text-secondary rounded-pill flex-grow-1 fw-medium py-2 border-0 fs-90">
+                            <i class="bi bi-capsule me-2"></i> Vacunas
                         </button>
                     </div>
 
-                    <!-- LISTADO DE MASCOTAS -->
-                    <ul class="list-group list-group-flush" id="petsList">
-                        @forelse($pets as $pet)
-                        <a href="{{ route('medical_records.show', $pet) }}" 
-                           class="list-group-item list-group-item-action pet-item"
-                           style="border-radius: 10px; margin-bottom: 8px; border-left: 4px solid transparent; transition: all 0.2s;"
-                           data-pet-name="{{ $pet->name }}"
-                           data-owner-name="{{ $pet->owner->name }} {{ $pet->owner->lastname }}"
-                           @if($selectedPet && $selectedPet->id === $pet->id)
-                           style="border-radius: 10px; margin-bottom: 8px; border-left: 4px solid #76a75d; background-color: #f8fff3; color: #76a75d;"
-                           @endif>
-                            <strong>{{ $pet->name }}</strong>
-                            @if($pet->age)
-                                <span class="badge bg-pet-green" style="margin-left: auto; display: inline-block;">{{ $pet->age }} años</span>
-                            @endif
-                            <br>
-                            <small class="text-muted">
-                                <i class="bi bi-paw-fill me-1"></i>{{ $pet->species }}
-                                @if($pet->breed)
-                                    - {{ $pet->breed }}
-                                @endif
-                            </small><br>
-                            <small class="text-muted">
-                                <i class="bi bi-person me-1"></i>{{ $pet->owner->name }} {{ $pet->owner->lastname }}
-                            </small>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h6 class="fw-bold mb-0 text-dark">Historial de Consultas</h6>
+                        <a href="{{ route('medical_records.create', $selectedPet->getId()) }}" class="btn btn-pet-green text-white btn-sm px-3 rounded-3 fw-medium">
+                            Nueva Consulta
                         </a>
+                    </div>
+
+                    <div class="d-flex flex-column gap-3">
+                        @forelse($medicalRecords as $record)
+                        <div class="border rounded-4 p-4 position-relative border-start-pet-green-dark">
+                            <div class="badge bg-pet-green rounded-pill mb-3 px-3 py-2 fs-75">
+                                {{ $record->getVisitedAt()->format('Y-m-d') }}
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-dark fw-medium fs-90">Dr(a). {{ $record->doctor->getName() }} {{ $record->doctor->getLastname() }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-dark fw-medium fs-85">Motivo de consulta:</span><br>
+                                <span class="text-secondary fs-85">{{ $record->getReason() }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-dark fw-medium fs-85">Diagnóstico:</span><br>
+                                <span class="text-secondary fs-85">{{ $record->getDiagnosis() ?? 'N/A' }}</span>
+                            </div>
+                            <div>
+                                <span class="text-dark fw-medium fs-85">Observaciones:</span><br>
+                                <span class="text-secondary fs-85">{{ $record->getNotes() ?? 'Ninguna' }}</span>
+                            </div>
+
+                            <div class="position-absolute top-15-px right-15-px">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ route('medical_records.edit', $record->getId()) }}" class="btn text-secondary border-0"><i class="bi bi-pencil"></i></a>
+                                    <form action="{{ route('medical_records.destroy', $record->getId()) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn text-danger border-0" onclick="return confirm('¿Eliminar este registro?')"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         @empty
-                        <li class="list-group-item text-muted text-center py-4">
-                            <i class="bi bi-inbox"></i><br>
-                            No hay mascotas
-                        </li>
+                        <div class="text-center py-5 text-muted bg-light rounded-4">
+                            <i class="bi bi-inbox fs-1 mb-3 d-block text-secondary"></i>
+                            El paciente no cuenta con consultas previas.
+                        </div>
                         @endforelse
-                    </ul>
+                    </div>
+
                 </div>
             </div>
-        </div>
-
-        <!-- DETALLE Y HISTORIAL DE MASCOTA -->
-        <div class="col-md-9">
-            @if($selectedPet)
-                <!-- PERFIL DEL PACIENTE -->
-                <div class="card shadow-sm mb-4" style="border-radius: 15px; border-top: 4px solid #76a75d;">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h5 class="fw-bold mb-3">
-                                    <i class="bi bi-paw-fill me-2" style="color: #76a75d;"></i>{{ $selectedPet->name }}
-                                </h5>
-                                <p class="mb-2">
-                                    <strong><i class="bi bi-tag me-2" style="color: #76a75d;"></i>Especie:</strong> {{ $selectedPet->species }}
-                                </p>
-                                <p class="mb-2">
-                                    <strong><i class="bi bi-bookmark me-2" style="color: #76a75d;"></i>Raza:</strong> 
-                                    {{ $selectedPet->breed ?? 'No especificada' }}
-                                </p>
-                                <p class="mb-2">
-                                    <strong><i class="bi bi-person-circle me-2" style="color: #76a75d;"></i>Propietario:</strong> 
-                                    {{ $selectedPet->owner->name }} {{ $selectedPet->owner->lastname }}
-                                </p>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <div class="p-3" style="background-color: #f8fff3; border-radius: 10px; border-left: 4px solid #76a75d;">
-                                    <small class="text-muted d-block">Última visita</small>
-                                    <strong style="color: #76a75d; font-size: 1.2rem;">
-                                        @if($lastVisit)
-                                            {{ $lastVisit->visited_at->format('d M Y') }}
-                                        @else
-                                            Sin visitas
-                                        @endif
-                                    </strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- HISTORIAL Y TABS -->
-                <div class="card shadow-sm" style="border-radius: 15px;">
-                    <div class="card-header" style="background-color: white; border-bottom: 2px solid #e9ecef; border-radius: 15px 15px 0 0;">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="fw-bold mb-0">
-                                <i class="bi bi-file-earmark-text me-2" style="color: #76a75d;"></i>Registros Médicos
-                            </h5>
-                            <a href="{{ route('medical_records.create', $selectedPet) }}" class="btn btn-sm" style="background-color: #76a75d; color: white; border-radius: 25px;">
-                                <i class="bi bi-plus-circle me-1"></i>Nueva Entrada
-                            </a>
-                        </div>
-
-                        <!-- TABS -->
-                        <ul class="nav nav-tabs border-0" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="historial-tab" data-bs-toggle="tab" data-bs-target="#historial" type="button" role="tab" style="color: #76a75d; font-weight: bold; border-bottom: 3px solid #76a75d;">
-                                    <i class="bi bi-file-earmark-text me-1"></i>Historial
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="kardex-tab" data-bs-toggle="tab" data-bs-target="#kardex" type="button" role="tab" style="color: #6c757d;">
-                                    <i class="bi bi-bookmark me-1"></i>Kardex
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="vacunas-tab" data-bs-toggle="tab" data-bs-target="#vacunas" type="button" role="tab" style="color: #6c757d;">
-                                    <i class="bi bi-capsule me-1"></i>Vacunas
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- TAB CONTENT -->
-                    <div class="card-body">
-                        <div class="tab-content">
-                            <!-- TAB: HISTORIAL -->
-                            <div class="tab-pane fade show active" id="historial" role="tabpanel" tabindex="0">
-                                @forelse($medicalRecords as $record)
-                                <div class="card shadow-sm mb-3" style="border-radius: 15px; border-left: 4px solid #76a75d;">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                            <div>
-                                                <h6 class="fw-bold mb-1">
-                                                    <i class="bi bi-calendar-event me-2" style="color: #76a75d;"></i>{{ $record->visited_at->format('d M Y') }}
-                                                </h6>
-                                                <small class="text-muted">
-                                                    <i class="bi bi-person-circle me-1"></i>Dr. {{ $record->doctor->name }} {{ $record->doctor->lastname }}
-                                                </small>
-                                            </div>
-                                            <div class="btn-group btn-group-sm" role="group">
-                                                <a href="{{ route('medical_records.edit', $record) }}" class="btn btn-outline-primary" title="Editar">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
-                                                <form action="{{ route('medical_records.destroy', $record) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-outline-danger" title="Eliminar" onclick="return confirm('¿Eliminar este registro?')">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <small class="text-muted"><i class="bi bi-question-circle me-1" style="color: #76a75d;"></i>Motivo</small>
-                                                <p class="mb-0 fw-medium">{{ $record->reason }}</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <small class="text-muted"><i class="bi bi-stethoscope me-1" style="color: #76a75d;"></i>Diagnóstico</small>
-                                                <p class="mb-0 fw-medium">{{ $record->diagnosis }}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <small class="text-muted"><i class="bi bi-pill me-1" style="color: #76a75d;"></i>Tratamiento</small>
-                                            <p class="mb-0 fw-medium">{{ $record->treatment }}</p>
-                                        </div>
-
-                                        @if($record->notes)
-                                        <div class="mb-3">
-                                            <small class="text-muted"><i class="bi bi-chat-left-text me-1" style="color: #76a75d;"></i>Notas</small>
-                                            <p class="mb-0 fw-medium">{{ $record->notes }}</p>
-                                        </div>
-                                        @endif
-
-                                        <!-- FOTOS -->
-                                        @if($record->photos && count($record->photos) > 0)
-                                        <div class="mt-3 pt-3" style="border-top: 1px solid #e9ecef;">
-                                            <small class="text-muted"><i class="bi bi-image me-1" style="color: #76a75d;"></i>Fotos</small>
-                                            <div class="d-flex gap-2 mt-2" style="overflow-x: auto;">
-                                                @foreach($record->photos as $photo)
-                                                <a href="{{ asset('storage/' . $photo) }}" target="_blank">
-                                                    <img src="{{ asset('storage/' . $photo) }}" alt="Foto médica" 
-                                                         style="width: 120px; height: 120px; object-fit: cover; border-radius: 10px; border: 2px solid #76a75d; cursor: pointer; transition: transform 0.2s;"
-                                                         onmouseover="this.style.transform='scale(1.05)'"
-                                                         onmouseout="this.style.transform='scale(1)'">
-                                                </a>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        @endif
-                                    </div>
-                                </div>
-                                @empty
-                                <div class="alert alert-info" style="border-radius: 15px; border-left: 4px solid #76a75d;">
-                                    <i class="bi bi-info-circle me-2"></i>No hay registros médicos aún. 
-                                    <a href="{{ route('medical_records.create', $selectedPet) }}" style="color: #76a75d; font-weight: bold;">Crear uno</a>
-                                </div>
-                                @endforelse
-                            </div>
-
-                            <!-- TAB: KARDEX -->
-                            <div class="tab-pane fade" id="kardex" role="tabpanel" tabindex="0">
-                                <div class="text-center py-5">
-                                    <i class="bi bi-hourglass-split" style="font-size: 2.5rem; color: #76a75d;"></i>
-                                    <p class="text-muted mt-3">Próximamente...</p>
-                                </div>
-                            </div>
-
-                            <!-- TAB: VACUNAS -->
-                            <div class="tab-pane fade" id="vacunas" role="tabpanel" tabindex="0">
-                                <div class="text-center py-5">
-                                    <i class="bi bi-capsule" style="font-size: 2.5rem; color: #76a75d;"></i>
-                                    <p class="text-muted mt-3">Próximamente...</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @else
-            <div class="alert alert-info" style="border-radius: 15px; border-left: 4px solid #76a75d;">
-                <i class="bi bi-info-circle me-2"></i>Selecciona una mascota para ver su historial
-            </div>
-            @endif
         </div>
     </div>
+    @else
+        <div class="alert alert-info border-0 shadow-sm rounded-4 text-center mt-3 p-5">
+            <i class="bi bi-info-circle mb-3 fs-3 d-block"></i>
+            No se seleccionó ninguna mascota o la mascota no existe.
+            <br><a href="{{ route('clients.index') }}" class="btn btn-pet-green mt-3">Volver</a>
+        </div>
+    @endif
 </div>
-
-<script>
-    // Búsqueda de mascotas por nombre O nombre del dueño
-    document.getElementById('searchPets').addEventListener('keyup', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const petItems = document.querySelectorAll('.pet-item');
-        
-        petItems.forEach(item => {
-            const petName = item.getAttribute('data-pet-name').toLowerCase();
-            const ownerName = item.getAttribute('data-owner-name').toLowerCase();
-            
-            if (petName.includes(searchTerm) || ownerName.includes(searchTerm)) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    });
-
-    // Cambiar color de las tabs
-    const tabs = document.querySelectorAll('.nav-link');
-    tabs.forEach(tab => {
-        tab.addEventListener('shown.bs.tab', function() {
-            tabs.forEach(t => {
-                t.style.color = '#6c757d';
-                t.style.borderBottom = 'none';
-            });
-            this.style.color = '#76a75d';
-            this.style.borderBottom = '3px solid #76a75d';
-            this.style.fontWeight = 'bold';
-        });
-    });
-</script>
 @endsection

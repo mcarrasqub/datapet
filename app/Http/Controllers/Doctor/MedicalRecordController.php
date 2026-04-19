@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Doctor;
 use App\Http\Controllers\Controller;
 use App\Models\MedicalRecord;
 use App\Models\Pet;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreMedicalRecordRequest;
+use App\Http\Requests\UpdateMedicalRecordRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class MedicalRecordController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $pets = Pet::with('medicalRecords.doctor')->get();
         
@@ -19,45 +22,41 @@ class MedicalRecordController extends Controller
         $medicalRecords = $selectedPet ? $selectedPet->medicalRecords()->orderByDesc('visited_at')->get() : collect();
         $lastVisit = $selectedPet ? $selectedPet->medicalRecords()->orderByDesc('visited_at')->first() : null;
 
-        return view('medical_records.medical_records', [
-            'pets' => $pets,
-            'selectedPet' => $selectedPet,
-            'medicalRecords' => $medicalRecords,
-            'lastVisit' => $lastVisit,
-        ]);
+        $viewData = [];
+        $viewData['pets'] = $pets;
+        $viewData['selectedPet'] = $selectedPet;
+        $viewData['medicalRecords'] = $medicalRecords;
+        $viewData['lastVisit'] = $lastVisit;
+
+        return view('medical_records.medical_records', $viewData);
     }
 
-    public function show(Pet $pet)
+    public function show(Pet $pet): View
     {
         $pets = Pet::with('medicalRecords.doctor')->get();
         $medicalRecords = $pet->medicalRecords()->orderByDesc('visited_at')->get();
         $lastVisit = $pet->medicalRecords()->orderByDesc('visited_at')->first();
 
-        return view('medical_records.medical_records', [
-            'pets' => $pets,
-            'selectedPet' => $pet,
-            'medicalRecords' => $medicalRecords,
-            'lastVisit' => $lastVisit,
-        ]);
+        $viewData = [];
+        $viewData['pets'] = $pets;
+        $viewData['selectedPet'] = $pet;
+        $viewData['medicalRecords'] = $medicalRecords;
+        $viewData['lastVisit'] = $lastVisit;
+
+        return view('medical_records.medical_records', $viewData);
     }
 
-    public function create(Pet $pet)
+    public function create(Pet $pet): View
     {
-        return view('medical_records.create', [
-            'pet' => $pet,
-        ]);
+        $viewData = [];
+        $viewData['pet'] = $pet;
+
+        return view('medical_records.create', $viewData);
     }
 
-    public function store(Request $request, Pet $pet)
+    public function store(StoreMedicalRecordRequest $request, Pet $pet): RedirectResponse
     {
-        $validated = $request->validate([
-            'visited_at' => 'required|date',
-            'reason' => 'required|string|max:255',
-            'diagnosis' => 'required|string',
-            'treatment' => 'required|string',
-            'notes' => 'nullable|string',
-            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validated = $request->validated();
 
         // Procesar fotos
         $photos = [];
@@ -80,24 +79,18 @@ class MedicalRecordController extends Controller
                        ->with('success', 'Registro médico creado con éxito');
     }
 
-    public function edit(MedicalRecord $medicalRecord)
+    public function edit(MedicalRecord $medicalRecord): View
     {
-        return view('medical_records.edit', [
-            'record' => $medicalRecord,
-            'pet' => $medicalRecord->pet,
-        ]);
+        $viewData = [];
+        $viewData['record'] = $medicalRecord;
+        $viewData['pet'] = $medicalRecord->pet;
+
+        return view('medical_records.edit', $viewData);
     }
 
-    public function update(Request $request, MedicalRecord $medicalRecord)
+    public function update(UpdateMedicalRecordRequest $request, MedicalRecord $medicalRecord): RedirectResponse
     {
-        $validated = $request->validate([
-            'visited_at' => 'required|date',
-            'reason' => 'required|string|max:255',
-            'diagnosis' => 'required|string',
-            'treatment' => 'required|string',
-            'notes' => 'nullable|string',
-            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $validated = $request->validated();
 
         // Procesar fotos
         $photos = $medicalRecord->photos ?? [];
@@ -118,7 +111,7 @@ class MedicalRecordController extends Controller
                        ->with('success', 'Registro médico actualizado con éxito');
     }
 
-    public function destroy(MedicalRecord $medicalRecord)
+    public function destroy(MedicalRecord $medicalRecord): RedirectResponse
     {
         // Eliminar fotos
         if ($medicalRecord->photos) {

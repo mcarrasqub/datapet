@@ -1,0 +1,30 @@
+/* Doctor Module Styles */
+
+.pet-hover-card {
+    transition: background-color 0.2s ease;
+}
+
+.pet-hover-card:hover {
+    background-color: #ededed !important;
+}
+
+.pet-hover-card:hover .pet-name {
+    color: #6da252 !important;
+}
+
+.pet-hover-card-bg {
+    background-color: #fcfcfc;
+}
+
+.avatar-edit-btn {
+    bottom: 5px;
+    right: 5px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+.border-start-pet-green-dark { border-left: 5px solid #6da252 !important; }

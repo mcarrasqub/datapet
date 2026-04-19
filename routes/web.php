@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/clients/create', 'App\Http\Controllers\Admin\ClientController@create')->name('clients.create');
     Route::post('/clients', 'App\Http\Controllers\Admin\ClientController@store')->name('clients.store');  
 
+    Route::get('/doctor/clients', 'App\Http\Controllers\Doctor\ClientDoctorController@index')->name('clients.index');
     Route::get('/medical-records', 'App\Http\Controllers\Doctor\MedicalRecordController@index')->name('medical_records.index');
     Route::get('/medical-records/{pet}', 'App\Http\Controllers\Doctor\MedicalRecordController@show')->name('medical_records.show');
     Route::get('/medical-records/{pet}/create', 'App\Http\Controllers\Doctor\MedicalRecordController@create')->name('medical_records.create');

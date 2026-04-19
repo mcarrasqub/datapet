@@ -15,13 +15,22 @@
     <title>@yield('title', 'DataPet')</title>
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @auth
+        @if(auth()->user()->role === 'admin')
+            <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+        @elseif(auth()->user()->role === 'doctor')
+            <link href="{{ asset('css/doctor.css') }}" rel="stylesheet">
+        @else
+            <link href="{{ asset('css/client.css') }}" rel="stylesheet">
+        @endif
+    @endauth
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-dashboard">
     <div class="container-fluid py-4 border-bottom bg-white shadow-sm">
         <div class="d-flex justify-content-between align-items-center px-4">
             <div class="d-flex align-items-center">
@@ -81,7 +90,7 @@
                             <a class="nav-link {{ request()->routeIs('appointments.*') ? 'active-pill' : 'text-dark fw-medium' }}" href="#"><i class="bi bi-calendar4-event me-2"></i>Mis Citas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('medical_records.*') ? 'active-pill' : 'text-dark fw-medium' }}" href="{{ route('medical_records.index') }}"><i class="bi bi-file-earmark-text me-2"></i>Historiales</a>
+                            <a class="nav-link {{ request()->routeIs('clients.*') ? 'active-pill' : 'text-dark fw-medium' }}" href="{{ route('clients.index') }}"><i class="bi bi-people me-2"></i>Clientes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('register') ? 'active-pill' : 'text-dark fw-medium' }}" href="{{ route('register') }}"><i class="bi bi-person-plus me-2"></i>Nuevo Cliente</a>

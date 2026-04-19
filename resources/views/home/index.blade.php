@@ -29,8 +29,8 @@
               
               <p class="text-muted small mb-4">
                 {{ $pet->getSpecies() }} 
-                @if($pet->getBirthDate())
-                  &bull; {{ \Carbon\Carbon::parse($pet->getBirthDate())->age }} años
+                @if($pet->getAge())
+                  &bull; {{ $pet->getAge() }} años
                 @endif
               </p>
 

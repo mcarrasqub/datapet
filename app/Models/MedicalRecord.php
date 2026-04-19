@@ -45,4 +45,51 @@ class MedicalRecord extends Model
     {
         return $this->belongsTo(User::class, 'doctor_id');
     }
+
+    // Getters
+
+    public function getId(): int
+    {
+        return $this->attributes['id'];
+    }
+
+    public function getPetId(): int
+    {
+        return $this->attributes['pet_id'];
+    }
+
+    public function getDoctorId(): int
+    {
+        return $this->attributes['doctor_id'];
+    }
+
+    public function getVisitedAt(): \Illuminate\Support\Carbon
+    {
+        return $this->visited_at;
+    }
+
+    public function getReason(): string
+    {
+        return $this->attributes['reason'];
+    }
+
+    public function getDiagnosis(): ?string
+    {
+        return $this->attributes['diagnosis'] ?? null;
+    }
+
+    public function getTreatment(): ?string
+    {
+        return $this->attributes['treatment'] ?? null;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->attributes['notes'] ?? null;
+    }
+
+    public function getPhotos(): ?array
+    {
+        return $this->photos;
+    }
 }

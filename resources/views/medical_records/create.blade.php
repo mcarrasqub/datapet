@@ -4,10 +4,10 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card shadow-sm" style="border-radius: 15px; border-top: 4px solid #76a75d;">
+            <div class="card shadow-sm rounded-4 border-0 border-top-pet-green">
                 <div class="card-body">
                     <h5 class="fw-bold mb-4">
-                        <i class="bi bi-plus-circle me-2" style="color: #76a75d;"></i>Nueva Entrada Médica
+                        <i class="bi bi-plus-circle me-2 text-pet-green"></i>Nueva Entrada Médica
                     </h5>
                     <p class="text-muted mb-4">
                         <i class="bi bi-paw-fill me-2"></i><strong>Paciente:</strong> {{ $pet->name }} - {{ $pet->species }}
@@ -18,7 +18,7 @@
 
                         <div class="mb-4">
                             <label for="visited_at" class="form-label fw-bold">
-                                <i class="bi bi-calendar-event me-2" style="color: #76a75d;"></i>Fecha de Visita
+                                <i class="bi bi-calendar-event me-2 text-pet-green"></i>Fecha de Visita
                             </label>
                             <input type="date" class="form-control @error('visited_at') is-invalid @enderror" 
                                    id="visited_at" name="visited_at" value="{{ old('visited_at', now()->format('Y-m-d')) }}" required
@@ -28,7 +28,7 @@
 
                         <div class="mb-4">
                             <label for="reason" class="form-label fw-bold">
-                                <i class="bi bi-question-circle me-2" style="color: #76a75d;"></i>Motivo de Visita
+                                <i class="bi bi-question-circle me-2 text-pet-green"></i>Motivo de Visita
                             </label>
                             <input type="text" class="form-control @error('reason') is-invalid @enderror" 
                                    id="reason" name="reason" value="{{ old('reason') }}" 
@@ -39,7 +39,7 @@
 
                         <div class="mb-4">
                             <label for="diagnosis" class="form-label fw-bold">
-                                <i class="bi bi-stethoscope me-2" style="color: #76a75d;"></i>Diagnóstico
+                                <i class="bi bi-stethoscope me-2 text-pet-green"></i>Diagnóstico
                             </label>
                             <textarea class="form-control @error('diagnosis') is-invalid @enderror" 
                                       id="diagnosis" name="diagnosis" rows="3" 
@@ -50,7 +50,7 @@
 
                         <div class="mb-4">
                             <label for="treatment" class="form-label fw-bold">
-                                <i class="bi bi-pill me-2" style="color: #76a75d;"></i>Tratamiento
+                                <i class="bi bi-pill me-2 text-pet-green"></i>Tratamiento
                             </label>
                             <textarea class="form-control @error('treatment') is-invalid @enderror" 
                                       id="treatment" name="treatment" rows="3" 
@@ -61,7 +61,7 @@
 
                         <div class="mb-4">
                             <label for="notes" class="form-label fw-bold">
-                                <i class="bi bi-chat-left-text me-2" style="color: #76a75d;"></i>Notas Adicionales
+                                <i class="bi bi-chat-left-text me-2 text-pet-green"></i>Notas Adicionales
                             </label>
                             <textarea class="form-control @error('notes') is-invalid @enderror" 
                                       id="notes" name="notes" rows="2" 
@@ -72,11 +72,10 @@
 
                         <div class="mb-4">
                             <label for="photos" class="form-label fw-bold">
-                                <i class="bi bi-image me-2" style="color: #76a75d;"></i>Fotos (Máximo 3)
+                                <i class="bi bi-image me-2 text-pet-green"></i>Fotos (Máximo 3)
                             </label>
-                            <input type="file" class="form-control @error('photos.*') is-invalid @enderror" 
-                                   id="photos" name="photos[]" multiple accept="image/*"
-                                   style="border-color: #76a75d;">
+                            <input type="file" class="form-control border-pet-green @error('photos.*') is-invalid @enderror" 
+                                   id="photos" name="photos[]" multiple accept="image/*">
                             <small class="text-muted d-block mt-2">
                                 <i class="bi bi-info-circle me-1"></i>Puedes subir hasta 3 fotos (JPG, PNG, GIF)
                             </small>
@@ -87,7 +86,7 @@
                         <div id="photoPreview" class="mb-4"></div>
 
                         <div class="d-flex gap-2 mt-5">
-                            <button type="submit" class="btn" style="background-color: #76a75d; color: white; font-weight: bold;">
+                            <button type="submit" class="btn btn-pet-green">
                                 <i class="bi bi-check-circle me-2"></i>Guardar Registro
                             </button>
                             <a href="{{ route('medical_records.show', $pet) }}" class="btn btn-outline-secondary">
