@@ -8,7 +8,7 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;      
+use Illuminate\View\View;
 
 
 
@@ -77,8 +77,8 @@ class UserController extends Controller
         $lastName = count($parts) > 1 ? implode(' ', array_slice($parts, 1)) : '';
 
         $user = User::create([
-            'name' => $data['name'],
-            'lastname' => $data['lastname'],
+            'name' => $firstName ?: $data['name'],
+            'lastname' => $lastName,
             'email' => $data['email'],
             'role' => $data['role'],
             'status' => true,
@@ -94,7 +94,7 @@ class UserController extends Controller
      */
     public function toggleStatus(User $user): RedirectResponse
     {
-        $user->status = ! (bool) $user->status;
+        $user->status = !(bool) $user->status;
         $user->save();
 
         $statusLabel = $user->status ? 'activado' : 'desactivado';

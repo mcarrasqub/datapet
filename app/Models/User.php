@@ -65,10 +65,20 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
     public function pets()
     {
         return $this->hasMany(Pet::class);
+    }
+
+    public function uploadedMedicalExams()
+    {
+        return $this->hasMany(MedicalExam::class, 'uploaded_by');
+    }
+
+    public function doctorTasks()
+    {
+        return $this->hasMany(DoctorTask::class, 'doctor_id');
     }
 
     // Getters
@@ -178,9 +188,9 @@ class User extends Authenticatable
     {
         return $query->where(function ($q) use ($term) {
             $q->where('name', 'like', "%{$term}%")
-              ->orWhere('lastname', 'like', "%{$term}%")
-              ->orWhere('phone', 'like', "%{$term}%")
-              ->orWhere('id', 'like', "%{$term}%");
+                ->orWhere('lastname', 'like', "%{$term}%")
+                ->orWhere('phone', 'like', "%{$term}%")
+                ->orWhere('id', 'like', "%{$term}%");
         });
     }
 
@@ -193,7 +203,7 @@ class User extends Authenticatable
     {
         return $query->whereHas('pets', function ($q) use ($term) {
             $q->where('name', 'like', "%{$term}%")
-              ->orWhere('id', 'like', "%{$term}%");
+                ->orWhere('id', 'like', "%{$term}%");
         });
     }
 }

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\MedicalExamController;
+use App\Http\Controllers\Admin\DoctorTaskController;
 
 Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home.index');
 
@@ -15,9 +17,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/users', 'App\Http\Controllers\Admin\UserController@store')->name('users.store');
     Route::patch('/users/{user}/toggle-status', 'App\Http\Controllers\Admin\UserController@toggleStatus')->name('users.toggleStatus');
     Route::delete('/users/{user}', 'App\Http\Controllers\Admin\UserController@destroy')->name('users.destroy');
+    Route::get('/admin/doctor-tasks', [DoctorTaskController::class, 'index'])->name('tasks.index');
+    Route::patch('/admin/doctor-tasks/{task}/status', [DoctorTaskController::class, 'updateStatus'])->name('tasks.updateStatus');
 
     Route::get('/clients/create', 'App\Http\Controllers\Admin\ClientController@create')->name('clients.create');
-    Route::post('/clients', 'App\Http\Controllers\Admin\ClientController@store')->name('clients.store');  
+    Route::post('/clients', 'App\Http\Controllers\Admin\ClientController@store')->name('clients.store');
 
     Route::get('/doctor/clients', 'App\Http\Controllers\Doctor\ClientDoctorController@index')->name('clients.index');
     Route::get('/medical-records', 'App\Http\Controllers\Doctor\MedicalRecordController@index')->name('medical_records.index');
@@ -27,8 +31,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/medical-records-edit/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@edit')->name('medical_records.edit');
     Route::put('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@update')->name('medical_records.update');
     Route::delete('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@destroy')->name('medical_records.destroy');
+    Route::post('/pets/{pet}/exams', [MedicalExamController::class, 'store'])->name('medical_exams.store');
+    Route::get('/medical-exams/{medicalExam}/view', [MedicalExamController::class, 'view'])->name('medical_exams.view');
+    Route::get('/medical-exams/{medicalExam}/download', [MedicalExamController::class, 'download'])->name('medical_exams.download');
 
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home.index');
+    Route::get('/my-exams', 'App\Http\Controllers\PetController@exams')->name('pets.exams');
     Route::get('/pets', 'App\Http\Controllers\PetController@index')->name('pets.index');
     Route::get('/pets/create', 'App\Http\Controllers\PetController@create')->name('pets.create');
     Route::post('/pets', 'App\Http\Controllers\PetController@store')->name('pets.store');

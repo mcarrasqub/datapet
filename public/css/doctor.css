@@ -27,4 +27,61 @@
     border: 2px solid white;
 }
 
-.border-start-pet-green-dark { border-left: 5px solid #6da252 !important; }
+.border-start-pet-green-dark {
+    border-left: 5px solid #6da252 !important;
+}
+
+.exam-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fcfdfb 100%);
+}
+
+.exam-counter-pill {
+    background: #f2f7ee;
+    border: 1px solid #e2edd8;
+    border-radius: 999px;
+    padding: 0.45rem 0.55rem 0.45rem 0.9rem;
+    color: #567d42;
+}
+
+.exam-table-wrap {
+    border: 1px solid #edf1ea;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.exam-table thead th {
+    background-color: #f8faf7;
+    color: #4c5f42;
+    font-weight: 700;
+    font-size: 0.86rem;
+    border-bottom: 1px solid #e8eee3;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+}
+
+.exam-table tbody td {
+    padding-top: 0.95rem;
+    padding-bottom: 0.95rem;
+    vertical-align: middle;
+}
+
+.exam-upload-panel {
+    background: #f8faf7;
+    border: 1px solid #e8eee3;
+}
+
+.exam-upload-panel .form-label {
+    color: #415a34;
+}
+
+.exam-upload-panel .form-control,
+.exam-upload-panel .form-select {
+    border-color: #d8e4ce;
+}
+
+.exam-upload-panel .form-control:focus,
+.exam-upload-panel .form-select:focus {
+    border-color: #9dc07f;
+    box-shadow: 0 0 0 0.2rem rgba(109, 162, 82, 0.15);
+}
