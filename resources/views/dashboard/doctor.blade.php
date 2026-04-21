@@ -27,18 +27,26 @@
                             <i class="bi bi-calendar-day text-pet-green me-2"></i>
                             <h6 class="fw-bold mb-0">Agenda del Día</h6>
                         </div>
-                        <p class="text-muted small mb-4">Esta sección todavía no está conectada a una agenda real.</p>
-
-                        <div class="border rounded-3 p-4 bg-light">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-clock-history text-pet-green me-2"></i>
-                                <h6 class="mb-0 fw-bold">Agenda pendiente de implementación</h6>
-                            </div>
-                            <p class="text-muted mb-0">
-                                Cuando se habilite el módulo de citas, aquí aparecerán tus turnos del día.
-                                Por ahora, los datos reales de tu jornada están en los indicadores superiores y en los
-                                exámenes pendientes.
-                            </p>
+                        <div class="d-flex flex-column gap-3">
+                            @forelse(($agendaHoy ?? collect()) as $cita)
+                                <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">
+                                            {{ $cita->pet?->getName() ?? 'Mascota' }}
+                                        </h6>
+                                        <small class="text-muted d-block">{{ $cita->pet?->owner?->getName() ?? 'Sin propietario' }}</small>
+                                        <small class="text-muted d-block">Motivo: {{ $cita->getReason() ?: 'No especificado' }}</small>
+                                        <small class="text-muted d-block fw-medium mt-1">
+                                            <i class="bi bi-clock me-1"></i> {{ \Carbon\Carbon::parse($cita->getStartTime())->format('g:i A') }} - {{ \Carbon\Carbon::parse($cita->getEndTime())->format('g:i A') }}
+                                        </small>
+                                    </div>
+                                    <a href="{{ route('doctor.appointments.index') }}" class="btn btn-outline-pet-green btn-sm px-3 rounded-3">Ver Calendario</a>
+                                </div>
+                            @empty
+                                <div class="border rounded-3 p-4 bg-light text-center">
+                                    <p class="mb-0 text-muted">No tienes citas programadas para hoy.</p>
+                                </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>

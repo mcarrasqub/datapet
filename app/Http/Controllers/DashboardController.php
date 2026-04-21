@@ -112,10 +112,11 @@ class DashboardController extends Controller
             $pendingExams = $pendingExamsQuery->take(4)->get();
             $examsPendientes = (clone $pendingExamsQuery)->count();
 
-            $agendaHoy = MedicalRecord::with(['pet.owner'])
+            $agendaHoy = \App\Models\Appointment::with(['pet.owner'])
                 ->where('doctor_id', $user->id)
-                ->whereDate('visited_at', $today->toDateString())
-                ->orderBy('visited_at')
+                ->where('date', $today->toDateString())
+                ->where('status', 'scheduled')
+                ->orderBy('start_time')
                 ->get();
 
             return view('dashboard.doctor', compact(

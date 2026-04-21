@@ -135,3 +135,82 @@
 .border-top-pet-green { border-top: 4px solid var(--pet-green) !important; }
 .avatar-150-bordered { width: 150px !important; height: 150px !important; object-fit: cover; border-radius: 10px; border: 2px solid var(--pet-green); }
 .avatar-remove-btn { position: absolute; top: 5px; right: 5px; border-radius: 50%; width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; }
+
+/* Calendar Styles Shared */
+.fc-event {
+    cursor: pointer;
+    border-radius: 6px !important;
+    border-color: var(--pet-green) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-weight: 500;
+}
+
+.fc-event:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    z-index: 5 !important;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 1.75rem;
+    color: var(--pet-green);
+    font-weight: 800;
+    text-transform: capitalize;
+    letter-spacing: -0.5px;
+}
+
+.fc-theme-standard .fc-scrollgrid {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+    background: #fff;
+}
+
+.fc .fc-button-primary {
+    background-color: var(--pet-green) !important;
+    border-color: var(--pet-green) !important;
+    border-radius: 20px !important;
+    padding: 0.4rem 1.2rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    box-shadow: 0 2px 6px rgba(118, 167, 93, 0.2);
+    transition: all 0.2s ease;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+
+.fc .fc-button-primary:hover {
+    background-color: #5e864a !important;
+    box-shadow: 0 4px 10px rgba(118, 167, 93, 0.3);
+    transform: translateY(-1px);
+}
+
+.fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:not(:disabled).fc-button-active {
+    background-color: #4b6a3b !important;
+    border-color: #4b6a3b !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+    padding: 12px 8px;
+    font-weight: 700;
+    color: #495057;
+    text-decoration: none !important;
+}
+
+.fc .fc-daygrid-day-number {
+    font-weight: 600;
+    color: #495057;
+    text-decoration: none !important;
+    padding: 8px;
+}
+
+.fc-day-today {
+    background-color: rgba(118, 167, 93, 0.05) !important;
+}
+
+.fc .fc-timegrid-slot-label-cushion {
+    font-weight: 500;
+    color: #6c757d;
+}

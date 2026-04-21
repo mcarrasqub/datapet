@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\MedicalExamController;
 use App\Http\Controllers\Admin\DoctorTaskController;
+use App\Http\Controllers\AppointmentController;
 
 Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home.index');
 
@@ -46,4 +47,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pets/{pet}/edit', 'App\Http\Controllers\PetController@edit')->name('pets.edit');
     Route::put('/pets/{pet}', 'App\Http\Controllers\PetController@update')->name('pets.update');
     Route::delete('/pets/{pet}', 'App\Http\Controllers\PetController@destroy')->name('pets.destroy');
+
+    Route::resource('appointments', AppointmentController::class)->except(['create', 'show', 'edit']);
+
+    Route::get('/doctor/appointments', 'App\Http\Controllers\Doctor\AppointmentDoctorController@index')->name('doctor.appointments.index');
+    Route::get('/doctor/appointments/events', 'App\Http\Controllers\Doctor\AppointmentDoctorController@events')->name('doctor.appointments.events');
 });

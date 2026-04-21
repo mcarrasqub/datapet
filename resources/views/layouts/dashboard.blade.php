@@ -29,6 +29,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    @stack('styles')
 </head>
 
 <body class="bg-dashboard">
@@ -91,8 +92,8 @@
                     {{-- Doctor links --}}
                     @if(auth()->check() && auth()->user()->role === 'doctor')
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('appointments.*') ? 'active-pill' : 'text-dark fw-medium' }}"
-                                href="#"><i class="bi bi-calendar4-event me-2"></i>Mis Citas</a>
+                            <a class="nav-link {{ request()->routeIs('doctor.appointments.index') ? 'active-pill' : 'text-dark fw-medium' }}"
+                                href="{{ route('doctor.appointments.index') }}"><i class="bi bi-calendar4-event me-2"></i>Mis Citas</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('clients.*') ? 'active-pill' : 'text-dark fw-medium' }}"
@@ -134,8 +135,8 @@
                                 Clientes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('schedule.*') ? 'active-pill' : 'text-dark fw-medium' }}"
-                                href="#"><i class="bi bi-calendar3 me-2"></i>Agenda</a>
+                            <a class="nav-link {{ request()->routeIs('appointments.index') ? 'active-pill' : 'text-dark fw-medium' }}"
+                                href="{{ route('appointments.index') }}"><i class="bi bi-calendar3 me-2"></i>Citas</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('settings.*') ? 'active-pill' : 'text-dark fw-medium' }}"
@@ -153,6 +154,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
+    @stack('scripts')
 </body>
 
 </html>
