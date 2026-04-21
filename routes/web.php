@@ -19,6 +19,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/users/{user}', 'App\Http\Controllers\Admin\UserController@destroy')->name('users.destroy');
     Route::get('/admin/doctor-tasks', [DoctorTaskController::class, 'index'])->name('tasks.index');
     Route::patch('/admin/doctor-tasks/{task}/status', [DoctorTaskController::class, 'updateStatus'])->name('tasks.updateStatus');
+    Route::patch('/doctor/tasks/{task}/status', [DoctorTaskController::class, 'updateOwnStatus'])->name('tasks.updateOwnStatus');
+    Route::delete('/admin/doctor-tasks/{task}', [DoctorTaskController::class, 'destroy'])->name('tasks.destroy');
 
     Route::get('/clients/create', 'App\Http\Controllers\Admin\ClientController@create')->name('clients.create');
     Route::post('/clients', 'App\Http\Controllers\Admin\ClientController@store')->name('clients.store');

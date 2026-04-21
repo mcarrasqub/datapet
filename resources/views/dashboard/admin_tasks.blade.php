@@ -30,13 +30,6 @@
             </div>
             <div class="col-md-6 col-lg">
                 <div class="card border-0 shadow-sm rounded-3 h-100">
-                    <div class="card-body"><small class="text-muted">En proceso</small>
-                        <h4 class="fw-bold mb-0 text-primary">{{ $metrics['in_progress'] }}</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg">
-                <div class="card border-0 shadow-sm rounded-3 h-100">
                     <div class="card-body"><small class="text-muted">Completadas</small>
                         <h4 class="fw-bold mb-0 text-success">{{ $metrics['completed'] }}</h4>
                     </div>
@@ -70,7 +63,6 @@
                         <select name="status" class="form-select">
                             <option value="">Todos</option>
                             <option value="pending" @selected($statusFilter === 'pending')>Pendiente</option>
-                            <option value="in_progress" @selected($statusFilter === 'in_progress')>En proceso</option>
                             <option value="completed" @selected($statusFilter === 'completed')>Completada</option>
                             <option value="overdue" @selected($statusFilter === 'overdue')>Vencida</option>
                         </select>
@@ -90,8 +82,9 @@
                     $doctorOverdue = $doctorTasks->filter(function ($task) {
                         return $task->is_overdue || $task->status === 'overdue';
                     })->count();
-                    $doctorPending = $doctorTasks->where('status', 'pending')->count();
-                    $doctorInProgress = $doctorTasks->where('status', 'in_progress')->count();
+                    $doctorPending = $doctorTasks->filter(function ($task) {
+                        return $task->status === 'pending' && !($task->is_overdue || $task->status === 'overdue');
+                    })->count();
                     $doctorCompleted = $doctorTasks->where('status', 'completed')->count();
                 @endphp
 
@@ -106,9 +99,6 @@
                             <span
                                 class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-2">Pendientes:
                                 {{ $doctorPending }}</span>
-                            <span
-                                class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle rounded-pill px-3 py-2">En proceso:
-                                {{ $doctorInProgress }}</span>
                             <span
                                 class="badge bg-success-subtle text-success-emphasis border border-success-subtle rounded-pill px-3 py-2">Completadas:
                                 {{ $doctorCompleted }}</span>
@@ -178,22 +168,25 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-end pe-4">
-                                                    <form action="{{ route('tasks.updateStatus', $task) }}" method="POST"
-                                                        class="d-inline-flex gap-2">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <select name="status" class="form-select form-select-sm">
-                                                            <option value="pending" @selected($task->status === 'pending')>Pendiente
-                                                            </option>
-                                                            <option value="in_progress" @selected($task->status === 'in_progress')>En
-                                                                proceso</option>
-                                                            <option value="completed" @selected($task->status === 'completed')>Completada
-                                                            </option>
-                                                            <option value="overdue" @selected($task->status === 'overdue')>Vencida
-                                                            </option>
-                                                        </select>
-                                                        <button type="submit" class="btn btn-sm btn-outline-pet-green">Guardar</button>
-                                                    </form>
+                                                    <div class="d-inline-flex gap-2">
+                                                        <form action="{{ route('tasks.updateStatus', $task) }}" method="POST"
+                                                            class="d-inline-flex gap-1">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <select name="status" class="form-select form-select-sm">
+                                                                <option value="pending" @selected($task->status === 'pending')>Pendiente</option>
+                                                                <option value="completed" @selected($task->status === 'completed')>Completada</option>
+                                                            </select>
+                                                            <button type="submit" class="btn btn-sm btn-outline-pet-green">Guardar</button>
+                                                        </form>
+                                                        <form action="{{ route('tasks.destroy', $task) }}" method="POST" 
+                                                            onsubmit="return confirm('¿Eliminar esta tarea?');"
+                                                            class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                                        </form>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach

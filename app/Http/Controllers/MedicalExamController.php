@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMedicalExamRequest;
+use App\Models\DoctorTask;
 use App\Models\MedicalExam;
 use App\Models\Pet;
 use Illuminate\Http\RedirectResponse;
@@ -69,6 +70,16 @@ class MedicalExamController extends Controller
                 'reviewed_by_doctor_id' => (int) Auth::id(),
                 'reviewed_by_doctor_at' => now(),
             ]);
+
+            // Marcar la tarea automática de revisión de examen como completada
+            $taskKey = 'doctor:' . Auth::id() . ':exam:' . $medicalExam->id . ':review';
+            $task = DoctorTask::where('task_key', $taskKey)
+                ->where('doctor_id', Auth::id())
+                ->first();
+
+            if ($task) {
+                $task->update(['status' => 'completed']);
+            }
         }
 
         if (!Storage::disk('local')->exists($medicalExam->file_path)) {

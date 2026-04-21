@@ -25,6 +25,28 @@ class DoctorTaskController extends Controller
         $doctorFilter = $request->input('doctor_id');
         $statusFilter = $request->input('status');
 
+        // Construir consulta base para tareas con filtros de doctor
+        $tasksBaseQuery = DoctorTask::query()
+            ->when($doctorFilter, function ($query) use ($doctorFilter) {
+                $query->where('doctor_id', $doctorFilter);
+            });
+
+        // Obtener todas las tareas para calcular métricas globales (sin filtro de estado)
+        $allTasksForMetrics = (clone $tasksBaseQuery)->get();
+
+        // Calcular métricas globales por estado
+        $globalMetrics = [
+            'total' => $allTasksForMetrics->count(),
+            'pending' => $allTasksForMetrics->filter(function ($task) {
+                return $task->status === 'pending' && !($task->is_overdue || $task->status === 'overdue');
+            })->count(),
+            'completed' => $allTasksForMetrics->where('status', 'completed')->count(),
+            'overdue' => $allTasksForMetrics->filter(function ($task) {
+                return $task->is_overdue || $task->status === 'overdue';
+            })->count(),
+        ];
+
+        // Cargar doctores con sus tareas filtradas correctamente
         $doctors = User::query()
             ->where('role', 'doctor')
             ->when($doctorFilter, function ($query) use ($doctorFilter) {
@@ -32,9 +54,36 @@ class DoctorTaskController extends Controller
             })
             ->with([
                 'doctorTasks' => function ($query) use ($statusFilter) {
-                    $query->when($statusFilter, function ($taskQuery) use ($statusFilter) {
-                        $taskQuery->where('status', $statusFilter);
-                    })->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+                    // Si se selecciona un filtro de estado, aplicarlo
+                    if ($statusFilter) {
+                        if ($statusFilter === 'overdue') {
+                            // Para "vencida": tareas con status='overdue' O tareas donde la fecha límite ya pasó y no están completadas
+                            $query->where(function ($q) {
+                                $q->where('status', 'overdue')
+                                    ->orWhere(function ($subQ) {
+                                        $subQ->where('status', '!=', 'completed')
+                                            ->where('status', '!=', 'overdue')
+                                            ->whereNotNull('due_date')
+                                            ->whereRaw('due_date < CURDATE()');
+                                    });
+                            });
+                        } else {
+                            // Para otros estados
+                            if ($statusFilter === 'pending') {
+                                // Para "pendiente": solo tareas pending que NO estén vencidas
+                                $query->where('status', 'pending')
+                                    ->where(function ($q) {
+                                    $q->whereNull('due_date')
+                                        ->orWhereRaw('due_date >= CURDATE()');
+                                });
+                            } else {
+                                // Para "completed", filtrar exactamente por ese estado
+                                $query->where('status', $statusFilter);
+                            }
+                        }
+                    }
+
+                    $query->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
                         ->orderBy('due_date')
                         ->orderByDesc('created_at');
                 }
@@ -42,21 +91,8 @@ class DoctorTaskController extends Controller
             ->orderBy('name')
             ->get();
 
-        $allTasks = DoctorTask::query()
-            ->when($doctorFilter, function ($query) use ($doctorFilter) {
-                $query->where('doctor_id', $doctorFilter);
-            })
-            ->get();
-
-        $metrics = [
-            'total' => $allTasks->count(),
-            'pending' => $allTasks->where('status', 'pending')->count(),
-            'in_progress' => $allTasks->where('status', 'in_progress')->count(),
-            'completed' => $allTasks->where('status', 'completed')->count(),
-            'overdue' => $allTasks->filter(function ($task) {
-                return $task->is_overdue || $task->status === 'overdue';
-            })->count(),
-        ];
+        // Las métricas a mostrar son las globales (respetan el filtro de doctor pero no el de estado)
+        $metrics = $globalMetrics;
 
         return view('dashboard.admin_tasks', [
             'doctors' => $doctors,
@@ -76,6 +112,33 @@ class DoctorTaskController extends Controller
         ]);
 
         return back()->with('success', 'Estado de la tarea actualizado correctamente.');
+    }
+
+    public function updateOwnStatus(Request $request, DoctorTask $task): RedirectResponse
+    {
+        // Verificar que el doctor autenticado es dueño de esta tarea
+        if (!Auth::check() || Auth::user()->id !== $task->doctor_id || Auth::user()->role !== 'doctor') {
+            abort(403, 'No tienes permiso para actualizar esta tarea.');
+        }
+
+        $request->validate([
+            'status' => 'required|in:pending,completed',
+        ]);
+
+        $task->update([
+            'status' => $request->input('status'),
+        ]);
+
+        return back()->with('success', 'Tarea actualizada correctamente.');
+    }
+
+    public function destroy(DoctorTask $task): RedirectResponse
+    {
+        $this->ensureAdmin();
+
+        $task->delete();
+
+        return back()->with('success', 'Tarea eliminada correctamente.');
     }
 
     private function ensureAdmin(): void
@@ -106,7 +169,8 @@ class DoctorTaskController extends Controller
             }
 
             $cleanupQuery = DoctorTask::where('doctor_id', $doctor->id)
-                ->where('is_system', true);
+                ->where('is_system', true)
+                ->where('status', '!=', 'completed'); // Proteger tareas completadas
 
             if (count($activeKeys) > 0) {
                 $cleanupQuery->whereNotIn('task_key', $activeKeys);
@@ -123,10 +187,9 @@ class DoctorTaskController extends Controller
     {
         $existingTask = DoctorTask::where('task_key', $taskData['task_key'])->first();
 
-        if ($existingTask) {
-            $taskData['status'] = $existingTask->status === 'completed'
-                ? 'pending'
-                : $existingTask->status;
+        // Si la tarea ya existe y está completada, mantenerla completada
+        if ($existingTask && $existingTask->status === 'completed') {
+            $taskData['status'] = 'completed';
         }
 
         DoctorTask::updateOrCreate(
