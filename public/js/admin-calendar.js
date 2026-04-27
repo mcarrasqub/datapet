@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             minute: '2-digit',
             meridiem: 'short'
         },
-        events: window.CalendarConfig.eventsUrl,
+        events: globalThis.CalendarConfig.eventsUrl,
         dateClick: function(info) {
             openCreateModal(info.dateStr.split('T')[0], info.dateStr.split('T')[1]?.substring(0, 5));
         },
@@ -48,7 +48,7 @@ function openCreateModal(date = '', startTime = '') {
     currentEventId = null;
     document.getElementById('appointmentForm').reset();
     document.getElementById('formMethod').value = 'POST';
-    document.getElementById('appointmentForm').action = window.CalendarConfig.storeUrl;
+    document.getElementById('appointmentForm').action = globalThis.CalendarConfig.storeUrl;
     
     document.getElementById('statusGroup').style.display = 'none';
     document.getElementById('btnDelete').style.display = 'none';
@@ -58,7 +58,7 @@ function openCreateModal(date = '', startTime = '') {
     if (startTime) {
         document.getElementById('start_time').value = startTime;
         const [h, m] = startTime.split(':');
-        const endH = (parseInt(h) + 1).toString().padStart(2, '0');
+        const endH = (Number.parseInt(h) + 1).toString().padStart(2, '0');
         document.getElementById('end_time').value = `${endH}:${m}`;
     }
 
