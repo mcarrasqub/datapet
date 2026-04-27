@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Carbon\Carbon;
 
 class DoctorTask extends Model
 {
@@ -48,6 +48,7 @@ class DoctorTask extends Model
                         return $recovered;
                     }
                 }
+
                 return $value;
             }
         );
@@ -64,7 +65,7 @@ class DoctorTask extends Model
     public function getIsOverdueAttribute(): bool
     {
         // Sin fecha límite, no puede estar vencida
-        if (!$this->due_date) {
+        if (! $this->due_date) {
             return false;
         }
 

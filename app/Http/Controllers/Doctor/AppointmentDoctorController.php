@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
 use App\Models\Appointment;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AppointmentDoctorController extends Controller
 {
@@ -23,18 +23,19 @@ class AppointmentDoctorController extends Controller
 
         $events = $appointments->map(function ($appointment) {
             $statusColor = $appointment->getStatus() === 'canceled' ? '#dc3545' : '#76a75d';
+
             return [
                 'id' => $appointment->getId(),
-                'title' => 'Cita: ' . $appointment->pet->getName(),
-                'start' => $appointment->getDate() . 'T' . $appointment->getStartTime(),
-                'end' => $appointment->getDate() . 'T' . $appointment->getEndTime(),
+                'title' => 'Cita: '.$appointment->pet->getName(),
+                'start' => $appointment->getDate().'T'.$appointment->getStartTime(),
+                'end' => $appointment->getDate().'T'.$appointment->getEndTime(),
                 'backgroundColor' => $statusColor,
                 'borderColor' => $statusColor,
                 'extendedProps' => [
                     'pet_name' => $appointment->pet->getName(),
                     'status' => $appointment->getStatus(),
                     'reason' => $appointment->getReason(),
-                ]
+                ],
             ];
         });
 

@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+    const calendarEl = document.getElementById('calendar');
     if (!calendarEl) return;
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridDay',
         headerToolbar: {
             left: 'prev,next today',
@@ -39,20 +39,20 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function openViewModal(event) {
-    let props = event.extendedProps;
+    const props = event.extendedProps;
     
     document.getElementById('pet_name').innerText = props.pet_name;
     
-    let startObj = event.start;
-    let endObj = event.end;
+    const startObj = event.start;
+    const endObj = event.end;
     
-    let startTimeStr = startObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    let endTimeStr = endObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const startTimeStr = startObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const endTimeStr = endObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     
     document.getElementById('start_time').innerText = startTimeStr;
     document.getElementById('end_time').innerText = endTimeStr;
     
-    let statusBadge = document.getElementById('status');
+    const statusBadge = document.getElementById('status');
     if (props.status === 'scheduled') {
         statusBadge.className = 'badge bg-success';
         statusBadge.innerText = 'Programada';

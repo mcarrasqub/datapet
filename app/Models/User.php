@@ -180,8 +180,7 @@ class User extends Authenticatable
 
     // Scopes
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $term
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSearchByClient($query, string $term)
@@ -195,8 +194,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $term
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSearchByPet($query, string $term)
@@ -207,4 +205,3 @@ class User extends Authenticatable
         });
     }
 }
-

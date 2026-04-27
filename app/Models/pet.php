@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Modelo Pet
- * 
+ *
  * Atributos:
  * - id: int - Identificador único
  * - user_id: int - ID del usuario propietario
@@ -26,134 +26,134 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Pet extends Model
 {
-  use HasFactory;
+    use HasFactory;
 
-  protected $fillable = [
-    'user_id',
-    'name',
-    'species',
-    'breed',
-    'age',
-    'gender',
-    'weight',
-    'photo',
-    'notes'
-  ];
+    protected $fillable = [
+        'user_id',
+        'name',
+        'species',
+        'breed',
+        'age',
+        'gender',
+        'weight',
+        'photo',
+        'notes',
+    ];
 
-  protected $casts = [
-    'age' => 'integer',
-    'weight' => 'decimal:2'
-  ];
+    protected $casts = [
+        'age' => 'integer',
+        'weight' => 'decimal:2',
+    ];
 
-  public function owner(): BelongsTo
-  {
-    return $this->belongsTo(User::class, 'user_id');
-  }
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
-  public function medicalRecords(): HasMany
-  {
-    return $this->hasMany(MedicalRecord::class, 'pet_id');
-  }
+    public function medicalRecords(): HasMany
+    {
+        return $this->hasMany(MedicalRecord::class, 'pet_id');
+    }
 
-  public function medicalExams(): HasMany
-  {
-    return $this->hasMany(MedicalExam::class, 'pet_id');
-  }
+    public function medicalExams(): HasMany
+    {
+        return $this->hasMany(MedicalExam::class, 'pet_id');
+    }
 
-  // Getters
-  public function getId(): int
-  {
-    return $this->attributes['id'];
-  }
+    // Getters
+    public function getId(): int
+    {
+        return $this->attributes['id'];
+    }
 
-  public function getUserId(): int
-  {
-    return $this->attributes['user_id'];
-  }
+    public function getUserId(): int
+    {
+        return $this->attributes['user_id'];
+    }
 
-  public function getName(): string
-  {
-    return $this->attributes['name'];
-  }
+    public function getName(): string
+    {
+        return $this->attributes['name'];
+    }
 
-  public function getSpecies(): string
-  {
-    return $this->attributes['species'];
-  }
+    public function getSpecies(): string
+    {
+        return $this->attributes['species'];
+    }
 
-  public function getBreed(): ?string
-  {
-    return $this->attributes['breed'] ?? null;
-  }
+    public function getBreed(): ?string
+    {
+        return $this->attributes['breed'] ?? null;
+    }
 
-  public function getAge(): ?int
-  {
-    return $this->attributes['age'] ?? null;
-  }
+    public function getAge(): ?int
+    {
+        return $this->attributes['age'] ?? null;
+    }
 
-  public function getGender(): string
-  {
-    return $this->attributes['gender'];
-  }
+    public function getGender(): string
+    {
+        return $this->attributes['gender'];
+    }
 
-  public function getWeight(): ?float
-  {
-    return $this->attributes['weight'] ?? null;
-  }
+    public function getWeight(): ?float
+    {
+        return $this->attributes['weight'] ?? null;
+    }
 
-  public function getPhoto(): ?string
-  {
-    return $this->attributes['photo'] ?? null;
-  }
+    public function getPhoto(): ?string
+    {
+        return $this->attributes['photo'] ?? null;
+    }
 
-  public function getNotes(): ?string
-  {
-    return $this->attributes['notes'] ?? null;
-  }
+    public function getNotes(): ?string
+    {
+        return $this->attributes['notes'] ?? null;
+    }
 
-  // Setters
-  public function setUserId(int $userId): void
-  {
-    $this->attributes['user_id'] = $userId;
-  }
+    // Setters
+    public function setUserId(int $userId): void
+    {
+        $this->attributes['user_id'] = $userId;
+    }
 
-  public function setName(string $name): void
-  {
-    $this->attributes['name'] = $name;
-  }
+    public function setName(string $name): void
+    {
+        $this->attributes['name'] = $name;
+    }
 
-  public function setSpecies(string $species): void
-  {
-    $this->attributes['species'] = $species;
-  }
+    public function setSpecies(string $species): void
+    {
+        $this->attributes['species'] = $species;
+    }
 
-  public function setBreed(?string $breed): void
-  {
-    $this->attributes['breed'] = $breed;
-  }
+    public function setBreed(?string $breed): void
+    {
+        $this->attributes['breed'] = $breed;
+    }
 
-  public function setAge(?int $age): void
-  {
-    $this->attributes['age'] = $age;
-  }
+    public function setAge(?int $age): void
+    {
+        $this->attributes['age'] = $age;
+    }
 
-  public function setGender(string $gender): void
-  {
-    $this->attributes['gender'] = $gender;
-  }
+    public function setGender(string $gender): void
+    {
+        $this->attributes['gender'] = $gender;
+    }
 
-  public function setWeight(?float $weight): void
-  {
-    $this->attributes['weight'] = $weight;
-  }
+    public function setWeight(?float $weight): void
+    {
+        $this->attributes['weight'] = $weight;
+    }
 
-  public function setPhoto(?string $photo): void
-  {
-    $this->attributes['photo'] = $photo;
-  }
+    public function setPhoto(?string $photo): void
+    {
+        $this->attributes['photo'] = $photo;
+    }
 
-  public function setNotes(?string $notes): void
-  {
-    $this->attributes['notes'] = $notes;
-  }
+    public function setNotes(?string $notes): void
+    {
+        $this->attributes['notes'] = $notes;
+    }
 }

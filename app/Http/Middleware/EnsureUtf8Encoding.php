@@ -16,7 +16,7 @@ class EnsureUtf8Encoding
         // Force Content-Type header with UTF-8 charset
         $contentType = $response->headers->get('Content-Type', 'text/html');
         if (strpos($contentType, 'charset') === false) {
-            $response->headers->set('Content-Type', $contentType . '; charset=UTF-8');
+            $response->headers->set('Content-Type', $contentType.'; charset=UTF-8');
         }
 
         return $response;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Appointment;
+use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAppointmentRequest extends FormRequest
 {
@@ -41,7 +41,7 @@ class StoreAppointmentRequest extends FormRequest
                 ->where(function ($query) {
                     $query->where(function ($q) {
                         $q->where('start_time', '<', $this->end_time)
-                          ->where('end_time', '>', $this->start_time);
+                            ->where('end_time', '>', $this->start_time);
                     });
                 })
                 ->exists();

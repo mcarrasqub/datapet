@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
-use App\Models\Appointment;
-use App\Models\User;
-use App\Models\Pet;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
+use App\Models\Appointment;
+use App\Models\Pet;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AppointmentController extends Controller
 {
@@ -20,21 +20,22 @@ class AppointmentController extends Controller
             $appointments = Appointment::with(['doctor', 'pet'])->get();
             $events = $appointments->map(function ($appointment) {
                 $statusColor = $appointment->getStatus() === 'canceled' ? '#dc3545' : '#76a75d';
+
                 return [
                     'id' => $appointment->getId(),
-                    'title' => 'Cita: ' . $appointment->pet->getName(),
-                    'start' => $appointment->getDate() . 'T' . $appointment->getStartTime(),
-                    'end' => $appointment->getDate() . 'T' . $appointment->getEndTime(),
+                    'title' => 'Cita: '.$appointment->pet->getName(),
+                    'start' => $appointment->getDate().'T'.$appointment->getStartTime(),
+                    'end' => $appointment->getDate().'T'.$appointment->getEndTime(),
                     'backgroundColor' => $statusColor,
                     'borderColor' => $statusColor,
                     'extendedProps' => [
                         'doctor_id' => $appointment->getDoctorId(),
                         'pet_id' => $appointment->getPetId(),
-                        'doctor_name' => $appointment->doctor->getName() . ' ' . $appointment->doctor->getLastname(),
+                        'doctor_name' => $appointment->doctor->getName().' '.$appointment->doctor->getLastname(),
                         'pet_name' => $appointment->pet->getName(),
                         'status' => $appointment->getStatus(),
                         'reason' => $appointment->getReason(),
-                    ]
+                    ],
                 ];
             });
 

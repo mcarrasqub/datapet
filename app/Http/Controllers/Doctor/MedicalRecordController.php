@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
-use App\Models\MedicalRecord;
-use App\Models\Pet;
 use App\Http\Requests\StoreMedicalRecordRequest;
 use App\Http\Requests\UpdateMedicalRecordRequest;
+use App\Models\MedicalRecord;
+use App\Models\Pet;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class MedicalRecordController extends Controller
@@ -154,7 +154,7 @@ class MedicalRecordController extends Controller
     {
         $role = (string) (Auth::user()->role ?? '');
 
-        if (!in_array($role, ['admin', 'doctor'], true)) {
+        if (! in_array($role, ['admin', 'doctor'], true)) {
             abort(403, 'No tienes permisos para acceder a esta sección.');
         }
     }

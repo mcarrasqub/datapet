@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pet_id')->constrained()->cascadeOnDelete();   
-            $table->foreignId('doctor_id')->constrained('users');          
-            $table->dateTime('visited_at');                                 
-            $table->string('reason');                                      
+            $table->foreignId('pet_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('doctor_id')->constrained('users');
+            $table->dateTime('visited_at');
+            $table->string('reason');
             $table->text('diagnosis')->nullable();
             $table->text('treatment')->nullable();
             $table->text('notes')->nullable();

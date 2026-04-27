@@ -1,11 +1,11 @@
 let currentEventId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+    const calendarEl = document.getElementById('calendar');
     
     if(!calendarEl) return;
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
         headerToolbar: {
             left: 'prev,next today',
@@ -57,8 +57,8 @@ function openCreateModal(date = '', startTime = '') {
     if (date) document.getElementById('date').value = date;
     if (startTime) {
         document.getElementById('start_time').value = startTime;
-        let [h, m] = startTime.split(':');
-        let endH = (parseInt(h) + 1).toString().padStart(2, '0');
+        const [h, m] = startTime.split(':');
+        const endH = (parseInt(h) + 1).toString().padStart(2, '0');
         document.getElementById('end_time').value = `${endH}:${m}`;
     }
 
@@ -67,7 +67,7 @@ function openCreateModal(date = '', startTime = '') {
 
 function openEditModal(event) {
     currentEventId = event.id;
-    let props = event.extendedProps;
+    const props = event.extendedProps;
     
     document.getElementById('appointmentForm').action = `/appointments/${currentEventId}`;
     document.getElementById('formMethod').value = 'PUT';
@@ -75,10 +75,10 @@ function openEditModal(event) {
     document.getElementById('doctor_id').value = props.doctor_id;
     document.getElementById('pet_id').value = props.pet_id;
     
-    let startObj = event.start;
-    let endObj = event.end;
+    const startObj = event.start;
+    const endObj = event.end;
     
-    let dateStr = startObj.getFullYear() + '-' + String(startObj.getMonth() + 1).padStart(2, '0') + '-' + String(startObj.getDate()).padStart(2, '0');
+    const dateStr = startObj.getFullYear() + '-' + String(startObj.getMonth() + 1).padStart(2, '0') + '-' + String(startObj.getDate()).padStart(2, '0');
     document.getElementById('date').value = dateStr;
     
     document.getElementById('start_time').value = String(startObj.getHours()).padStart(2, '0') + ':' + String(startObj.getMinutes()).padStart(2, '0');
@@ -96,7 +96,7 @@ function openEditModal(event) {
 
 function deleteAppointment() {
     if(confirm('¿Está seguro de eliminar físicamente esta cita? Esta acción no se puede deshacer.')) {
-        let form = document.getElementById('deleteForm');
+        const form = document.getElementById('deleteForm');
         form.action = `/appointments/${currentEventId}`;
         form.submit();
     }

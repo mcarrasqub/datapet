@@ -20,7 +20,6 @@ class MedicalRecord extends Model
      * this->attributes['notes'] - string - contains any additional notes.
      * this->attributes['photos'] - array - contains an array of photo URLs related to the medical record.
      */
-
     protected $fillable = [
         'pet_id',
         'doctor_id',

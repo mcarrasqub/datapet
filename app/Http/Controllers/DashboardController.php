@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\MedicalExam;
 use App\Models\MedicalRecord;
-use App\Models\User;
 use App\Models\Pet;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,7 +48,7 @@ class DashboardController extends Controller
                 return [
                     'icon' => $entry->role === 'doctor' ? 'bi-person-plus' : 'bi-person-add',
                     'title' => $entry->role === 'doctor' ? 'Nuevo doctor registrado' : 'Nuevo usuario registrado',
-                    'description' => trim($entry->name . ' ' . ($entry->lastname ?? '')),
+                    'description' => trim($entry->name.' '.($entry->lastname ?? '')),
                     'time' => $entry->created_at,
                 ];
             });
@@ -57,7 +57,7 @@ class DashboardController extends Controller
                 return [
                     'icon' => 'bi-heart',
                     'title' => 'Nueva mascota registrada',
-                    'description' => trim($entry->name . ' - ' . ($entry->owner?->name ?? 'Sin propietario')),
+                    'description' => trim($entry->name.' - '.($entry->owner?->name ?? 'Sin propietario')),
                     'time' => $entry->created_at,
                 ];
             });
@@ -66,7 +66,7 @@ class DashboardController extends Controller
                 return [
                     'icon' => 'bi-file-earmark-medical',
                     'title' => 'Nueva consulta médica',
-                    'description' => trim(($entry->pet?->name ?? 'Mascota') . ' - ' . $entry->reason),
+                    'description' => trim(($entry->pet?->name ?? 'Mascota').' - '.$entry->reason),
                     'time' => $entry->created_at,
                 ];
             });

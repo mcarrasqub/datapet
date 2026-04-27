@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Appointment;
+use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAppointmentRequest extends FormRequest
 {
@@ -37,7 +37,7 @@ class UpdateAppointmentRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $appointmentId = $this->route('appointment')->getId();
-            
+
             $overlap = Appointment::where('doctor_id', $this->doctor_id)
                 ->where('date', $this->date)
                 ->where('status', 'scheduled')
@@ -45,7 +45,7 @@ class UpdateAppointmentRequest extends FormRequest
                 ->where(function ($query) {
                     $query->where(function ($q) {
                         $q->where('start_time', '<', $this->end_time)
-                          ->where('end_time', '>', $this->start_time);
+                            ->where('end_time', '>', $this->start_time);
                     });
                 })
                 ->exists();
