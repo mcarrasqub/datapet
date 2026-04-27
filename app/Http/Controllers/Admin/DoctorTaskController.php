@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -87,7 +88,11 @@ class DoctorTaskController extends Controller
                         }
                     }
 
-                    $query->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+                    $priorityOrder = DB::connection()->getDriverName() === 'sqlite'
+                        ? "CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END"
+                        : "FIELD(priority, 'high', 'medium', 'low')";
+
+                    $query->orderByRaw($priorityOrder)
                         ->orderBy('due_date')
                         ->orderByDesc('created_at');
                 },
