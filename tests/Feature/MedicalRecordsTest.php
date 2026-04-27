@@ -169,4 +169,32 @@ class MedicalRecordsTest extends TestCase
             'treatment' => 'Mantener loción calaminada según sea necesario, continuar evitando alérgenos',
         ]);
     }
+
+    /**
+     * Test negativo: un cliente no debe poder crear registros médicos.
+     *
+     * Criteria covered:
+     * - Access is restricted to doctors/admins
+     */
+    public function test_client_cannot_create_medical_record(): void
+    {
+        $client = User::factory()->create(['role' => 'client']);
+
+        $this->actingAs($client);
+
+        $response = $this->post(route('medical_records.store', $this->pet), [
+            'visited_at' => now()->toDateString(),
+            'reason' => 'Intento no autorizado',
+            'diagnosis' => 'No aplica',
+            'treatment' => 'No aplica',
+            'observation' => 'No aplica',
+        ]);
+
+        $response->assertStatus(403);
+
+        $this->assertDatabaseMissing('medical_records', [
+            'pet_id' => $this->pet->id,
+            'reason' => 'Intento no autorizado',
+        ]);
+    }
 }

@@ -18,7 +18,7 @@ class MedicalRecordController extends Controller
     {
         $this->ensureDoctorOrAdmin();
 
-        $pets = Pet::with('medicalRecords.doctor')->get();
+        $pets = Pet::with('medicalRecords.doctor', 'medicalRecords.observations.doctor')->get();
 
         $selectedPet = $pets->first();
         $medicalRecords = $selectedPet ? $selectedPet->medicalRecords()->orderByDesc('visited_at')->get() : collect();
@@ -41,7 +41,7 @@ class MedicalRecordController extends Controller
     {
         $this->ensureDoctorOrAdmin();
 
-        $pets = Pet::with('medicalRecords.doctor')->get();
+        $pets = Pet::with('medicalRecords.doctor', 'medicalRecords.observations.doctor')->get();
         $medicalRecords = $pet->medicalRecords()->orderByDesc('visited_at')->get();
         $lastVisit = $pet->medicalRecords()->orderByDesc('visited_at')->first();
         $medicalExams = $pet->medicalExams()
@@ -74,6 +74,8 @@ class MedicalRecordController extends Controller
         $this->ensureDoctorOrAdmin();
 
         $validated = $request->validated();
+        $validated['notes'] = $validated['observation'] ?? null;
+        unset($validated['observation']);
 
         // Procesar fotos
         $photos = [];
@@ -112,6 +114,8 @@ class MedicalRecordController extends Controller
         $this->ensureDoctorOrAdmin();
 
         $validated = $request->validated();
+        $validated['notes'] = $validated['observation'] ?? null;
+        unset($validated['observation']);
 
         // Procesar fotos
         $photos = $medicalRecord->photos ?? [];

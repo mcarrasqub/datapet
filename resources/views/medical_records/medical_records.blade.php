@@ -261,8 +261,63 @@
                                             <span class="text-secondary fs-85">{{ $record->getDiagnosis() ?? 'N/A' }}</span>
                                         </div>
                                         <div>
-                                            <span class="text-dark fw-medium fs-85">Observaciones:</span><br>
-                                            <span class="text-secondary fs-85">{{ $record->getNotes() ?? 'Ninguna' }}</span>
+                                            <span class="text-dark fw-medium fs-85">Observación clínica:</span><br>
+                                            <span class="text-secondary fs-85">{{ $record->getObservation() ?? 'Ninguna' }}</span>
+                                        </div>
+
+                                        <div class="mt-4 pt-3 border-top">
+                                            <form action="{{ route('clinical_observations.store', $record) }}" method="POST" class="mb-3">
+                                                @csrf
+                                                <label for="observation-{{ $record->getId() }}" class="form-label fw-medium fs-85 mb-2">Nueva observación</label>
+                                                <textarea id="observation-{{ $record->getId() }}" name="observation" rows="3"
+                                                          class="form-control form-control-sm @error('observation') is-invalid @enderror"
+                                                          placeholder="Escribe un hallazgo, evolución o conducta clínica" required></textarea>
+                                                @error('observation')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                                <div class="text-end mt-2">
+                                                    <button type="submit" class="btn btn-pet-green btn-sm text-white">
+                                                        <i class="bi bi-plus-circle me-1"></i>Guardar observación
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="text-dark fw-medium fs-85">Observaciones clínicas</span>
+                                                <span class="badge bg-light text-secondary border">
+                                                    {{ count($record->observations) }}
+                                                </span>
+                                            </div>
+
+                                            @forelse($record->observations->sortByDesc('created_at') as $observation)
+                                                <div class="bg-light rounded-4 p-3 mb-2 border">
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <small class="text-muted fw-medium">
+                                                            {{ $observation->created_at?->format('Y-m-d H:i') }}
+                                                        </small>
+                                                        <small class="text-muted">
+                                                            Dr(a). {{ $observation->doctor?->getName() }} {{ $observation->doctor?->getLastname() }}
+                                                        </small>
+                                                    </div>
+                                                    <div class="text-secondary fs-85">
+                                                        {{ $observation->getObservation() }}
+                                                    </div>
+                                                    <div class="d-flex justify-content-end gap-2 mt-2">
+                                                        <a href="{{ route('clinical_observations.edit', $observation) }}" class="btn btn-outline-secondary btn-sm">
+                                                            <i class="bi bi-pencil me-1"></i>Editar
+                                                        </a>
+                                                        <form action="{{ route('clinical_observations.destroy', $observation) }}" method="POST" onsubmit="return confirm('¿Eliminar esta observación?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                                <i class="bi bi-trash me-1"></i>Eliminar
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            @empty
+                                                <div class="text-muted fs-85">
+                                                    No hay observaciones clínicas registradas para esta consulta.
+                                                </div>
+                                            @endforelse
                                         </div>
 
                                         <div class="position-absolute top-15-px right-15-px">

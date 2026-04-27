@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DoctorTaskController;
+use App\Http\Controllers\Doctor\ClinicalObservationController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\MedicalExamController;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/medical-records-edit/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@edit')->name('medical_records.edit');
     Route::put('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@update')->name('medical_records.update');
     Route::delete('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@destroy')->name('medical_records.destroy');
+    Route::post('/medical-records/{medicalRecord}/observations', [ClinicalObservationController::class, 'store'])->name('clinical_observations.store');
+    Route::get('/clinical-observations/{clinicalObservation}/edit', [ClinicalObservationController::class, 'edit'])->name('clinical_observations.edit');
+    Route::put('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'update'])->name('clinical_observations.update');
+    Route::delete('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'destroy'])->name('clinical_observations.destroy');
     Route::post('/pets/{pet}/exams', [MedicalExamController::class, 'store'])->name('medical_exams.store');
     Route::get('/medical-exams/{medicalExam}/view', [MedicalExamController::class, 'view'])->name('medical_exams.view');
     Route::get('/medical-exams/{medicalExam}/download', [MedicalExamController::class, 'download'])->name('medical_exams.download');
