@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
             minute: '2-digit',
             meridiem: 'short'
         },
-        events: window.DoctorCalendarConfig.eventsUrl,
+        events: globalThis.DoctorCalendarConfig.eventsUrl,
         eventClick: function(info) {
             openViewModal(info.event);
         }
