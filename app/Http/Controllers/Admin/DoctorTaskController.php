@@ -16,6 +16,10 @@ use Illuminate\View\View;
 
 class DoctorTaskController extends Controller
 {
+    private const CONSULTATION_PREFIX = 'La consulta del ';
+
+    private const TASK_KEY_RECORD_SEGMENT = ':record:';
+
     public function index(Request $request): View
     {
         $this->ensureAdmin();
@@ -156,7 +160,7 @@ class DoctorTaskController extends Controller
         foreach ($doctors as $doctor) {
             $activeKeys = [];
 
-            $examTasks = $this->buildUnreviewedExamTasks((int) $doctor->id, $allDoctorIds);
+            $examTasks = $this->buildUnreviewedExamTasks($allDoctorIds);
             foreach ($examTasks as $taskData) {
                 $activeKeys[] = $taskData['task_key'];
                 $this->upsertSystemTask($taskData);
@@ -172,7 +176,7 @@ class DoctorTaskController extends Controller
                 ->where('is_system', true)
                 ->where('status', '!=', 'completed'); // Proteger tareas completadas
 
-            if (count($activeKeys) > 0) {
+            if (! empty($activeKeys)) {
                 $cleanupQuery->whereNotIn('task_key', $activeKeys);
             }
 
@@ -201,7 +205,7 @@ class DoctorTaskController extends Controller
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function buildUnreviewedExamTasks(int $doctorId, array $allDoctorIds): array
+    private function buildUnreviewedExamTasks(array $allDoctorIds): array
     {
         $exams = MedicalExam::query()
             ->with(['pet.medicalRecords', 'uploader', 'medicalRecord'])
@@ -258,7 +262,7 @@ class DoctorTaskController extends Controller
             ->values()
             ->all();
 
-        return count($doctorIds) > 0 ? $doctorIds : $allDoctorIds;
+        return ! empty($doctorIds) ? $doctorIds : $allDoctorIds;
     }
 
     /**
@@ -286,14 +290,14 @@ class DoctorTaskController extends Controller
                 $tasks[] = [
                     'doctor_id' => $doctorId,
                     'title' => 'Completar historial clínico (diagnóstico)',
-                    'description' => 'La consulta del '.$visitDate.' no tiene diagnóstico registrado.',
+                    'description' => self::CONSULTATION_PREFIX.$visitDate.' no tiene diagnóstico registrado.',
                     'status' => 'pending',
                     'due_date' => optional($record->visited_at)->toDateString(),
                     'priority' => 'high',
                     'is_system' => true,
                     'source_type' => 'medical_record',
                     'source_id' => $record->id,
-                    'task_key' => 'doctor:'.$doctorId.':record:'.$record->id.':diagnosis',
+                    'task_key' => 'doctor:'.$doctorId.self::TASK_KEY_RECORD_SEGMENT.$record->id.':diagnosis',
                 ];
             }
 
@@ -301,14 +305,14 @@ class DoctorTaskController extends Controller
                 $tasks[] = [
                     'doctor_id' => $doctorId,
                     'title' => 'Completar receta/tratamiento',
-                    'description' => 'La consulta del '.$visitDate.' no tiene tratamiento o receta registrada.',
+                    'description' => self::CONSULTATION_PREFIX.$visitDate.' no tiene tratamiento o receta registrada.',
                     'status' => 'pending',
                     'due_date' => optional($record->visited_at)->toDateString(),
                     'priority' => 'medium',
                     'is_system' => true,
                     'source_type' => 'medical_record',
                     'source_id' => $record->id,
-                    'task_key' => 'doctor:'.$doctorId.':record:'.$record->id.':treatment',
+                    'task_key' => 'doctor:'.$doctorId.self::TASK_KEY_RECORD_SEGMENT.$record->id.':treatment',
                 ];
             }
 
@@ -316,14 +320,14 @@ class DoctorTaskController extends Controller
                 $tasks[] = [
                     'doctor_id' => $doctorId,
                     'title' => 'Completar kardex/seguimiento',
-                    'description' => 'La consulta del '.$visitDate.' no tiene notas de seguimiento (kardex).',
+                    'description' => self::CONSULTATION_PREFIX.$visitDate.' no tiene notas de seguimiento (kardex).',
                     'status' => 'pending',
                     'due_date' => optional($record->visited_at)->toDateString(),
                     'priority' => 'low',
                     'is_system' => true,
                     'source_type' => 'medical_record',
                     'source_id' => $record->id,
-                    'task_key' => 'doctor:'.$doctorId.':record:'.$record->id.':notes',
+                    'task_key' => 'doctor:'.$doctorId.self::TASK_KEY_RECORD_SEGMENT.$record->id.':notes',
                 ];
             }
         }
