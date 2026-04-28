@@ -6,9 +6,13 @@ use App\Models\Appointment;
 use App\Models\Pet;
 use App\Models\User;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 
 class DoctorAppointmentsTest extends TestCase
 {
+    use RefreshDatabase;
+
     private User $doctor;
     private User $otherDoctor;
     private Pet $doctorPet;

@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class ClinicalObservationsTest extends TestCase
 {
-    use RefreshDatabase; // Importante para limpiar la DB en cada test
+    use RefreshDatabase; 
 
     private const OBS_GOOD_STATE = 'Paciente presenta buen estado general, mucosas rosadas, capilares llenos.';
     private User $doctor;

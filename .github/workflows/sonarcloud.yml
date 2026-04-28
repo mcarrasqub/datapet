@@ -1,49 +1,52 @@
 name: Analisis SonarCloud
 on:
-    push:
-        branches: ["main", "develop"]
-    pull_request:
-        branches: ["main", "develop"]
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
 
 jobs:
-    sonarcloud:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                fetch-depth: 0
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: '8.2'
-                coverage: xdebug
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          # Añadimos las extensiones necesarias para que Laravel y SQLite funcionen bien
+          extensions: mbstring, xml, ctype, iconv, intl, sqlite, pdo_sqlite
+          coverage: pcov
 
-            - name: Install Dependencies
-              run: composer install --prefer-dist --no-interaction
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-interaction
 
-            - name: Refresh Autoloader
-              run: composer dump-autoload
+      - name: Copy .env file
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
-            - name: Run Tests with Coverage
-              env:
-                DB_CONNECTION: sqlite
-                DB_DATABASE: ':memory:'
-              run: php artisan test --coverage-clover=coverage.xml
+      - name: Generate App Key
+        run: php artisan key:generate
 
-            - name: Upload coverage report
-              uses: actions/upload-artifact@v4
-              with:
-                name: coverage
-                path: coverage.xml
+      - name: Run Tests with Coverage
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
+        # Ejecutamos los tests. Si uno falla, el reporte se genera igual para Sonar
+        run: php artisan test --coverage-clover=coverage.xml
 
-            - name: SonarCloud Scan
-              uses: SonarSource/sonarcloud-github-action@master
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-              with:
-                args: >
-                    -Dsonar.projectKey=mcarrasqub_datapet
-                    -Dsonar.organization=mcarrasqub
-                    -Dsonar.php.coverage.reportPaths=coverage.xml
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=mcarrasqub_datapet
+            -Dsonar.organization=mcarrasqub
+            -Dsonar.php.coverage.reportPaths=coverage.xml
+            -Dsonar.sources=app
+            -Dsonar.tests=tests
+            -Dsonar.verbose=true

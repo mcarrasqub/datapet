@@ -3,6 +3,7 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
+         cacheDirectory=".phpunit.cache"
 >
     <testsuites>
         <testsuite name="Unit">
@@ -12,14 +13,18 @@
             <directory>tests/Feature</directory>
         </testsuite>
     </testsuites>
+
     <source>
         <include>
             <directory>app</directory>
         </include>
+    </source>
+
+    <coverage>
         <report>
             <clover outputFile="coverage.xml"/>
         </report>
-    </source>
+    </coverage>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="base64:YLk3jA5CjZQZ4P1qX8nD9vH2mR6tL0oB5sW4xK7fG3Y="/>
