@@ -29,8 +29,8 @@
             <div class="card-body p-3">
                 <form method="GET" action="{{ route('pets.exams') }}" class="row g-2 align-items-end">
                     <div class="col-md-5">
-                        <label class="form-label text-muted small mb-1">Filtrar por mascota</label>
-                        <select name="pet_id" class="form-select">
+                        <label for="pet_id" class="form-label text-muted small mb-1">Filtrar por mascota</label>
+                        <select name="pet_id" id="pet_id" class="form-select">
                             <option value="">Todas mis mascotas</option>
                             @foreach($viewData['pets'] as $pet)
                                 <option value="{{ $pet->getId() }}" @selected((int) ($viewData['selectedPetId'] ?? 0) === $pet->getId())>

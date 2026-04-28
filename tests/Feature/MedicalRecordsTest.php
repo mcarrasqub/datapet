@@ -38,12 +38,14 @@ class MedicalRecordsTest extends TestCase
         // Actuar como doctor
         $this->actingAs($this->doctor);
 
+        $treatmentPlan = 'Dieta blanda, hidratación oral, metoclopramida 10mg c/8h por 3 días';
+
         // Datos iniciales del registro médico
         $visitData = [
             'visited_at' => now()->toDateString(),
             'reason' => 'Consulta por molestia gastrointestinal',
             'diagnosis' => 'Gastroenteritis viral',
-            'treatment' => 'Dieta blanda, hidratación oral, metoclopramida 10mg c/8h por 3 días',
+            'treatment' => $treatmentPlan,
             'notes' => 'Mejoría esperada en 48-72 horas',
         ];
 
@@ -59,7 +61,7 @@ class MedicalRecordsTest extends TestCase
             'pet_id' => $this->pet->id,
             'doctor_id' => $this->doctor->id,
             'diagnosis' => 'Gastroenteritis viral',
-            'treatment' => 'Dieta blanda, hidratación oral, metoclopramida 10mg c/8h por 3 días',
+            'treatment' => $treatmentPlan,
         ]);
 
         // Recuperar el registro
@@ -69,7 +71,7 @@ class MedicalRecordsTest extends TestCase
         $this->assertEquals('Gastroenteritis viral', $record->getDiagnosis());
 
         // Verificar que el tratamiento es accesible
-        $this->assertEquals('Dieta blanda, hidratación oral, metoclopramida 10mg c/8h por 3 días', $record->getTreatment());
+        $this->assertEquals($treatmentPlan, $record->getTreatment());
 
         // Actualizar el registro con información adicional
         $updatedData = [

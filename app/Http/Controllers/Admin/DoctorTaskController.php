@@ -9,6 +9,7 @@ use App\Models\MedicalExam;
 use App\Models\MedicalRecord;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,40 +60,8 @@ class DoctorTaskController extends Controller
             })
             ->with([
                 'doctorTasks' => function ($query) use ($statusFilter) {
-                    // Si se selecciona un filtro de estado, aplicarlo
-                    if ($statusFilter) {
-                        if ($statusFilter === 'overdue') {
-                            // Para "vencida": tareas con status='overdue' O tareas donde la fecha límite ya pasó y no están completadas
-                            $query->where(function ($q) {
-                                $q->where('status', 'overdue')
-                                    ->orWhere(function ($subQ) {
-                                        $subQ->where('status', '!=', 'completed')
-                                            ->where('status', '!=', 'overdue')
-                                            ->whereNotNull('due_date')
-                                            ->whereRaw('due_date < CURDATE()');
-                                    });
-                            });
-                        } else {
-                            // Para otros estados
-                            if ($statusFilter === 'pending') {
-                                // Para "pendiente": solo tareas pending que NO estén vencidas
-                                $query->where('status', 'pending')
-                                    ->where(function ($q) {
-                                        $q->whereNull('due_date')
-                                            ->orWhereRaw('due_date >= CURDATE()');
-                                    });
-                            } else {
-                                // Para "completed", filtrar exactamente por ese estado
-                                $query->where('status', $statusFilter);
-                            }
-                        }
-                    }
-
-                    $priorityOrder = DB::connection()->getDriverName() === 'sqlite'
-                        ? "CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END"
-                        : "FIELD(priority, 'high', 'medium', 'low')";
-
-                    $query->orderByRaw($priorityOrder)
+                    $this->applyTaskStatusFilter($query, $statusFilter);
+                    $query->orderByRaw($this->getPriorityOrderExpression())
                         ->orderBy('due_date')
                         ->orderByDesc('created_at');
                 },
@@ -110,6 +79,46 @@ class DoctorTaskController extends Controller
             'statusFilter' => $statusFilter,
             'metrics' => $metrics,
         ]);
+    }
+
+    private function applyTaskStatusFilter(Relation $query, ?string $statusFilter): void
+    {
+        if (! $statusFilter) {
+            return;
+        }
+
+        if ($statusFilter === 'overdue') {
+            $query->where(function ($subQuery) {
+                $subQuery->where('status', 'overdue')
+                    ->orWhere(function ($nestedQuery) {
+                        $nestedQuery->where('status', '!=', 'completed')
+                            ->where('status', '!=', 'overdue')
+                            ->whereNotNull('due_date')
+                            ->whereRaw('due_date < CURDATE()');
+                    });
+            });
+
+            return;
+        }
+
+        if ($statusFilter === 'pending') {
+            $query->where('status', 'pending')
+                ->where(function ($pendingQuery) {
+                    $pendingQuery->whereNull('due_date')
+                        ->orWhereRaw('due_date >= CURDATE()');
+                });
+
+            return;
+        }
+
+        $query->where('status', $statusFilter);
+    }
+
+    private function getPriorityOrderExpression(): string
+    {
+        return DB::connection()->getDriverName() === 'sqlite'
+            ? "CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END"
+            : "FIELD(priority, 'high', 'medium', 'low')";
     }
 
     public function updateStatus(UpdateDoctorTaskStatusRequest $request, DoctorTask $task): RedirectResponse
