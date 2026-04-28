@@ -16,6 +16,9 @@
         <include>
             <directory>app</directory>
         </include>
+        <report>
+            <clover outputFile="coverage.xml"/>
+        </report>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
