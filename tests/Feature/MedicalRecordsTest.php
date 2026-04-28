@@ -35,13 +35,25 @@ class MedicalRecordsTest extends TestCase
             'reason' => 'Consulta rutinaria',
             'diagnosis' => 'Sano',
             'treatment' => 'Ninguno',
+            'observation' => 'Paciente en excelente estado', // CAMPO CLAVE PARA EL REQUEST
         ];
 
-        // LLAMADA AL CONTROLADOR (Esto sube el coverage)
+        // Ejecutamos la petición
         $response = $this->post(route('medical_records.store', $this->pet), $visitData);
 
-        $response->assertRedirect();
-        $this->assertDatabaseHas('medical_records', ['diagnosis' => 'Sano']);
+        // Si sigue fallando, esto te imprimirá el error real en la consola de GitHub
+        if ($response->status() !== 302) {
+            dump($response->getSession()->get('errors')->getMessages());
+        }
+
+        $response->assertRedirect(route('medical_records.show', $this->pet));
+        
+        // Verificamos que se guardó como 'notes' (como hace tu controlador)
+        $this->assertDatabaseHas('medical_records', [
+            'pet_id' => $this->pet->id,
+            'diagnosis' => 'Sano',
+            'notes' => 'Paciente en excelente estado' 
+        ]);
     }
 
     /**
