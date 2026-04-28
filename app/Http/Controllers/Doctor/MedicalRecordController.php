@@ -26,6 +26,9 @@ class MedicalRecordController extends Controller
         $medicalExams = $selectedPet
             ? $selectedPet->medicalExams()->with(['uploader', 'medicalRecord'])->orderByDesc('uploaded_at')->get()
             : collect();
+        $vaccinations = $selectedPet
+            ? $selectedPet->vaccinations()->with('doctor')->orderByDesc('vaccinated_at')->get()
+            : collect();
 
         $viewData = [];
         $viewData['pets'] = $pets;
@@ -33,6 +36,7 @@ class MedicalRecordController extends Controller
         $viewData['medicalRecords'] = $medicalRecords;
         $viewData['lastVisit'] = $lastVisit;
         $viewData['medicalExams'] = $medicalExams;
+        $viewData['vaccinations'] = $vaccinations;
 
         return view('medical_records.medical_records', $viewData);
     }
@@ -48,6 +52,10 @@ class MedicalRecordController extends Controller
             ->with(['uploader', 'medicalRecord'])
             ->orderByDesc('uploaded_at')
             ->get();
+        $vaccinations = $pet->vaccinations()
+            ->with('doctor')
+            ->orderByDesc('vaccinated_at')
+            ->get();
 
         $viewData = [];
         $viewData['pets'] = $pets;
@@ -55,6 +63,7 @@ class MedicalRecordController extends Controller
         $viewData['medicalRecords'] = $medicalRecords;
         $viewData['lastVisit'] = $lastVisit;
         $viewData['medicalExams'] = $medicalExams;
+        $viewData['vaccinations'] = $vaccinations;
 
         return view('medical_records.medical_records', $viewData);
     }

@@ -234,6 +234,63 @@
                                 </button>
                             </div>
 
+                            <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+                                <h6 class="fw-bold mb-0 text-dark">Vacunación</h6>
+                                <span class="badge bg-light text-secondary border">{{ count($vaccinations) }}</span>
+                            </div>
+
+                            <form action="{{ route('vaccinations.store', $selectedPet) }}" method="POST" class="row g-3 mb-4">
+                                @csrf
+                                <div class="col-md-5">
+                                    <label for="vaccine_type" class="form-label">Tipo de vacuna</label>
+                                    <input type="text" name="vaccine_type" id="vaccine_type" value="{{ old('vaccine_type') }}" class="form-control @error('vaccine_type') is-invalid @enderror" placeholder="Ej: Antirrábica" required>
+                                    @error('vaccine_type')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="vaccinated_at" class="form-label">Fecha de aplicación</label>
+                                    <input type="date" name="vaccinated_at" id="vaccinated_at" value="{{ old('vaccinated_at') }}" class="form-control @error('vaccinated_at') is-invalid @enderror" required>
+                                    @error('vaccinated_at')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="next_due_date" class="form-label">Próxima dosis</label>
+                                    <input type="date" name="next_due_date" id="next_due_date" value="{{ old('next_due_date') }}" class="form-control @error('next_due_date') is-invalid @enderror">
+                                    @error('next_due_date')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="notes" class="form-label">Notas</label>
+                                    <textarea name="notes" id="notes" rows="2" class="form-control @error('notes') is-invalid @enderror" placeholder="Observaciones opcionales">{{ old('notes') }}</textarea>
+                                    @error('notes')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button type="submit" class="btn btn-pet-green text-white px-4">Registrar vacuna</button>
+                                </div>
+                            </form>
+
+                            <div class="d-flex flex-column gap-3 mb-4">
+                                @forelse($vaccinations as $vaccination)
+                                    <div class="border rounded-4 p-4 bg-light">
+                                        <div class="d-flex justify-content-between align-items-start gap-3">
+                                            <div>
+                                                <div class="fw-semibold text-dark">{{ $vaccination->vaccine_type }}</div>
+                                                <div class="text-secondary fs-90">Aplicada: {{ $vaccination->vaccinated_at->format('Y-m-d') }}</div>
+                                                <div class="text-secondary fs-90">Siguiente dosis: {{ $vaccination->next_due_date ? $vaccination->next_due_date->format('Y-m-d') : 'No programada' }}</div>
+                                                <div class="text-secondary fs-90">Registrada por: Dr(a). {{ optional($vaccination->doctor)->name }} {{ optional($vaccination->doctor)->lastname }}</div>
+                                            </div>
+                                            @if($vaccination->notes)
+                                                <span class="badge bg-pet-green-10 text-pet-green-dark rounded-pill">Con notas</span>
+                                            @endif
+                                        </div>
+                                        @if($vaccination->notes)
+                                            <div class="mt-3 text-secondary fs-90">{{ $vaccination->notes }}</div>
+                                        @endif
+                                    </div>
+                                @empty
+                                    <div class="text-center py-4 text-muted bg-light rounded-4">
+                                        No hay vacunas registradas para esta mascota.
+                                    </div>
+                                @endforelse
+                            </div>
+
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <h6 class="fw-bold mb-0 text-dark">Historial de Consultas</h6>
                                 <a href="{{ route('medical_records.create', $selectedPet->getId()) }}"
