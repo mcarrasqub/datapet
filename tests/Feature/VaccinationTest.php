@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Pet;
+use App\Models\MedicalRecord;
+use App\Models\ClinicalObservation;
 use App\Models\User;
 use App\Models\Vaccination;
 use Illuminate\Support\Carbon;
@@ -65,12 +67,40 @@ class VaccinationTest extends TestCase
             'notes' => 'Refuerzo anual',
         ]);
 
+        $record = MedicalRecord::create([
+            'pet_id' => $pet->id,
+            'doctor_id' => $doctor->id,
+            'visited_at' => Carbon::today(),
+            'reason' => 'Control general',
+            'diagnosis' => 'Sano',
+            'treatment' => 'Ninguno',
+            'notes' => 'Observación inicial',
+        ]);
+
+        ClinicalObservation::create([
+            'medical_record_id' => $record->id,
+            'doctor_id' => $doctor->id,
+            'observation' => 'Paciente estable y activo.',
+        ]);
+
         $response = $this->actingAs($doctor)->get(route('medical_records.show', $pet));
 
         $response->assertOk();
         $response->assertSee('Antirrabica');
         $response->assertSee('Refuerzo anual');
         $response->assertSee(Carbon::today()->addYear()->format('Y-m-d'));
+        $response->assertSee('id="historia"', false);
+        $response->assertSee('id="consultas"', false);
+        $response->assertSee('id="kardex"', false);
+        $response->assertSee('id="vacunas"', false);
+        $response->assertSee('id="examenes"', false);
+        $response->assertSee('data-section="vacunas"', false);
+        $response->assertSee('Nueva Consulta');
+        $response->assertSee('Nueva observación');
+        $response->assertSee('Subir exámenes');
+        $response->assertSee('Paciente estable y activo.');
+        $response->assertSee('El kardex todavía no tiene contenido.');
+        $response->assertDontSee('Visitas/Consultas');
     }
 
     public function test_validation_fails_when_required_fields_missing()

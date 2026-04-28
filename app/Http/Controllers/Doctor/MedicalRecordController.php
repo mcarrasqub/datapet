@@ -21,7 +21,9 @@ class MedicalRecordController extends Controller
         $pets = Pet::with('medicalRecords.doctor', 'medicalRecords.observations.doctor')->get();
 
         $selectedPet = $pets->first();
-        $medicalRecords = $selectedPet ? $selectedPet->medicalRecords()->orderByDesc('visited_at')->get() : collect();
+        $medicalRecords = $selectedPet
+            ? $selectedPet->medicalRecords()->with(['doctor', 'observations.doctor'])->orderByDesc('visited_at')->get()
+            : collect();
         $lastVisit = $selectedPet ? $selectedPet->medicalRecords()->orderByDesc('visited_at')->first() : null;
         $medicalExams = $selectedPet
             ? $selectedPet->medicalExams()->with(['uploader', 'medicalRecord'])->orderByDesc('uploaded_at')->get()
@@ -46,7 +48,7 @@ class MedicalRecordController extends Controller
         $this->ensureDoctorOrAdmin();
 
         $pets = Pet::with('medicalRecords.doctor', 'medicalRecords.observations.doctor')->get();
-        $medicalRecords = $pet->medicalRecords()->orderByDesc('visited_at')->get();
+        $medicalRecords = $pet->medicalRecords()->with(['doctor', 'observations.doctor'])->orderByDesc('visited_at')->get();
         $lastVisit = $pet->medicalRecords()->orderByDesc('visited_at')->first();
         $medicalExams = $pet->medicalExams()
             ->with(['uploader', 'medicalRecord'])
