@@ -37,7 +37,7 @@ class MedicalExamsTest extends TestCase
     }
 
     /**
-     * Happy path: el doctor sube un examen, queda vinculado a la mascota y luego
+     * Happy path: el doctor sube un examen, luego queda vinculado a la mascota y luego
      * puede visualizarlo y descargarlo.
      */
     public function test_doctor_can_upload_view_and_download_medical_exam(): void
