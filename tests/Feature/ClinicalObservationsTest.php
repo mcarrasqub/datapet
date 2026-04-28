@@ -11,6 +11,7 @@ use Tests\TestCase;
 
 class ClinicalObservationsTest extends TestCase
 {
+    private const OBS_GOOD_STATE = 'Paciente presenta buen estado general, mucosas rosadas, capilares llenos.';
     private User $doctor;
     private Pet $pet;
     private MedicalRecord $medicalRecord;
@@ -58,7 +59,7 @@ class ClinicalObservationsTest extends TestCase
         $observation = ClinicalObservation::create([
             'medical_record_id' => $this->medicalRecord->id,
             'doctor_id' => $this->doctor->id,
-            'observation' => 'Paciente presenta buen estado general, mucosas rosadas, capilares llenos.',
+            'observation' => self::OBS_GOOD_STATE,
         ]);
 
         // Verificar que la observación se guardó en la base de datos
@@ -66,7 +67,7 @@ class ClinicalObservationsTest extends TestCase
             'id' => $observation->id,
             'medical_record_id' => $this->medicalRecord->id,
             'doctor_id' => $this->doctor->id,
-            'observation' => 'Paciente presenta buen estado general, mucosas rosadas, capilares llenos.',
+            'observation' => self::OBS_GOOD_STATE,
         ]);
 
         // Verificar que el timestamp se registró correctamente
@@ -82,7 +83,7 @@ class ClinicalObservationsTest extends TestCase
         // Verificar que se puede recuperar desde la relación
         $recordObservations = $this->medicalRecord->observations;
         $this->assertCount(1, $recordObservations);
-        $this->assertEquals('Paciente presenta buen estado general, mucosas rosadas, capilares llenos.', $recordObservations->first()->getObservation());
+        $this->assertEquals(self::OBS_GOOD_STATE, $recordObservations->first()->getObservation());
     }
 
     /**

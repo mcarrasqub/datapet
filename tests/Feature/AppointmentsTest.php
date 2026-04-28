@@ -9,6 +9,8 @@ use Tests\TestCase;
 
 class AppointmentsTest extends TestCase
 {
+    private const TIME_0900 = '09:00';
+    private const TIME_1000 = '10:00';
     private User $admin;
     private User $doctor;
     private Pet $pet;
@@ -41,8 +43,8 @@ class AppointmentsTest extends TestCase
             'doctor_id' => $this->doctor->id,
             'pet_id' => $this->pet->id,
             'date' => $this->date,
-            'start_time' => '09:00',
-            'end_time' => '10:00',
+            'start_time' => self::TIME_0900,
+            'end_time' => self::TIME_1000,
             'status' => 'scheduled',
             'reason' => 'Consulta de control',
         ]);
@@ -56,8 +58,8 @@ class AppointmentsTest extends TestCase
             'doctor_id' => $this->doctor->id,
             'pet_id' => $this->pet->id,
             'date' => $this->date,
-            'start_time' => '09:00',
-            'end_time' => '10:00',
+            'start_time' => self::TIME_0900,
+            'end_time' => self::TIME_1000,
             'status' => 'scheduled',
         ]);
 
@@ -65,8 +67,8 @@ class AppointmentsTest extends TestCase
             'doctor_id' => $this->doctor->id,
             'pet_id' => $this->pet->id,
             'date' => $this->date,
-            'start_time' => '09:00',
-            'end_time' => '10:00',
+            'start_time' => self::TIME_0900,
+            'end_time' => self::TIME_1000,
             'status' => 'canceled',
             'reason' => 'Consulta cancelada por el cliente',
         ]);

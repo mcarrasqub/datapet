@@ -8,6 +8,9 @@ use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
+    private const ROUTE_LOGOUT = '/logout';
+    private const ROUTE_DASHBOARD = '/dashboard';
+    private const ROUTE_LOGIN = '/login';
     /**
      * Test del Happy Path: Usuario se autentica y luego hace logout
      * verificando que la sesión termina y se redirige correctamente.
@@ -32,7 +35,7 @@ class AuthTest extends TestCase
         $this->assertAuthenticatedAs($user);
 
         // Ejecutar logout
-        $response = $this->post('/logout');
+        $response = $this->post(self::ROUTE_LOGOUT);
 
         // Verificar que se redirige al login
         $response->assertRedirect('/');
@@ -66,20 +69,20 @@ class AuthTest extends TestCase
         $this->actingAs($user);
 
         // Verificar que el usuario puede acceder al dashboard (ruta protegida)
-        $response = $this->get('/dashboard');
+        $response = $this->get(self::ROUTE_DASHBOARD);
         $response->assertStatus(200);
 
         // Ejecutar logout
-        $this->post('/logout');
+        $this->post(self::ROUTE_LOGOUT);
 
         // Verificar que ya no está autenticado
         $this->assertGuest();
 
         // Intentar acceder al dashboard (simulando back button del navegador)
-        $response = $this->get('/dashboard');
+        $response = $this->get(self::ROUTE_DASHBOARD);
 
         // Debe redirigir a login (estatus 302 redirect o 401 unauthorized)
-        $response->assertRedirect('/login');
+        $response->assertRedirect(self::ROUTE_LOGIN);
 
         // Verificar que no hay acceso autorizado
         $this->assertGuest();
@@ -102,7 +105,7 @@ class AuthTest extends TestCase
         ]);
 
         // Autenticar usuario
-        $response = $this->post('/login', [
+        $response = $this->post(self::ROUTE_LOGIN, [
             'email' => 'doctor2@example.com',
             'password' => 'password123',
         ]);
@@ -115,13 +118,13 @@ class AuthTest extends TestCase
         $this->assertNotNull($userBeforeLogout);
 
         // Ejecutar logout
-        $this->post('/logout');
+        $this->post(self::ROUTE_LOGOUT);
 
         // Verificar que la sesión está limpia
         $this->assertGuest();
 
         // Intentar usar la sesión antigua debería fallar
-        $response = $this->get('/dashboard');
-        $response->assertRedirect('/login');
+        $response = $this->get(self::ROUTE_DASHBOARD);
+        $response->assertRedirect(self::ROUTE_LOGIN);
     }
 }
