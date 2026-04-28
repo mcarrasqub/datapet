@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Http\Requests\UserRequest;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
-
-
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -30,7 +29,7 @@ class UserController extends Controller
         $roleInput = $request->input('role', '');
 
         // Filtro de búsqueda
-        if (!empty($searchInput)) {
+        if (! empty($searchInput)) {
             $search = trim($searchInput);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -40,7 +39,7 @@ class UserController extends Controller
         }
 
         // Filtro por rol
-        if (!empty($roleInput) && array_key_exists($roleInput, $roles)) {
+        if (! empty($roleInput) && array_key_exists($roleInput, $roles)) {
             $query->where('role', $roleInput);
         }
 
@@ -94,10 +93,11 @@ class UserController extends Controller
      */
     public function toggleStatus(User $user): RedirectResponse
     {
-        $user->status = !(bool) $user->status;
+        $user->status = ! (bool) $user->status;
         $user->save();
 
         $statusLabel = $user->status ? 'activado' : 'desactivado';
+
         return redirect()->route('users.index')
             ->with('success', "Usuario \"{$user->name}\" $statusLabel exitosamente.");
     }
@@ -107,9 +107,14 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
-        $user->delete();
+    
+    if (Auth::user()->role !== 'admin') {
+        abort(403, 'No tienes permisos para realizar esta acción.');
+    }
 
-        return redirect()->route('users.index')
-            ->with('success', "Usuario \"{$user->name}\" eliminado correctamente.");
+    $user->delete();
+
+    return redirect()->route('users.index')
+        ->with('success', "Usuario \"{$user->name}\" eliminado correctamente.");
     }
 }

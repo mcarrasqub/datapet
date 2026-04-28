@@ -22,7 +22,6 @@ class Appointment extends Model
      * this->attributes['created_at'] - datetime
      * this->attributes['updated_at'] - datetime
      */
-
     protected $fillable = [
         'doctor_id',
         'pet_id',

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
-use App\Models\MedicalRecord;
-use App\Models\Pet;
 use App\Http\Requests\StoreMedicalRecordRequest;
 use App\Http\Requests\UpdateMedicalRecordRequest;
+use App\Models\MedicalRecord;
+use App\Models\Pet;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class MedicalRecordController extends Controller
@@ -18,13 +18,18 @@ class MedicalRecordController extends Controller
     {
         $this->ensureDoctorOrAdmin();
 
-        $pets = Pet::with('medicalRecords.doctor')->get();
+        $pets = Pet::with('medicalRecords.doctor', 'medicalRecords.observations.doctor')->get();
 
         $selectedPet = $pets->first();
-        $medicalRecords = $selectedPet ? $selectedPet->medicalRecords()->orderByDesc('visited_at')->get() : collect();
+        $medicalRecords = $selectedPet
+            ? $selectedPet->medicalRecords()->with(['doctor', 'observations.doctor'])->orderByDesc('visited_at')->get()
+            : collect();
         $lastVisit = $selectedPet ? $selectedPet->medicalRecords()->orderByDesc('visited_at')->first() : null;
         $medicalExams = $selectedPet
             ? $selectedPet->medicalExams()->with(['uploader', 'medicalRecord'])->orderByDesc('uploaded_at')->get()
+            : collect();
+        $vaccinations = $selectedPet
+            ? $selectedPet->vaccinations()->with('doctor')->orderByDesc('vaccinated_at')->get()
             : collect();
 
         $viewData = [];
@@ -33,6 +38,7 @@ class MedicalRecordController extends Controller
         $viewData['medicalRecords'] = $medicalRecords;
         $viewData['lastVisit'] = $lastVisit;
         $viewData['medicalExams'] = $medicalExams;
+        $viewData['vaccinations'] = $vaccinations;
 
         return view('medical_records.medical_records', $viewData);
     }
@@ -41,12 +47,16 @@ class MedicalRecordController extends Controller
     {
         $this->ensureDoctorOrAdmin();
 
-        $pets = Pet::with('medicalRecords.doctor')->get();
-        $medicalRecords = $pet->medicalRecords()->orderByDesc('visited_at')->get();
+        $pets = Pet::with('medicalRecords.doctor', 'medicalRecords.observations.doctor')->get();
+        $medicalRecords = $pet->medicalRecords()->with(['doctor', 'observations.doctor'])->orderByDesc('visited_at')->get();
         $lastVisit = $pet->medicalRecords()->orderByDesc('visited_at')->first();
         $medicalExams = $pet->medicalExams()
             ->with(['uploader', 'medicalRecord'])
             ->orderByDesc('uploaded_at')
+            ->get();
+        $vaccinations = $pet->vaccinations()
+            ->with('doctor')
+            ->orderByDesc('vaccinated_at')
             ->get();
 
         $viewData = [];
@@ -55,6 +65,7 @@ class MedicalRecordController extends Controller
         $viewData['medicalRecords'] = $medicalRecords;
         $viewData['lastVisit'] = $lastVisit;
         $viewData['medicalExams'] = $medicalExams;
+        $viewData['vaccinations'] = $vaccinations;
 
         return view('medical_records.medical_records', $viewData);
     }
@@ -74,6 +85,8 @@ class MedicalRecordController extends Controller
         $this->ensureDoctorOrAdmin();
 
         $validated = $request->validated();
+        $validated['notes'] = $validated['observation'] ?? null;
+        unset($validated['observation']);
 
         // Procesar fotos
         $photos = [];
@@ -112,6 +125,8 @@ class MedicalRecordController extends Controller
         $this->ensureDoctorOrAdmin();
 
         $validated = $request->validated();
+        $validated['notes'] = $validated['observation'] ?? null;
+        unset($validated['observation']);
 
         // Procesar fotos
         $photos = $medicalRecord->photos ?? [];
@@ -154,7 +169,7 @@ class MedicalRecordController extends Controller
     {
         $role = (string) (Auth::user()->role ?? '');
 
-        if (!in_array($role, ['admin', 'doctor'], true)) {
+        if (! in_array($role, ['admin', 'doctor'], true)) {
             abort(403, 'No tienes permisos para acceder a esta sección.');
         }
     }

@@ -1,11 +1,11 @@
 let currentEventId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+    const calendarEl = document.getElementById('calendar');
     
     if(!calendarEl) return;
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
         headerToolbar: {
             left: 'prev,next today',
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             minute: '2-digit',
             meridiem: 'short'
         },
-        events: window.CalendarConfig.eventsUrl,
+        events: globalThis.CalendarConfig.eventsUrl,
         dateClick: function(info) {
             openCreateModal(info.dateStr.split('T')[0], info.dateStr.split('T')[1]?.substring(0, 5));
         },
@@ -48,7 +48,7 @@ function openCreateModal(date = '', startTime = '') {
     currentEventId = null;
     document.getElementById('appointmentForm').reset();
     document.getElementById('formMethod').value = 'POST';
-    document.getElementById('appointmentForm').action = window.CalendarConfig.storeUrl;
+    document.getElementById('appointmentForm').action = globalThis.CalendarConfig.storeUrl;
     
     document.getElementById('statusGroup').style.display = 'none';
     document.getElementById('btnDelete').style.display = 'none';
@@ -57,8 +57,8 @@ function openCreateModal(date = '', startTime = '') {
     if (date) document.getElementById('date').value = date;
     if (startTime) {
         document.getElementById('start_time').value = startTime;
-        let [h, m] = startTime.split(':');
-        let endH = (parseInt(h) + 1).toString().padStart(2, '0');
+        const [h, m] = startTime.split(':');
+        const endH = (Number.parseInt(h) + 1).toString().padStart(2, '0');
         document.getElementById('end_time').value = `${endH}:${m}`;
     }
 
@@ -67,7 +67,7 @@ function openCreateModal(date = '', startTime = '') {
 
 function openEditModal(event) {
     currentEventId = event.id;
-    let props = event.extendedProps;
+    const props = event.extendedProps;
     
     document.getElementById('appointmentForm').action = `/appointments/${currentEventId}`;
     document.getElementById('formMethod').value = 'PUT';
@@ -75,10 +75,10 @@ function openEditModal(event) {
     document.getElementById('doctor_id').value = props.doctor_id;
     document.getElementById('pet_id').value = props.pet_id;
     
-    let startObj = event.start;
-    let endObj = event.end;
+    const startObj = event.start;
+    const endObj = event.end;
     
-    let dateStr = startObj.getFullYear() + '-' + String(startObj.getMonth() + 1).padStart(2, '0') + '-' + String(startObj.getDate()).padStart(2, '0');
+    const dateStr = startObj.getFullYear() + '-' + String(startObj.getMonth() + 1).padStart(2, '0') + '-' + String(startObj.getDate()).padStart(2, '0');
     document.getElementById('date').value = dateStr;
     
     document.getElementById('start_time').value = String(startObj.getHours()).padStart(2, '0') + ':' + String(startObj.getMinutes()).padStart(2, '0');
@@ -96,7 +96,7 @@ function openEditModal(event) {
 
 function deleteAppointment() {
     if(confirm('¿Está seguro de eliminar físicamente esta cita? Esta acción no se puede deshacer.')) {
-        let form = document.getElementById('deleteForm');
+        const form = document.getElementById('deleteForm');
         form.action = `/appointments/${currentEventId}`;
         form.submit();
     }

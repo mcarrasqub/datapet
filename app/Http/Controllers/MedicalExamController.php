@@ -20,7 +20,7 @@ class MedicalExamController extends Controller
 
         $validated = $request->validated();
 
-        if (!empty($validated['medical_record_id']) && !$pet->medicalRecords()->where('id', $validated['medical_record_id'])->exists()) {
+        if (! empty($validated['medical_record_id']) && ! $pet->medicalRecords()->where('id', $validated['medical_record_id'])->exists()) {
             return back()->withErrors([
                 'medical_record_id' => 'La consulta seleccionada no pertenece a esta mascota.',
             ])->withInput();
@@ -30,8 +30,8 @@ class MedicalExamController extends Controller
 
         foreach ($request->file('files', []) as $file) {
             $extension = strtolower((string) $file->getClientOriginalExtension());
-            $uniqueFileName = Str::uuid()->toString() . '.' . $extension;
-            $relativePath = 'medical_exams/pet_' . $pet->id;
+            $uniqueFileName = Str::uuid()->toString().'.'.$extension;
+            $relativePath = 'medical_exams/pet_'.$pet->id;
             $storedPath = $file->storeAs($relativePath, $uniqueFileName, 'local');
 
             MedicalExam::create([
@@ -54,25 +54,25 @@ class MedicalExamController extends Controller
 
         if (Auth::user()->role === 'client') {
             return redirect()->route('pets.exams', ['pet_id' => $pet->id])
-                ->with('success', 'Se cargaron ' . $uploadedCount . ' archivo(s) de examen correctamente.');
+                ->with('success', 'Se cargaron '.$uploadedCount.' archivo(s) de examen correctamente.');
         }
 
         return redirect()->route('medical_records.show', $pet)
-            ->with('success', 'Se cargaron ' . $uploadedCount . ' archivo(s) de examen correctamente.');
+            ->with('success', 'Se cargaron '.$uploadedCount.' archivo(s) de examen correctamente.');
     }
 
     public function view(MedicalExam $medicalExam): BinaryFileResponse
     {
         $this->ensureCanAccessPet($medicalExam->pet);
 
-        if (Auth::user()->role === 'doctor' && !$medicalExam->reviewed_by_doctor_at) {
+        if (Auth::user()->role === 'doctor' && ! $medicalExam->reviewed_by_doctor_at) {
             $medicalExam->update([
                 'reviewed_by_doctor_id' => (int) Auth::id(),
                 'reviewed_by_doctor_at' => now(),
             ]);
 
             // Marcar la tarea automática de revisión de examen como completada
-            $taskKey = 'doctor:' . Auth::id() . ':exam:' . $medicalExam->id . ':review';
+            $taskKey = 'doctor:'.Auth::id().':exam:'.$medicalExam->id.':review';
             $task = DoctorTask::where('task_key', $taskKey)
                 ->where('doctor_id', Auth::id())
                 ->first();
@@ -82,7 +82,7 @@ class MedicalExamController extends Controller
             }
         }
 
-        if (!Storage::disk('local')->exists($medicalExam->file_path)) {
+        if (! Storage::disk('local')->exists($medicalExam->file_path)) {
             abort(404, 'El archivo no existe.');
         }
 
@@ -90,7 +90,7 @@ class MedicalExamController extends Controller
 
         return response()->file($absolutePath, [
             'Content-Type' => $medicalExam->mime_type,
-            'Content-Disposition' => 'inline; filename="' . addslashes($medicalExam->original_name) . '"',
+            'Content-Disposition' => 'inline; filename="'.addslashes($medicalExam->original_name).'"',
         ]);
     }
 
@@ -98,7 +98,7 @@ class MedicalExamController extends Controller
     {
         $this->ensureCanAccessPet($medicalExam->pet);
 
-        if (!Storage::disk('local')->exists($medicalExam->file_path)) {
+        if (! Storage::disk('local')->exists($medicalExam->file_path)) {
             abort(404, 'El archivo no existe.');
         }
 
@@ -122,7 +122,7 @@ class MedicalExamController extends Controller
             abort(403, 'Solo puedes subir exámenes para tus propias mascotas.');
         }
 
-        if (!in_array($role, ['admin', 'doctor', 'client'], true)) {
+        if (! in_array($role, ['admin', 'doctor', 'client'], true)) {
             abort(403, 'No tienes permisos para subir exámenes.');
         }
     }
@@ -131,7 +131,7 @@ class MedicalExamController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             abort(403);
         }
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="C:\xampp\htdocs\datapet\phpunit.xml" tests="27" assertions="77" errors="0" failures="0" skipped="0" time="2.377468">
+    <testsuite name="Unit" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.003252">
+      <testsuite name="Tests\Unit\ExampleTest" file="C:\xampp\htdocs\datapet\tests\Unit\ExampleTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.003252">
+        <testcase name="test_that_true_is_true" file="C:\xampp\htdocs\datapet\tests\Unit\ExampleTest.php" line="12" class="Tests\Unit\ExampleTest" classname="Tests.Unit.ExampleTest" assertions="1" time="0.003252"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="Feature" tests="26" assertions="76" errors="0" failures="0" skipped="0" time="2.374216">
+      <testsuite name="Tests\Feature\AppointmentsTest" file="C:\xampp\htdocs\datapet\tests\Feature\AppointmentsTest.php" tests="2" assertions="4" errors="0" failures="0" skipped="0" time="0.720441">
+        <testcase name="test_admin_can_create_and_cancel_appointment" file="C:\xampp\htdocs\datapet\tests\Feature\AppointmentsTest.php" line="30" class="Tests\Feature\AppointmentsTest" classname="Tests.Feature.AppointmentsTest" assertions="3" time="0.701313"/>
+        <testcase name="test_overlapping_appointment_is_rejected" file="C:\xampp\htdocs\datapet\tests\Feature\AppointmentsTest.php" line="63" class="Tests\Feature\AppointmentsTest" classname="Tests.Feature.AppointmentsTest" assertions="1" time="0.019128"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\AuthTest" file="C:\xampp\htdocs\datapet\tests\Feature\AuthTest.php" tests="2" assertions="5" errors="0" failures="0" skipped="0" time="0.033773">
+        <testcase name="test_user_can_logout_and_session_ends" file="C:\xampp\htdocs\datapet\tests\Feature\AuthTest.php" line="13" class="Tests\Feature\AuthTest" classname="Tests.Feature.AuthTest" assertions="3" time="0.016495"/>
+        <testcase name="test_user_cannot_access_protected_routes_after_logout" file="C:\xampp\htdocs\datapet\tests\Feature\AuthTest.php" line="23" class="Tests\Feature\AuthTest" classname="Tests.Feature.AuthTest" assertions="2" time="0.017278"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\ClinicalObservationsTest" file="C:\xampp\htdocs\datapet\tests\Feature\ClinicalObservationsTest.php" tests="5" assertions="14" errors="0" failures="0" skipped="0" time="1.140750">
+        <testcase name="test_doctor_can_record_clinical_observation_with_timestamp" file="C:\xampp\htdocs\datapet\tests\Feature\ClinicalObservationsTest.php" line="44" class="Tests\Feature\ClinicalObservationsTest" classname="Tests.Feature.ClinicalObservationsTest" assertions="4" time="0.023178"/>
+        <testcase name="test_doctor_can_record_multiple_observations_and_edit_them" file="C:\xampp\htdocs\datapet\tests\Feature\ClinicalObservationsTest.php" line="72" class="Tests\Feature\ClinicalObservationsTest" classname="Tests.Feature.ClinicalObservationsTest" assertions="3" time="1.051855"/>
+        <testcase name="test_doctor_can_delete_clinical_observation" file="C:\xampp\htdocs\datapet\tests\Feature\ClinicalObservationsTest.php" line="99" class="Tests\Feature\ClinicalObservationsTest" classname="Tests.Feature.ClinicalObservationsTest" assertions="2" time="0.024852"/>
+        <testcase name="test_doctor_cannot_create_clinical_observation_without_text" file="C:\xampp\htdocs\datapet\tests\Feature\ClinicalObservationsTest.php" line="119" class="Tests\Feature\ClinicalObservationsTest" classname="Tests.Feature.ClinicalObservationsTest" assertions="3" time="0.017372"/>
+        <testcase name="test_client_cannot_delete_observations" file="C:\xampp\htdocs\datapet\tests\Feature\ClinicalObservationsTest.php" line="134" class="Tests\Feature\ClinicalObservationsTest" classname="Tests.Feature.ClinicalObservationsTest" assertions="2" time="0.023492"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\DoctorAppointmentsTest" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorAppointmentsTest.php" tests="2" assertions="15" errors="0" failures="0" skipped="0" time="0.048646">
+        <testcase name="test_doctor_can_view_schedule_calendar_with_daily_and_weekly_views" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorAppointmentsTest.php" line="46" class="Tests\Feature\DoctorAppointmentsTest" classname="Tests.Feature.DoctorAppointmentsTest" assertions="6" time="0.025711"/>
+        <testcase name="test_doctor_only_sees_assigned_appointments_in_events" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorAppointmentsTest.php" line="70" class="Tests\Feature\DoctorAppointmentsTest" classname="Tests.Feature.DoctorAppointmentsTest" assertions="9" time="0.022934"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\DoctorTaskControllerTest" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTaskControllerTest.php" tests="5" assertions="9" errors="0" failures="0" skipped="0" time="0.115418">
+        <testcase name="test_index_syncs_system_tasks" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTaskControllerTest.php" line="34" class="Tests\Feature\DoctorTaskControllerTest" classname="Tests.Feature.DoctorTaskControllerTest" assertions="2" time="0.031187"/>
+        <testcase name="test_admin_can_update_task_status" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTaskControllerTest.php" line="71" class="Tests\Feature\DoctorTaskControllerTest" classname="Tests.Feature.DoctorTaskControllerTest" assertions="2" time="0.017797"/>
+        <testcase name="test_doctor_can_complete_own_task" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTaskControllerTest.php" line="97" class="Tests\Feature\DoctorTaskControllerTest" classname="Tests.Feature.DoctorTaskControllerTest" assertions="2" time="0.021912"/>
+        <testcase name="test_doctor_cannot_update_others_tasks" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTaskControllerTest.php" line="120" class="Tests\Feature\DoctorTaskControllerTest" classname="Tests.Feature.DoctorTaskControllerTest" assertions="1" time="0.024679"/>
+        <testcase name="test_admin_can_delete_task" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTaskControllerTest.php" line="143" class="Tests\Feature\DoctorTaskControllerTest" classname="Tests.Feature.DoctorTaskControllerTest" assertions="2" time="0.019844"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\DoctorTasksTest" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTasksTest.php" tests="3" assertions="14" errors="0" failures="0" skipped="0" time="0.080032">
+        <testcase name="test_admin_can_view_tasks_grouped_by_doctor_and_overdue_highlighted" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTasksTest.php" line="46" class="Tests\Feature\DoctorTasksTest" classname="Tests.Feature.DoctorTasksTest" assertions="10" time="0.034390"/>
+        <testcase name="test_admin_can_update_task_status" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTasksTest.php" line="111" class="Tests\Feature\DoctorTasksTest" classname="Tests.Feature.DoctorTasksTest" assertions="3" time="0.021474"/>
+        <testcase name="test_non_admin_cannot_access_tasks_dashboard" file="C:\xampp\htdocs\datapet\tests\Feature\DoctorTasksTest.php" line="144" class="Tests\Feature\DoctorTasksTest" classname="Tests.Feature.DoctorTasksTest" assertions="1" time="0.024167"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\ExampleTest" file="C:\xampp\htdocs\datapet\tests\Feature\ExampleTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.022314">
+        <testcase name="test_the_application_returns_a_successful_response" file="C:\xampp\htdocs\datapet\tests\Feature\ExampleTest.php" line="14" class="Tests\Feature\ExampleTest" classname="Tests.Feature.ExampleTest" assertions="1" time="0.022314"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\MedicalExamsTest" file="C:\xampp\htdocs\datapet\tests\Feature\MedicalExamsTest.php" tests="4" assertions="9" errors="0" failures="0" skipped="0" time="0.164026">
+        <testcase name="test_doctor_can_upload_medical_exam" file="C:\xampp\htdocs\datapet\tests\Feature\MedicalExamsTest.php" line="47" class="Tests\Feature\MedicalExamsTest" classname="Tests.Feature.MedicalExamsTest" assertions="3" time="0.052096"/>
+        <testcase name="test_doctor_can_view_medical_exam" file="C:\xampp\htdocs\datapet\tests\Feature\MedicalExamsTest.php" line="83" class="Tests\Feature\MedicalExamsTest" classname="Tests.Feature.MedicalExamsTest" assertions="2" time="0.026093"/>
+        <testcase name="test_doctor_can_download_medical_exam" file="C:\xampp\htdocs\datapet\tests\Feature\MedicalExamsTest.php" line="121" class="Tests\Feature\MedicalExamsTest" classname="Tests.Feature.MedicalExamsTest" assertions="3" time="0.036765"/>
+        <testcase name="test_client_cannot_upload_to_other_pets" file="C:\xampp\htdocs\datapet\tests\Feature\MedicalExamsTest.php" line="146" class="Tests\Feature\MedicalExamsTest" classname="Tests.Feature.MedicalExamsTest" assertions="1" time="0.049072"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\MedicalRecordsTest" file="C:\xampp\htdocs\datapet\tests\Feature\MedicalRecordsTest.php" tests="2" assertions="5" errors="0" failures="0" skipped="0" time="0.048817">
+        <testcase name="test_doctor_can_create_medical_record_via_controller" file="C:\xampp\htdocs\datapet\tests\Feature\MedicalRecordsTest.php" line="29" class="Tests\Feature\MedicalRecordsTest" classname="Tests.Feature.MedicalRecordsTest" assertions="3" time="0.027260"/>
+        <testcase name="test_cannot_create_record_without_diagnosis" file="C:\xampp\htdocs\datapet\tests\Feature\MedicalRecordsTest.php" line="62" class="Tests\Feature\MedicalRecordsTest" classname="Tests.Feature.MedicalRecordsTest" assertions="2" time="0.021558"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

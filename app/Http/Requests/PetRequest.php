@@ -22,7 +22,7 @@ class PetRequest extends FormRequest
             'gender' => 'required|in:male,female,unknown',
             'weight' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
         ];
     }
 }

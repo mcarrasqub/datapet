@@ -26,7 +26,7 @@ class StoreMedicalRecordRequest extends FormRequest
             'reason' => 'required|string|max:255',
             'diagnosis' => 'required|string',
             'treatment' => 'required|string',
-            'notes' => 'nullable|string',
+            'observation' => 'required|string',
             'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }

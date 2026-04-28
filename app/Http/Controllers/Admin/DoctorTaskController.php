@@ -9,13 +9,19 @@ use App\Models\MedicalExam;
 use App\Models\MedicalRecord;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class DoctorTaskController extends Controller
 {
+    private const CONSULTATION_PREFIX = 'La consulta del ';
+
+    private const TASK_KEY_RECORD_SEGMENT = ':record:';
+
     public function index(Request $request): View
     {
         $this->ensureAdmin();
@@ -38,7 +44,7 @@ class DoctorTaskController extends Controller
         $globalMetrics = [
             'total' => $allTasksForMetrics->count(),
             'pending' => $allTasksForMetrics->filter(function ($task) {
-                return $task->status === 'pending' && !($task->is_overdue || $task->status === 'overdue');
+                return $task->status === 'pending' && ! ($task->is_overdue || $task->status === 'overdue');
             })->count(),
             'completed' => $allTasksForMetrics->where('status', 'completed')->count(),
             'overdue' => $allTasksForMetrics->filter(function ($task) {
@@ -54,39 +60,11 @@ class DoctorTaskController extends Controller
             })
             ->with([
                 'doctorTasks' => function ($query) use ($statusFilter) {
-                    // Si se selecciona un filtro de estado, aplicarlo
-                    if ($statusFilter) {
-                        if ($statusFilter === 'overdue') {
-                            // Para "vencida": tareas con status='overdue' O tareas donde la fecha límite ya pasó y no están completadas
-                            $query->where(function ($q) {
-                                $q->where('status', 'overdue')
-                                    ->orWhere(function ($subQ) {
-                                        $subQ->where('status', '!=', 'completed')
-                                            ->where('status', '!=', 'overdue')
-                                            ->whereNotNull('due_date')
-                                            ->whereRaw('due_date < CURDATE()');
-                                    });
-                            });
-                        } else {
-                            // Para otros estados
-                            if ($statusFilter === 'pending') {
-                                // Para "pendiente": solo tareas pending que NO estén vencidas
-                                $query->where('status', 'pending')
-                                    ->where(function ($q) {
-                                    $q->whereNull('due_date')
-                                        ->orWhereRaw('due_date >= CURDATE()');
-                                });
-                            } else {
-                                // Para "completed", filtrar exactamente por ese estado
-                                $query->where('status', $statusFilter);
-                            }
-                        }
-                    }
-
-                    $query->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+                    $this->applyTaskStatusFilter($query, $statusFilter);
+                    $query->orderByRaw($this->getPriorityOrderExpression())
                         ->orderBy('due_date')
                         ->orderByDesc('created_at');
-                }
+                },
             ])
             ->orderBy('name')
             ->get();
@@ -103,6 +81,46 @@ class DoctorTaskController extends Controller
         ]);
     }
 
+    private function applyTaskStatusFilter(Relation $query, ?string $statusFilter): void
+    {
+        if (! $statusFilter) {
+            return;
+        }
+
+        if ($statusFilter === 'overdue') {
+            $query->where(function ($subQuery) {
+                $subQuery->where('status', 'overdue')
+                    ->orWhere(function ($nestedQuery) {
+                        $nestedQuery->where('status', '!=', 'completed')
+                            ->where('status', '!=', 'overdue')
+                            ->whereNotNull('due_date')
+                            ->whereRaw('due_date < CURDATE()');
+                    });
+            });
+
+            return;
+        }
+
+        if ($statusFilter === 'pending') {
+            $query->where('status', 'pending')
+                ->where(function ($pendingQuery) {
+                    $pendingQuery->whereNull('due_date')
+                        ->orWhereRaw('due_date >= CURDATE()');
+                });
+
+            return;
+        }
+
+        $query->where('status', $statusFilter);
+    }
+
+    private function getPriorityOrderExpression(): string
+    {
+        return DB::connection()->getDriverName() === 'sqlite'
+            ? "CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END"
+            : "FIELD(priority, 'high', 'medium', 'low')";
+    }
+
     public function updateStatus(UpdateDoctorTaskStatusRequest $request, DoctorTask $task): RedirectResponse
     {
         $this->ensureAdmin();
@@ -117,7 +135,7 @@ class DoctorTaskController extends Controller
     public function updateOwnStatus(Request $request, DoctorTask $task): RedirectResponse
     {
         // Verificar que el doctor autenticado es dueño de esta tarea
-        if (!Auth::check() || Auth::user()->id !== $task->doctor_id || Auth::user()->role !== 'doctor') {
+        if (! Auth::check() || Auth::user()->id !== $task->doctor_id || Auth::user()->role !== 'doctor') {
             abort(403, 'No tienes permiso para actualizar esta tarea.');
         }
 
@@ -143,7 +161,7 @@ class DoctorTaskController extends Controller
 
     private function ensureAdmin(): void
     {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (! Auth::check() || Auth::user()->role !== 'admin') {
             abort(403, 'No tienes permisos para acceder a esta sección.');
         }
     }
@@ -156,7 +174,7 @@ class DoctorTaskController extends Controller
         foreach ($doctors as $doctor) {
             $activeKeys = [];
 
-            $examTasks = $this->buildUnreviewedExamTasks((int) $doctor->id, $allDoctorIds);
+            $examTasks = $this->buildUnreviewedExamTasks($allDoctorIds);
             foreach ($examTasks as $taskData) {
                 $activeKeys[] = $taskData['task_key'];
                 $this->upsertSystemTask($taskData);
@@ -172,7 +190,7 @@ class DoctorTaskController extends Controller
                 ->where('is_system', true)
                 ->where('status', '!=', 'completed'); // Proteger tareas completadas
 
-            if (count($activeKeys) > 0) {
+            if (! empty($activeKeys)) {
                 $cleanupQuery->whereNotIn('task_key', $activeKeys);
             }
 
@@ -181,7 +199,7 @@ class DoctorTaskController extends Controller
     }
 
     /**
-     * @param array<string, mixed> $taskData
+     * @param  array<string, mixed>  $taskData
      */
     private function upsertSystemTask(array $taskData): void
     {
@@ -201,7 +219,7 @@ class DoctorTaskController extends Controller
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function buildUnreviewedExamTasks(int $doctorId, array $allDoctorIds): array
+    private function buildUnreviewedExamTasks(array $allDoctorIds): array
     {
         $exams = MedicalExam::query()
             ->with(['pet.medicalRecords', 'uploader', 'medicalRecord'])
@@ -219,15 +237,15 @@ class DoctorTaskController extends Controller
             foreach ($targetDoctorIds as $targetDoctorId) {
                 $tasks[] = [
                     'doctor_id' => $targetDoctorId,
-                    'title' => 'Revisar examen externo: ' . ($exam->title ?: $exam->original_name),
-                    'description' => 'El cliente subió un examen para ' . $petName . ' y aún no ha sido revisado por el doctor.',
+                    'title' => 'Revisar examen externo: '.($exam->title ?: $exam->original_name),
+                    'description' => 'El cliente subió un examen para '.$petName.' y aún no ha sido revisado por el doctor.',
                     'status' => 'pending',
                     'due_date' => optional($exam->uploaded_at)->toDateString(),
                     'priority' => 'high',
                     'is_system' => true,
                     'source_type' => 'medical_exam',
                     'source_id' => $exam->id,
-                    'task_key' => 'doctor:' . $targetDoctorId . ':exam:' . $exam->id . ':review',
+                    'task_key' => 'doctor:'.$targetDoctorId.':exam:'.$exam->id.':review',
                 ];
             }
         }
@@ -258,7 +276,7 @@ class DoctorTaskController extends Controller
             ->values()
             ->all();
 
-        return count($doctorIds) > 0 ? $doctorIds : $allDoctorIds;
+        return ! empty($doctorIds) ? $doctorIds : $allDoctorIds;
     }
 
     /**
@@ -286,14 +304,14 @@ class DoctorTaskController extends Controller
                 $tasks[] = [
                     'doctor_id' => $doctorId,
                     'title' => 'Completar historial clínico (diagnóstico)',
-                    'description' => 'La consulta del ' . $visitDate . ' no tiene diagnóstico registrado.',
+                    'description' => self::CONSULTATION_PREFIX.$visitDate.' no tiene diagnóstico registrado.',
                     'status' => 'pending',
                     'due_date' => optional($record->visited_at)->toDateString(),
                     'priority' => 'high',
                     'is_system' => true,
                     'source_type' => 'medical_record',
                     'source_id' => $record->id,
-                    'task_key' => 'doctor:' . $doctorId . ':record:' . $record->id . ':diagnosis',
+                    'task_key' => 'doctor:'.$doctorId.self::TASK_KEY_RECORD_SEGMENT.$record->id.':diagnosis',
                 ];
             }
 
@@ -301,14 +319,14 @@ class DoctorTaskController extends Controller
                 $tasks[] = [
                     'doctor_id' => $doctorId,
                     'title' => 'Completar receta/tratamiento',
-                    'description' => 'La consulta del ' . $visitDate . ' no tiene tratamiento o receta registrada.',
+                    'description' => self::CONSULTATION_PREFIX.$visitDate.' no tiene tratamiento o receta registrada.',
                     'status' => 'pending',
                     'due_date' => optional($record->visited_at)->toDateString(),
                     'priority' => 'medium',
                     'is_system' => true,
                     'source_type' => 'medical_record',
                     'source_id' => $record->id,
-                    'task_key' => 'doctor:' . $doctorId . ':record:' . $record->id . ':treatment',
+                    'task_key' => 'doctor:'.$doctorId.self::TASK_KEY_RECORD_SEGMENT.$record->id.':treatment',
                 ];
             }
 
@@ -316,14 +334,14 @@ class DoctorTaskController extends Controller
                 $tasks[] = [
                     'doctor_id' => $doctorId,
                     'title' => 'Completar kardex/seguimiento',
-                    'description' => 'La consulta del ' . $visitDate . ' no tiene notas de seguimiento (kardex).',
+                    'description' => self::CONSULTATION_PREFIX.$visitDate.' no tiene notas de seguimiento (kardex).',
                     'status' => 'pending',
                     'due_date' => optional($record->visited_at)->toDateString(),
                     'priority' => 'low',
                     'is_system' => true,
                     'source_type' => 'medical_record',
                     'source_id' => $record->id,
-                    'task_key' => 'doctor:' . $doctorId . ':record:' . $record->id . ':notes',
+                    'task_key' => 'doctor:'.$doctorId.self::TASK_KEY_RECORD_SEGMENT.$record->id.':notes',
                 ];
             }
         }

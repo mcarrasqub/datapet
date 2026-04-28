@@ -89,7 +89,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark fw-medium" href="#"><i class="bi bi-heart me-2"></i>Adopciones</a>
+                        <a class="nav-link {{ request()->routeIs('adoption.index') ? 'active-pill' : 'text-dark fw-medium' }}" 
+                           href="{{ route('adoption.index') }}">
+                            <i class="bi bi-heart me-2"></i>Adopciones
+                        </a>
                     </li>
                 </ul>
             </div>

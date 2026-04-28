@@ -1,10 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\MedicalExamController;
 use App\Http\Controllers\Admin\DoctorTaskController;
+use App\Http\Controllers\Doctor\ClinicalObservationController;
+use App\Http\Controllers\Doctor\VaccinationController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\MedicalExamController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home.index');
 
@@ -34,6 +36,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/medical-records-edit/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@edit')->name('medical_records.edit');
     Route::put('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@update')->name('medical_records.update');
     Route::delete('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@destroy')->name('medical_records.destroy');
+    Route::post('/medical-records/{medicalRecord}/observations', [ClinicalObservationController::class, 'store'])->name('clinical_observations.store');
+    Route::get('/clinical-observations/{clinicalObservation}/edit', [ClinicalObservationController::class, 'edit'])->name('clinical_observations.edit');
+    Route::put('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'update'])->name('clinical_observations.update');
+    Route::delete('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'destroy'])->name('clinical_observations.destroy');
+    Route::post('/pets/{pet}/vaccinations', [VaccinationController::class, 'store'])->name('vaccinations.store');
     Route::post('/pets/{pet}/exams', [MedicalExamController::class, 'store'])->name('medical_exams.store');
     Route::get('/medical-exams/{medicalExam}/view', [MedicalExamController::class, 'view'])->name('medical_exams.view');
     Route::get('/medical-exams/{medicalExam}/download', [MedicalExamController::class, 'download'])->name('medical_exams.download');
@@ -52,4 +59,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/doctor/appointments', 'App\Http\Controllers\Doctor\AppointmentDoctorController@index')->name('doctor.appointments.index');
     Route::get('/doctor/appointments/events', 'App\Http\Controllers\Doctor\AppointmentDoctorController@events')->name('doctor.appointments.events');
+
+    Route::get('/adoption', 'App\Http\Controllers\AdoptionController@index')->name('adoption.index');
+    Route::get('/adoption/{pet}', 'App\Http\Controllers\AdoptionController@show')->name('adoption.show');
+    Route::post('/adoption', 'App\Http\Controllers\AdoptionController@store')->name('adoption.store');
+    Route::get('/admin/adoption-requests', 'App\Http\Controllers\AdoptionController@adminIndex')->name('adoption.admin.index');  
+    Route::patch('/admin/adoption-requests/{adoptionRequest}/approve', 'App\Http\Controllers\AdoptionController@approve')->name('adoption.approve');
+    Route::patch('/admin/adoption-requests/{adoptionRequest}/reject', 'App\Http\Controllers\AdoptionController@reject')->name('adoption.reject');
+    Route::get('/admin/adoptions/create', 'App\Http\Controllers\AdoptionController@create')->name('admin.adoptions.create');
+    Route::post('/admin/adoptions', 'App\Http\Controllers\AdoptionController@storePet')->name('admin.adoptions.store');
 });

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Pet;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Pet;
+use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,6 +27,7 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         $clients = User::where('role', 'client')->get();
+
         return view('auth.register', compact('clients'));
     }
 
@@ -44,7 +45,7 @@ class RegisterController extends Controller
 
         // Create pet if pet data was provided
         if ($request->filled('pet_name')) {
-            $pet = new Pet();
+            $pet = new Pet;
             $pet->name = $request->pet_name;
             $pet->species = $request->species;
             $pet->breed = $request->breed;
@@ -61,8 +62,8 @@ class RegisterController extends Controller
             $pet->save();
         }
 
-        $message = ($request->registration_type === 'existing_client') 
-            ? 'Mascota agregada al cliente exitosamente.' 
+        $message = ($request->registration_type === 'existing_client')
+            ? 'Mascota agregada al cliente exitosamente.'
             : 'Cliente y mascota registrados exitosamente.';
 
         return redirect()->route('register')->with('success', $message);

@@ -60,14 +60,14 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="notes" class="form-label fw-bold">
-                                <i class="bi bi-chat-left-text me-2 text-pet-green"></i>Notas Adicionales
+                            <label for="observation" class="form-label fw-bold">
+                                <i class="bi bi-chat-left-text me-2 text-pet-green"></i>Observación clínica
                             </label>
-                            <textarea class="form-control @error('notes') is-invalid @enderror" 
-                                      id="notes" name="notes" rows="2" 
-                                      placeholder="Notas opcionales"
-                                      style="border-color: #76a75d;">{{ old('notes') }}</textarea>
-                            @error('notes')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                            <textarea class="form-control @error('observation') is-invalid @enderror" 
+                                      id="observation" name="observation" rows="2" 
+                                      placeholder="Describe hallazgos, conducta o seguimiento clínico"
+                                      style="border-color: #76a75d;">{{ old('observation') }}</textarea>
+                            @error('observation')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="mb-4">
