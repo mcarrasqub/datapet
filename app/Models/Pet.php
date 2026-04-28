@@ -60,6 +60,11 @@ class Pet extends Model
         return $this->hasMany(MedicalExam::class, 'pet_id');
     }
 
+    public function vaccinations(): HasMany
+    {
+        return $this->hasMany(Vaccination::class, 'pet_id');
+    }
+
     // Getters
     public function getId(): int
     {

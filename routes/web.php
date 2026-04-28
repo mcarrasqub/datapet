@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DoctorTaskController;
 use App\Http\Controllers\Doctor\ClinicalObservationController;
+use App\Http\Controllers\Doctor\VaccinationController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\MedicalExamController;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/clinical-observations/{clinicalObservation}/edit', [ClinicalObservationController::class, 'edit'])->name('clinical_observations.edit');
     Route::put('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'update'])->name('clinical_observations.update');
     Route::delete('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'destroy'])->name('clinical_observations.destroy');
+    Route::post('/pets/{pet}/vaccinations', [VaccinationController::class, 'store'])->name('vaccinations.store');
     Route::post('/pets/{pet}/exams', [MedicalExamController::class, 'store'])->name('medical_exams.store');
     Route::get('/medical-exams/{medicalExam}/view', [MedicalExamController::class, 'view'])->name('medical_exams.view');
     Route::get('/medical-exams/{medicalExam}/download', [MedicalExamController::class, 'download'])->name('medical_exams.download');
