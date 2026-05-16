@@ -15,6 +15,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/users', 'App\Http\Controllers\Admin\UserController@index')->name('users.index');
     Route::post('/users', 'App\Http\Controllers\Admin\UserController@store')->name('users.store');
+    Route::get('/users/{user}/edit', 'App\Http\Controllers\Admin\UserController@edit')->name('users.edit');
+    Route::put('/users/{user}', 'App\Http\Controllers\Admin\UserController@update')->name('users.update');
     Route::patch('/users/{user}/toggle-status', 'App\Http\Controllers\Admin\UserController@toggleStatus')->name('users.toggleStatus');
     Route::delete('/users/{user}', 'App\Http\Controllers\Admin\UserController@destroy')->name('users.destroy');
     Route::get('/admin/doctor-tasks', [DoctorTaskController::class, 'index'])->name('tasks.index');

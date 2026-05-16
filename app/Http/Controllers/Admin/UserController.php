@@ -8,6 +8,7 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 
@@ -87,6 +88,61 @@ class UserController extends Controller
 
         return redirect()->route('users.index')
             ->with('success', "Usuario \"{$user->name}\" creado correctamente.");
+    }
+
+    /**
+     * Show the form for editing the specified user.
+     */
+    public function edit(User $user): View
+    {
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'No tienes permisos para editar usuarios.');
+        }
+
+        $roles = [
+            'admin' => 'Administrador',
+            'doctor' => 'Doctor Veterinario',
+            'client' => 'Cliente',
+        ];
+
+        return view('admin.users.edit', compact('user', 'roles'));
+    }
+
+    /**
+     * Update the specified user in storage.
+     */
+    public function update(UserRequest $request, User $user): RedirectResponse
+    {
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'No tienes permisos para actualizar usuarios.');
+        }
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'role' => ['required', 'in:admin,doctor,client'],
+            'password' => ['nullable', 'string', 'min:8'],
+        ]);
+
+        // Split full name into name and lastname if possible.
+        $fullName = trim($data['name']);
+        $parts = preg_split('/\s+/', $fullName);
+        $firstName = $parts[0] ?? '';
+        $lastName = count($parts) > 1 ? implode(' ', array_slice($parts, 1)) : '';
+
+        $user->name = $firstName ?: $data['name'];
+        $user->lastname = $lastName;
+        $user->email = $data['email'];
+        $user->role = $data['role'];
+
+        if (!empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('users.index')
+            ->with('success', "Usuario \"{$user->name}\" actualizado correctamente.");
     }
 
     /**
