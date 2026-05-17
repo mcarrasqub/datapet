@@ -101,6 +101,11 @@ class Pet extends Model
     return $this->hasMany(KardexEntry::class, 'pet_id');
   }
 
+  public function medicalFormulas(): HasMany
+  {
+    return $this->hasMany(MedicalFormula::class, 'pet_id');
+  }
+
   // Getters
   public function getId(): int
   {

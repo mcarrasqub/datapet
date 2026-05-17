@@ -57,9 +57,11 @@
                                 <span><i class="bi bi-droplet me-3"></i>Vacunaciones</span>
                                 <span class="badge bg-pet-green rounded-pill">{{ count($vaccinations) }}</span>
                             </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
+                            <a href="#formulas"
+                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary js-pet-section-link"
+                                data-section="formulas">
                                 <span><i class="bi bi-capsule me-3"></i>Fórmulas médicas</span>
+                                <span class="badge bg-pet-green rounded-pill">{{ count($medicalFormulas) }}</span>
                             </a>
                             <a href="#"
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
@@ -520,6 +522,139 @@
                                         </div>
                                     @empty
                                         <div class="text-center py-4 text-muted bg-light rounded-4">No hay vacunas registradas para esta mascota.</div>
+                                    @endforelse
+                                </div>
+                            </div>
+
+                            <div id="formulas" class="js-pet-section d-none">
+                                <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+                                    <h6 class="fw-bold mb-0 text-dark">Fórmulas Médicas (Recetas)</h6>
+                                    <span class="badge bg-light text-secondary border">{{ count($medicalFormulas) }}</span>
+                                </div>
+
+                                <!-- Formulario de registro -->
+                                <div class="card border-0 bg-light rounded-4 p-4 mb-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="bi bi-capsule-take-half text-pet-green-dark fs-5 me-2"></i>
+                                        <h6 class="fw-bold mb-0 text-dark">Emitir Nueva Fórmula Médica</h6>
+                                    </div>
+
+                                    <form action="{{ route('formulas.store', $selectedPet) }}" method="POST" id="formula_form">
+                                        @csrf
+                                        <div class="row g-3 mb-3">
+                                            <div class="col-md-6">
+                                                <label for="formula_date" class="form-label fw-semibold text-secondary">Fecha de Emisión</label>
+                                                <input type="date" name="formula_date" id="formula_date" class="form-control rounded-3" value="{{ now()->toDateString() }}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="formula_instructions" class="form-label fw-semibold text-secondary">Indicaciones / Recomendaciones Generales</label>
+                                                <input type="text" name="instructions" id="formula_instructions" class="form-control rounded-3" placeholder="Ej: Administrar con alimento, reposar...">
+                                            </div>
+                                        </div>
+
+                                        <!-- Contenedor dinámico de medicamentos -->
+                                        <div class="border rounded-4 p-3 bg-white mb-3">
+                                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                                <h6 class="fw-bold text-pet-green mb-0 fs-90"><i class="bi bi-list-check me-1"></i>Lista de Medicamentos</h6>
+                                                <button type="button" class="btn btn-sm btn-outline-pet-green px-3 rounded-pill fw-semibold" id="btn_add_medication">
+                                                    <i class="bi bi-plus-circle me-1"></i> Agregar Medicamento
+                                                </button>
+                                            </div>
+
+                                            <div id="medication_rows_container" class="d-flex flex-column gap-3">
+                                                <!-- Fila base inicial -->
+                                                <div class="row g-2 align-items-end medication-row">
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="form-label small fw-semibold text-secondary mb-1">Medicamento</label>
+                                                        <input type="text" name="medications[0][name]" class="form-control rounded-3" placeholder="Ej: Meloxicam" required>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="form-label small fw-semibold text-secondary mb-1">Dosis</label>
+                                                        <input type="text" name="medications[0][dose]" class="form-control rounded-3" placeholder="Ej: 0.2 ml" required>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="form-label small fw-semibold text-secondary mb-1">Frecuencia</label>
+                                                        <input type="text" name="medications[0][frequency]" class="form-control rounded-3" placeholder="Ej: Cada 24 horas" required>
+                                                    </div>
+                                                    <div class="col-md-2 col-sm-10">
+                                                        <label class="form-label small fw-semibold text-secondary mb-1">Duración</label>
+                                                        <input type="text" name="medications[0][duration]" class="form-control rounded-3" placeholder="Ej: 5 días" required>
+                                                    </div>
+                                                    <div class="col-md-1 col-sm-2 text-end">
+                                                        <button type="button" class="btn btn-outline-danger w-100 rounded-3 btn-remove-row" disabled>
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-pet-green text-white px-4 py-2 fw-semibold rounded-3 shadow-sm">
+                                                <i class="bi bi-file-earmark-medical me-1"></i> Guardar Fórmula Médica
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Historial de fórmulas -->
+                                <div class="d-flex flex-column gap-3">
+                                    <h6 class="fw-bold text-dark mb-1 mt-2"><i class="bi bi-clock-history me-2"></i>Historial de Fórmulas Emitidas</h6>
+                                    @forelse($medicalFormulas as $formula)
+                                        <div class="border rounded-4 p-4 bg-light position-relative border-start-pet-green">
+                                            <div class="position-absolute top-0 end-0 p-3 d-flex gap-2 align-items-center">
+                                                <form action="{{ route('formulas.destroy', $formula) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-link text-danger p-0 border-0" onclick="return confirm('¿Seguro que deseas eliminar esta fórmula médica?')">
+                                                        <i class="bi bi-trash fs-110"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <div class="fw-bold text-dark fs-105 mb-1">
+                                                    <i class="bi bi-calendar-check text-pet-green-dark me-2"></i>{{ $formula->formula_date->format('Y-m-d') }}
+                                                </div>
+                                                <small class="text-muted">Prescrito por: Dr(a). {{ $formula->doctor->name }} {{ $formula->doctor->lastname }}</small>
+                                            </div>
+
+                                            <!-- Listado de medicamentos prescritos -->
+                                            <div class="table-responsive bg-white rounded-3 p-3 border mb-3">
+                                                <table class="table table-sm align-middle mb-0">
+                                                    <thead>
+                                                        <tr class="text-secondary small">
+                                                            <th>Medicamento</th>
+                                                            <th>Dosis</th>
+                                                            <th>Frecuencia</th>
+                                                            <th>Duración</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($formula->medications as $med)
+                                                            <tr>
+                                                                <td class="fw-semibold text-dark">{{ $med['name'] ?? '' }}</td>
+                                                                <td><span class="badge bg-light text-dark border px-2 py-1 rounded-pill">{{ $med['dose'] ?? '' }}</span></td>
+                                                                <td><span class="badge bg-light text-dark border px-2 py-1 rounded-pill">{{ $med['frequency'] ?? '' }}</span></td>
+                                                                <td><span class="badge bg-light text-dark border px-2 py-1 rounded-pill">{{ $med['duration'] ?? '' }}</span></td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            @if($formula->instructions)
+                                                <div class="p-3 bg-white rounded-3 border-start border-start-width-3 border-pet-green text-secondary fs-90">
+                                                    <strong class="d-block text-dark mb-1"><i class="bi bi-info-circle me-1"></i>Recomendaciones Generales:</strong>
+                                                    {{ $formula->instructions }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @empty
+                                        <div class="text-center py-5 text-muted bg-light rounded-4">
+                                            <i class="bi bi-capsule fs-1 mb-3 d-block text-secondary"></i>
+                                            La mascota no cuenta con fórmulas médicas registradas.
+                                        </div>
                                     @endforelse
                                 </div>
                             </div>
@@ -1077,6 +1212,61 @@
 
                     dynamicFieldsContainer.innerHTML = html;
                 });
+            }
+
+            // Dynamic Prescriptions medication rows generator
+            const btnAddMedication = document.getElementById('btn_add_medication');
+            const rowsContainer = document.getElementById('medication_rows_container');
+
+            if (btnAddMedication && rowsContainer) {
+                let rowCount = 1;
+
+                btnAddMedication.addEventListener('click', function () {
+                    const newRow = document.createElement('div');
+                    newRow.className = 'row g-2 align-items-end medication-row mt-2';
+                    newRow.innerHTML = `
+                        <div class="col-md-3 col-sm-12">
+                            <input type="text" name="medications[${rowCount}][name]" class="form-control rounded-3" placeholder="Ej: Meloxicam" required>
+                        </div>
+                        <div class="col-md-3 col-sm-12">
+                            <input type="text" name="medications[${rowCount}][dose]" class="form-control rounded-3" placeholder="Ej: 0.2 ml" required>
+                        </div>
+                        <div class="col-md-3 col-sm-12">
+                            <input type="text" name="medications[${rowCount}][frequency]" class="form-control rounded-3" placeholder="Ej: Cada 24 horas" required>
+                        </div>
+                        <div class="col-md-2 col-sm-10">
+                            <input type="text" name="medications[${rowCount}][duration]" class="form-control rounded-3" placeholder="Ej: 5 días" required>
+                        </div>
+                        <div class="col-md-1 col-sm-2 text-end">
+                            <button type="button" class="btn btn-outline-danger w-100 rounded-3 btn-remove-row">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    rowsContainer.appendChild(newRow);
+                    rowCount++;
+
+                    updateRemoveRowButtons();
+                });
+
+                rowsContainer.addEventListener('click', function (e) {
+                    const removeBtn = e.target.closest('.btn-remove-row');
+                    if (removeBtn && !removeBtn.disabled) {
+                        const row = removeBtn.closest('.medication-row');
+                        row.remove();
+                        updateRemoveRowButtons();
+                    }
+                });
+
+                function updateRemoveRowButtons() {
+                    const rows = rowsContainer.querySelectorAll('.medication-row');
+                    rows.forEach(function (row, idx) {
+                        const removeBtn = row.querySelector('.btn-remove-row');
+                        if (removeBtn) {
+                            removeBtn.disabled = (rows.length === 1);
+                        }
+                    });
+                }
             }
         });
     </script>
