@@ -53,6 +53,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/kardex/{kardexEntry}', [\App\Http\Controllers\Doctor\KardexController::class, 'destroy'])->name('kardex.destroy');
     Route::post('/pets/{pet}/formulas', [\App\Http\Controllers\Doctor\MedicalFormulaController::class, 'store'])->name('formulas.store');
     Route::delete('/formulas/{medicalFormula}', [\App\Http\Controllers\Doctor\MedicalFormulaController::class, 'destroy'])->name('formulas.destroy');
+    Route::post('/pets/{pet}/orders', [\App\Http\Controllers\Doctor\MedicalOrderController::class, 'store'])->name('orders.store');
+    Route::patch('/orders/{medicalOrder}/status', [\App\Http\Controllers\Doctor\MedicalOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::delete('/orders/{medicalOrder}', [\App\Http\Controllers\Doctor\MedicalOrderController::class, 'destroy'])->name('orders.destroy');
 
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home.index');
     Route::get('/my-exams', 'App\Http\Controllers\PetController@exams')->name('pets.exams');

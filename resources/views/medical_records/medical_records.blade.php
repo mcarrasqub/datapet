@@ -63,23 +63,17 @@
                                 <span><i class="bi bi-capsule me-3"></i>Fórmulas médicas</span>
                                 <span class="badge bg-pet-green rounded-pill">{{ count($medicalFormulas) }}</span>
                             </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
-                                <span><i class="bi bi-card-text me-3"></i>Órdenes</span>
+                            <a href="#ordenes"
+                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary js-pet-section-link"
+                                data-section="ordenes">
+                                <span><i class="bi bi-card-text me-3"></i>Órdenes clínicas</span>
+                                <span class="badge bg-pet-green rounded-pill">{{ count($medicalOrders) }}</span>
                             </a>
                             <a href="#examenes"
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary js-pet-section-link"
                                 data-section="examenes">
                                 <span><i class="bi bi-activity me-3"></i>Exámenes de laboratorio</span>
                                 <span class="badge bg-pet-green rounded-pill">{{ count($medicalExams) }}</span>
-                            </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
-                                <span><i class="bi bi-image me-3"></i>Imágenes diagnósticas</span>
-                            </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
-                                <span><i class="bi bi-file-earmark me-3"></i>Documentos</span>
                             </a>
                             <a href="#citas"
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 text-secondary js-pet-section-link"
@@ -654,6 +648,146 @@
                                         <div class="text-center py-5 text-muted bg-light rounded-4">
                                             <i class="bi bi-capsule fs-1 mb-3 d-block text-secondary"></i>
                                             La mascota no cuenta con fórmulas médicas registradas.
+                                        </div>
+                                    @endforelse
+                                </div>
+                            </div>
+
+                            <div id="ordenes" class="js-pet-section d-none">
+                                <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+                                    <h6 class="fw-bold mb-0 text-dark">Órdenes Clínicas Solicitadas</h6>
+                                    <span class="badge bg-light text-secondary border">{{ count($medicalOrders) }}</span>
+                                </div>
+
+                                <!-- Formulario de registro -->
+                                <div class="card border-0 bg-light rounded-4 p-4 mb-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="bi bi-file-earmark-plus-fill text-pet-green-dark fs-5 me-2"></i>
+                                        <h6 class="fw-bold mb-0 text-dark">Emitir Nueva Orden Clínica</h6>
+                                    </div>
+
+                                    <form action="{{ route('orders.store', $selectedPet) }}" method="POST" id="order_form">
+                                        @csrf
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="order_date" class="form-label fw-semibold text-secondary">Fecha de la Orden</label>
+                                                <input type="date" name="order_date" id="order_date" class="form-control rounded-3" value="{{ now()->toDateString() }}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="order_type" class="form-label fw-semibold text-secondary">Tipo de Orden</label>
+                                                <select name="order_type" id="order_type" class="form-select rounded-3" required>
+                                                    <option value="Laboratorio">Laboratorio</option>
+                                                    <option value="Imagenología">Imagenología</option>
+                                                    <option value="Cirugía / Procedimiento">Cirugía / Procedimiento</option>
+                                                    <option value="Otros">Otros</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="order_description" class="form-label fw-semibold text-secondary">Detalle / Instrucciones de la Orden</label>
+                                                <textarea name="description" id="order_description" rows="3" class="form-control rounded-3" placeholder="Ej: Realizar hemograma y perfil bioquímico completo en ayuno de 8 horas." required></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <button type="submit" class="btn btn-pet-green text-white px-4 py-2 rounded-pill fw-semibold shadow-sm">
+                                                <i class="bi bi-file-earmark-medical me-1"></i> Generar Orden
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Historial de órdenes -->
+                                <div class="d-flex flex-column gap-3">
+                                    @forelse($medicalOrders as $order)
+                                        <div class="card border border-light-subtle rounded-4 p-4 shadow-sm bg-white position-relative">
+                                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+                                                <div>
+                                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                                        <span class="fs-95 fw-bold text-dark">
+                                                            @if($order->order_type === 'Laboratorio')
+                                                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill text-xs">
+                                                                    <i class="bi bi-activity me-1"></i> Laboratorio
+                                                                </span>
+                                                            @elseif($order->order_type === 'Imagenología')
+                                                                <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill text-xs">
+                                                                    <i class="bi bi-image me-1"></i> Imagenología
+                                                                </span>
+                                                            @elseif($order->order_type === 'Cirugía / Procedimiento')
+                                                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill text-xs">
+                                                                    <i class="bi bi-heart-pulse me-1"></i> Cirugía / Procedimiento
+                                                                </span>
+                                                            @else
+                                                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-3 py-2 rounded-pill text-xs">
+                                                                    <i class="bi bi-file-earmark me-1"></i> Otros
+                                                                </span>
+                                                            @endif
+                                                        </span>
+                                                        <span class="text-muted small">| Solicitada por: <strong>Dr. {{ $order->doctor?->name ?? 'Veterinario' }}</strong></span>
+                                                    </div>
+                                                    <div class="text-secondary small mt-1">
+                                                        <i class="bi bi-calendar-event me-1"></i> Fecha: {{ $order->order_date->format('Y-m-d') }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <!-- Estado actual badge -->
+                                                    @if($order->status === 'completed')
+                                                        <span class="badge bg-success text-white px-3 py-2 rounded-pill fs-85">
+                                                            <i class="bi bi-check-circle me-1"></i> Realizada
+                                                        </span>
+                                                    @elseif($order->status === 'cancelled')
+                                                        <span class="badge bg-secondary text-white px-3 py-2 rounded-pill fs-85">
+                                                            <i class="bi bi-x-circle me-1"></i> Cancelada
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fs-85">
+                                                            <i class="bi bi-hourglass-split me-1"></i> Pendiente
+                                                        </span>
+                                                    @endif
+
+                                                    <!-- Botón de eliminar -->
+                                                    <form action="{{ route('orders.destroy', $order) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar esta orden clínica?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger border-0 rounded-circle p-2" title="Eliminar orden">
+                                                            <i class="bi bi-trash fs-95"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <div class="p-3 bg-light rounded-3 text-secondary fs-95 mb-3">
+                                                <strong class="text-dark d-block mb-1">Descripción:</strong>
+                                                {{ $order->description }}
+                                            </div>
+
+                                            <!-- Control de cambio de estado rápido -->
+                                            <div class="d-flex align-items-center justify-content-end gap-2 border-top pt-2">
+                                                <span class="text-muted small me-2"><i class="bi bi-arrow-left-right me-1"></i> Cambiar estado:</span>
+                                                <form action="{{ route('orders.updateStatus', $order) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="status" value="pending">
+                                                    <button type="submit" class="btn btn-xs btn-outline-warning rounded-pill px-3 py-1 fs-80 {{ $order->status === 'pending' ? 'active' : '' }}">Pendiente</button>
+                                                </form>
+                                                <form action="{{ route('orders.updateStatus', $order) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="status" value="completed">
+                                                    <button type="submit" class="btn btn-xs btn-outline-success rounded-pill px-3 py-1 fs-80 {{ $order->status === 'completed' ? 'active' : '' }}">Realizada</button>
+                                                </form>
+                                                <form action="{{ route('orders.updateStatus', $order) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="status" value="cancelled">
+                                                    <button type="submit" class="btn btn-xs btn-outline-secondary rounded-pill px-3 py-1 fs-80 {{ $order->status === 'cancelled' ? 'active' : '' }}">Cancelada</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="text-center py-5 text-muted bg-light rounded-4">
+                                            <i class="bi bi-file-earmark-text fs-1 mb-3 d-block text-secondary"></i>
+                                            La mascota no cuenta con órdenes clínicas registradas.
                                         </div>
                                     @endforelse
                                 </div>

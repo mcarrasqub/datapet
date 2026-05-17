@@ -129,6 +129,8 @@ class DoctorTaskController extends Controller
             'status' => $request->validated('status'),
         ]);
 
+        $this->handleTaskCompletion($task);
+
         return back()->with('success', 'Estado de la tarea actualizado correctamente.');
     }
 
@@ -146,6 +148,8 @@ class DoctorTaskController extends Controller
         $task->update([
             'status' => $request->input('status'),
         ]);
+
+        $this->handleTaskCompletion($task);
 
         return back()->with('success', 'Tarea actualizada correctamente.');
     }
@@ -260,6 +264,10 @@ class DoctorTaskController extends Controller
     {
         $doctorIds = collect();
 
+        if ($exam->medical_order_id && $exam->medicalOrder && $exam->medicalOrder->doctor_id) {
+            $doctorIds->push((int) $exam->medicalOrder->doctor_id);
+        }
+
         if ($exam->medicalRecord && $exam->medicalRecord->doctor_id) {
             $doctorIds->push((int) $exam->medicalRecord->doctor_id);
         }
@@ -347,5 +355,27 @@ class DoctorTaskController extends Controller
         }
 
         return $tasks;
+    }
+
+    /**
+     * Sincroniza la finalización de una tarea del sistema con su modelo origen (Examen y Orden Clínica)
+     */
+    private function handleTaskCompletion(DoctorTask $task): void
+    {
+        if ($task->status === 'completed') {
+            if ($task->source_type === 'medical_exam' && $task->source_id) {
+                $exam = \App\Models\MedicalExam::find($task->source_id);
+                if ($exam && !$exam->reviewed_by_doctor_at) {
+                    $exam->update([
+                        'reviewed_by_doctor_id' => $task->doctor_id,
+                        'reviewed_by_doctor_at' => now(),
+                    ]);
+
+                    if ($exam->medical_order_id) {
+                        $exam->medicalOrder()->update(['status' => 'completed']);
+                    }
+                }
+            }
+        }
     }
 }

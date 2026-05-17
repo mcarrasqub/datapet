@@ -106,6 +106,11 @@ class Pet extends Model
     return $this->hasMany(MedicalFormula::class, 'pet_id');
   }
 
+  public function medicalOrders(): HasMany
+  {
+    return $this->hasMany(MedicalOrder::class, 'pet_id');
+  }
+
   // Getters
   public function getId(): int
   {

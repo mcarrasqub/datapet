@@ -71,12 +71,19 @@ class PetController extends Controller
             ->whereIn('pet_id', $petIds)
             ->orderByDesc('uploaded_at');
 
+        $pendingOrders = collect();
+
         if ($selectedPetId && $petIds->contains($selectedPetId)) {
             $examsQuery->where('pet_id', $selectedPetId);
+            $pendingOrders = \App\Models\MedicalOrder::where('pet_id', $selectedPetId)
+                ->where('status', 'pending')
+                ->orderByDesc('order_date')
+                ->get();
         }
 
         $viewData['selectedPetId'] = $selectedPetId;
         $viewData['medicalExams'] = $examsQuery->get();
+        $viewData['pendingOrders'] = $pendingOrders;
 
         return view('pets.exams')->with('viewData', $viewData);
     }

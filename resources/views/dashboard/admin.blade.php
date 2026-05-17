@@ -66,64 +66,29 @@
                             <i class="bi bi-calendar-day text-pet-green me-2"></i>
                             <h6 class="fw-bold mb-0">Agenda del Día</h6>
                         </div>
-                        <p class="text-muted small mb-4">Bloque temporal de visualización (módulo en construcción)</p>
+                        <p class="text-muted small mb-4">Citas programadas para hoy en la clínica</p>
 
                         <div class="d-flex flex-column gap-3">
-                            <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-pet-green-10 icon-circle rounded-circle me-3">
-                                        <i class="bi bi-stethoscope text-pet-green"></i>
-                                    </div>
+                            @forelse(($agendaHoy ?? collect()) as $cita)
+                                <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">Kiwi <span
-                                                class="text-muted fw-normal">- María González</span></h6>
-                                        <small class="text-muted">Control de Rutina</small>
+                                        <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">
+                                            {{ $cita->pet?->getName() ?? 'Mascota' }}
+                                        </h6>
+                                        <small class="text-muted d-block">Propietario: {{ $cita->pet?->owner?->getName() ?? 'Sin propietario' }}</small>
+                                        <small class="text-muted d-block">Médico: Dr. {{ $cita->doctor?->getName() ?? 'No asignado' }}</small>
+                                        <small class="text-muted d-block">Motivo: {{ $cita->getReason() ?: 'No especificado' }}</small>
+                                        <small class="text-muted d-block fw-medium mt-1">
+                                            <i class="bi bi-clock me-1"></i> {{ \Carbon\Carbon::parse($cita->getStartTime())->format('g:i A') }} - {{ \Carbon\Carbon::parse($cita->getEndTime())->format('g:i A') }}
+                                        </small>
                                     </div>
+                                    <a href="{{ route('appointments.index') }}" class="btn btn-outline-pet-green btn-sm px-3 rounded-3">Ver Calendario</a>
                                 </div>
-                                <span class="badge bg-pet-green rounded-pill px-3 py-2">10:00 AM</span>
-                            </div>
-
-                            <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-pet-green-10 icon-circle rounded-circle me-3">
-                                        <i class="bi bi-stethoscope text-pet-green"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">Copo <span
-                                                class="text-muted fw-normal">- María González</span></h6>
-                                        <small class="text-muted">Revisión Dental</small>
-                                    </div>
+                            @empty
+                                <div class="border rounded-3 p-4 bg-light text-center">
+                                    <p class="mb-0 text-muted">No hay citas programadas para hoy.</p>
                                 </div>
-                                <span class="badge bg-pet-green rounded-pill px-3 py-2">11:30 AM</span>
-                            </div>
-
-                            <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-pet-green-10 icon-circle rounded-circle me-3">
-                                        <i class="bi bi-stethoscope text-pet-green"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">Rex <span
-                                                class="text-muted fw-normal">- Carlos Pérez</span></h6>
-                                        <small class="text-muted">Control de Temperatura</small>
-                                    </div>
-                                </div>
-                                <span class="badge bg-pet-green rounded-pill px-3 py-2">2:00 PM</span>
-                            </div>
-
-                            <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-pet-green-10 icon-circle rounded-circle me-3">
-                                        <i class="bi bi-stethoscope text-pet-green"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">Pipo <span
-                                                class="text-muted fw-normal">- Ana Martínez</span></h6>
-                                        <small class="text-muted">Emergencia</small>
-                                    </div>
-                                </div>
-                                <span class="badge bg-pet-green rounded-pill px-3 py-2">3:30 PM</span>
-                            </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>

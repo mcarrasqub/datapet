@@ -103,10 +103,6 @@
                             <a class="nav-link {{ request()->routeIs('register') ? 'active-pill' : 'text-dark fw-medium' }}"
                                 href="{{ route('register') }}"><i class="bi bi-person-plus me-2"></i>Nuevo Cliente</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('prescriptions.*') ? 'active-pill' : 'text-dark fw-medium' }}"
-                                href="#"><i class="bi bi-prescription me-2"></i>Recetas</a>
-                        </li>
                     @endif
 
                     {{-- Admin links --}}
