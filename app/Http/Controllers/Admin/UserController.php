@@ -8,7 +8,6 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 
@@ -92,7 +91,7 @@ class UserController extends Controller
      */
     public function edit(User $user): View
     {
-        if (Auth::user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin') {
             abort(403, 'No tienes permisos para editar usuarios.');
         }
 
@@ -110,7 +109,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user): RedirectResponse
     {
-        if (Auth::user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin') {
             abort(403, 'No tienes permisos para actualizar usuarios.');
         }
 
