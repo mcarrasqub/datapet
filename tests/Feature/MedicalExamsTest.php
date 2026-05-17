@@ -144,6 +144,50 @@ class MedicalExamsTest extends TestCase
         $this->assertEquals($this->doctor->id, $exam->reviewed_by_doctor_id);
     }
 
+    public function test_non_doctor_cannot_complete_review(): void
+    {
+        $client = User::factory()->create(['role' => 'client']);
+        $this->actingAs($client);
+
+        $exam = MedicalExam::create([
+            'pet_id' => $this->pet->id,
+            'medical_record_id' => $this->medicalRecord->id,
+            'uploaded_by' => $client->id,
+            'title' => 'Radiografia',
+            'file_path' => 'dummy',
+            'original_name' => 'dummy.pdf',
+            'mime_type' => 'application/pdf',
+            'file_size' => 1024,
+            'uploaded_at' => now(),
+        ]);
+
+        $response = $this->post(route('medical_exams.complete_review', $exam));
+        $response->assertStatus(403);
+    }
+
+    public function test_doctor_cannot_complete_already_reviewed_exam(): void
+    {
+        $this->actingAs($this->doctor);
+
+        $exam = MedicalExam::create([
+            'pet_id' => $this->pet->id,
+            'medical_record_id' => $this->medicalRecord->id,
+            'uploaded_by' => $this->doctor->id,
+            'title' => 'Radiografia',
+            'file_path' => 'dummy',
+            'original_name' => 'dummy.pdf',
+            'mime_type' => 'application/pdf',
+            'file_size' => 1024,
+            'uploaded_at' => now(),
+            'reviewed_by_doctor_at' => now(),
+            'reviewed_by_doctor_id' => $this->doctor->id,
+        ]);
+
+        $response = $this->post(route('medical_exams.complete_review', $exam));
+        $response->assertRedirect();
+        $response->assertSessionHas('info', 'Este examen ya había sido revisado.');
+    }
+
     /**
      * Test de descarga (Download) - Para subir cobertura
      */
@@ -170,6 +214,25 @@ class MedicalExamsTest extends TestCase
 
         $response->assertOk();
         $response->assertHeader('Content-Disposition', 'attachment; filename=descarga.pdf');
+    }
+
+    public function test_view_and_download_return_404_if_file_missing(): void
+    {
+        $this->actingAs($this->doctor);
+
+        $exam = MedicalExam::create([
+            'pet_id' => $this->pet->id,
+            'uploaded_by' => $this->doctor->id,
+            'title' => 'Missing File',
+            'file_path' => 'medical_exams/does_not_exist.pdf',
+            'original_name' => 'missing.pdf',
+            'mime_type' => 'application/pdf',
+            'file_size' => 500,
+            'uploaded_at' => now(),
+        ]);
+
+        $this->get(route('medical_exams.view', $exam))->assertStatus(404);
+        $this->get(route('medical_exams.download', $exam))->assertStatus(404);
     }
 
     public function test_client_cannot_upload_to_other_pets(): void
