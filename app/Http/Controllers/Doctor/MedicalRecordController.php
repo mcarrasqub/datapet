@@ -165,6 +165,47 @@ class MedicalRecordController extends Controller
             ->with('success', 'Registro médico eliminado con éxito');
     }
 
+    public function updatePet(\Illuminate\Http\Request $request, Pet $pet): RedirectResponse
+    {
+        $this->ensureDoctorOrAdmin();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'species' => 'required|string|max:255',
+            'breed' => 'nullable|string|max:255',
+            'age' => 'nullable|integer|min:0|max:200',
+            'gender' => 'required|in:male,female,unknown',
+            'weight' => 'nullable|numeric|min:0',
+            'color' => 'nullable|string|max:255',
+            'size' => 'nullable|string|max:255',
+            'reproductive_status' => 'nullable|string|max:255',
+            'is_deceased' => 'required|boolean',
+            'emotional_support' => 'required|boolean',
+            'service_animal' => 'required|boolean',
+            'diet' => 'nullable|string|max:1000',
+            'diet_quantity' => 'nullable|string|max:255',
+            'diet_frequency' => 'nullable|string|max:255',
+            'housing' => 'nullable|string|max:1000',
+            'bath_frequency' => 'nullable|string|max:255',
+            'bath_products' => 'nullable|string|max:255',
+            'other_pets' => 'nullable|string|max:255',
+            'last_heat' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        if ($request->hasFile('photo')) {
+            if ($pet->getPhoto()) {
+                Storage::disk('public')->delete($pet->getPhoto());
+            }
+            $validated['photo'] = $request->file('photo')->store('pets', 'public');
+        }
+
+        $pet->update($validated);
+
+        return redirect()->route('medical_records.show', $pet)
+            ->with('success', 'Datos de la mascota actualizados exitosamente.');
+    }
+
     private function ensureDoctorOrAdmin(): void
     {
         $role = (string) (Auth::user()->role ?? '');

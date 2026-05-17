@@ -129,102 +129,104 @@
                                             </div>
                                         @endif
                                         <button
-                                            class="btn btn-pet-green btn-sm rounded-circle position-absolute avatar-edit-btn">
+                                            class="btn btn-pet-green btn-sm rounded-circle position-absolute avatar-edit-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editPetModal">
                                             <i class="bi bi-pencil text-white fs-80"></i>
                                         </button>
                                     </div>
-                                </div>
-                                <div class="col-md-10">
-                                    <div class="row gy-3">
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Especie:</small>
-                                            <span class="fw-medium text-dark">{{ $selectedPet->getSpecies() }}</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Raza/Subespecie:</small>
-                                            <span
-                                                class="fw-medium text-dark">{{ $selectedPet->getBreed() ?? 'No especificada' }}</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Género:</small>
-                                            <span class="fw-medium text-dark">{{ ucfirst($selectedPet->getGender()) }}</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Color:</small>
-                                            <span class="fw-medium text-dark">N/A</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Peso:</small>
-                                            <span
-                                                class="fw-medium text-dark">{{ $selectedPet->getWeight() ? $selectedPet->getWeight() . ' Kilogramos' : 'N/A' }}</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Talla:</small>
-                                            <span class="fw-medium text-dark">N/A</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">E. Reproductivo:</small>
-                                            <span class="fw-medium text-dark">N/A</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Edad:</small>
-                                            <span
-                                                class="fw-medium text-dark">{{ $selectedPet->getAge() ? $selectedPet->getAge() . ' años' : 'N/A' }}</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Fallecido:</small>
-                                            <span
-                                                class="fw-medium text-dark">{{ strtolower(trim($selectedPet->getNotes() ?? '')) === 'fallecido' ? 'Sí' : 'No' }}</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Apoyo emocional:</small>
-                                            <span class="fw-medium text-dark">No</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <small class="text-muted d-block mb-1 fs-75">Animal de servicio:</small>
-                                            <span class="fw-medium text-dark">No</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Datos extra -->
-                            <div class="row gy-3">
-                                <div class="col-md-3">
-                                    <small class="text-muted d-block mb-1 fs-75">Alimento:</small>
-                                    <span class="fw-medium text-dark">N/A</span>
-                                </div>
-                                <div class="col-md-3">
-                                    <small class="text-muted d-block mb-1 fs-75">Cantidad de alimento:</small>
-                                    <span class="fw-medium text-dark">N/D</span>
-                                </div>
-                                <div class="col-md-3">
-                                    <small class="text-muted d-block mb-1 fs-75">Frecuencia de alimento:</small>
-                                    <span class="fw-medium text-dark">N/D</span>
-                                </div>
-                                <div class="col-md-3">
-                                    <small class="text-muted d-block mb-1 fs-75">Vivienda:</small>
-                                    <span class="fw-medium text-dark">N/D</span>
-                                </div>
-                                <div class="col-md-3">
-                                    <small class="text-muted d-block mb-1 fs-75">Frecuencia baño:</small>
-                                    <span class="fw-medium text-dark">N/D</span>
-                                </div>
-                                <div class="col-md-3">
-                                    <small class="text-muted d-block mb-1 fs-75">Productos de baño:</small>
-                                    <span class="fw-medium text-dark">N/D</span>
-                                </div>
-                                <div class="col-md-3">
-                                    <small class="text-muted d-block mb-1 fs-75">Otras mascotas, ¿cuales?:</small>
-                                    <span class="fw-medium text-dark">N/D</span>
-                                </div>
-                                <div class="col-md-3">
-                                    <small class="text-muted d-block mb-1 fs-75">Último calor:</small>
-                                    <span class="fw-medium text-dark">N/D</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                  </div>
+                                  <div class="col-md-10">
+                                      <div class="row gy-3">
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Especie:</small>
+                                              <span class="fw-medium text-dark">{{ $selectedPet->getSpecies() }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Raza/Subespecie:</small>
+                                              <span
+                                                  class="fw-medium text-dark">{{ $selectedPet->getBreed() ?? 'No especificada' }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Género:</small>
+                                              <span class="fw-medium text-dark">{{ ucfirst($selectedPet->getGender()) }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Color:</small>
+                                              <span class="fw-medium text-dark">{{ $selectedPet->getColor() ?? 'N/A' }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Peso:</small>
+                                              <span
+                                                  class="fw-medium text-dark">{{ $selectedPet->getWeight() ? $selectedPet->getWeight() . ' Kilogramos' : 'N/A' }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Talla:</small>
+                                              <span class="fw-medium text-dark">{{ $selectedPet->getSize() ?? 'N/A' }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">E. Reproductivo:</small>
+                                              <span class="fw-medium text-dark">{{ $selectedPet->getReproductiveStatus() ?? 'N/A' }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Edad:</small>
+                                              <span
+                                                  class="fw-medium text-dark">{{ $selectedPet->getAge() ? $selectedPet->getAge() . ' años' : 'N/A' }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Fallecido:</small>
+                                              <span
+                                                  class="fw-medium text-dark">{{ $selectedPet->getIsDeceased() ? 'Sí' : 'No' }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Apoyo emocional:</small>
+                                              <span class="fw-medium text-dark">{{ $selectedPet->getEmotionalSupport() ? 'Sí' : 'No' }}</span>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <small class="text-muted d-block mb-1 fs-75">Animal de servicio:</small>
+                                              <span class="fw-medium text-dark">{{ $selectedPet->getServiceAnimal() ? 'Sí' : 'No' }}</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+  
+                              <!-- Datos extra -->
+                              <div class="row gy-3 pt-3 border-top mt-3">
+                                  <div class="col-md-3">
+                                      <small class="text-muted d-block mb-1 fs-75">Alimento:</small>
+                                      <span class="fw-medium text-dark">{{ $selectedPet->getDiet() ?? 'N/A' }}</span>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <small class="text-muted d-block mb-1 fs-75">Cantidad de alimento:</small>
+                                      <span class="fw-medium text-dark">{{ $selectedPet->getDietQuantity() ?? 'N/D' }}</span>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <small class="text-muted d-block mb-1 fs-75">Frecuencia de alimento:</small>
+                                      <span class="fw-medium text-dark">{{ $selectedPet->getDietFrequency() ?? 'N/D' }}</span>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <small class="text-muted d-block mb-1 fs-75">Vivienda:</small>
+                                      <span class="fw-medium text-dark">{{ $selectedPet->getHousing() ?? 'N/D' }}</span>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <small class="text-muted d-block mb-1 fs-75">Frecuencia baño:</small>
+                                      <span class="fw-medium text-dark">{{ $selectedPet->getBathFrequency() ?? 'N/D' }}</span>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <small class="text-muted d-block mb-1 fs-75">Productos de baño:</small>
+                                      <span class="fw-medium text-dark">{{ $selectedPet->getBathProducts() ?? 'N/D' }}</span>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <small class="text-muted d-block mb-1 fs-75">Otras mascotas, ¿cuáles?:</small>
+                                      <span class="fw-medium text-dark">{{ $selectedPet->getOtherPets() ?? 'N/D' }}</span>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <small class="text-muted d-block mb-1 fs-75">Último calor:</small>
+                                      <span class="fw-medium text-dark">{{ $selectedPet->getLastHeat() ?? 'N/D' }}</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
 
                     <div class="card border-0 shadow rounded-4">
                         <div class="card-body p-4">
@@ -558,6 +560,159 @@
                                     </div>
                                 @endif
                             </div>
+                </div>
+            </div>
+
+            <!-- MODAL PARA EDITAR MASCOTA -->
+            <div class="modal fade" id="editPetModal" tabindex="-1" aria-labelledby="editPetModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
+                        <form action="{{ route('medical_records.update_pet', $selectedPet->getId()) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            
+                            <div class="modal-header bg-pet-green text-white py-3 border-0 rounded-top-4">
+                                <h5 class="modal-title fw-bold" id="editPetModalLabel">
+                                    <i class="bi bi-pencil-square me-2"></i>Editar Datos de Mascota
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body p-4" style="max-height: 70vh; overflow-y: auto;">
+                                <!-- Sección 1: Datos Básicos e Imagen -->
+                                <div class="mb-4">
+                                    <h6 class="fw-bold text-pet-green-dark border-bottom pb-2 mb-3">
+                                        <i class="bi bi-card-list me-2"></i>Datos Básicos e Imagen
+                                    </h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="modal_name" class="form-label small fw-semibold text-secondary">Nombre *</label>
+                                            <input type="text" name="name" id="modal_name" value="{{ $selectedPet->getName() }}" class="form-control rounded-3 shadow-sm border" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_species" class="form-label small fw-semibold text-secondary">Especie *</label>
+                                            <input type="text" name="species" id="modal_species" value="{{ $selectedPet->getSpecies() }}" class="form-control rounded-3 shadow-sm border" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_breed" class="form-label small fw-semibold text-secondary">Raza/Subespecie</label>
+                                            <input type="text" name="breed" id="modal_breed" value="{{ $selectedPet->getBreed() }}" class="form-control rounded-3 shadow-sm border">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_gender" class="form-label small fw-semibold text-secondary">Género *</label>
+                                            <select name="gender" id="modal_gender" class="form-select rounded-3 shadow-sm border" required>
+                                                <option value="male" @selected($selectedPet->getGender() === 'male')>Macho (Male)</option>
+                                                <option value="female" @selected($selectedPet->getGender() === 'female')>Hembra (Female)</option>
+                                                <option value="unknown" @selected($selectedPet->getGender() === 'unknown')>Desconocido (Unknown)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="modal_age" class="form-label small fw-semibold text-secondary">Edad (años)</label>
+                                            <input type="number" name="age" id="modal_age" value="{{ $selectedPet->getAge() }}" min="0" max="200" class="form-control rounded-3 shadow-sm border">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="modal_weight" class="form-label small fw-semibold text-secondary">Peso (Kilogramos)</label>
+                                            <input type="number" name="weight" id="modal_weight" value="{{ $selectedPet->getWeight() }}" step="0.01" min="0" class="form-control rounded-3 shadow-sm border">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="modal_color" class="form-label small fw-semibold text-secondary">Color</label>
+                                            <input type="text" name="color" id="modal_color" value="{{ $selectedPet->getColor() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: Sable, Gris">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_size" class="form-label small fw-semibold text-secondary">Talla</label>
+                                            <input type="text" name="size" id="modal_size" value="{{ $selectedPet->getSize() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: Pequeña, Mediana, Grande">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_reproductive_status" class="form-label small fw-semibold text-secondary">Estado Reproductivo</label>
+                                            <input type="text" name="reproductive_status" id="modal_reproductive_status" value="{{ $selectedPet->getReproductiveStatus() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: Esterilizado, Entero">
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="modal_photo" class="form-label small fw-semibold text-secondary">Foto de la Mascota</label>
+                                            <input type="file" name="photo" id="modal_photo" class="form-control rounded-3 shadow-sm border" accept="image/*">
+                                            <small class="text-muted d-block mt-1">Formatos aceptados: JPG, JPEG, PNG, WEBP. Máx: 2MB.</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sección 2: Condiciones Clínicas -->
+                                <div class="mb-4">
+                                    <h6 class="fw-bold text-pet-green-dark border-bottom pb-2 mb-3">
+                                        <i class="bi bi-heart-pulse me-2"></i>Condiciones Clínicas y Especiales
+                                    </h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label for="modal_is_deceased" class="form-label small fw-semibold text-secondary">¿Fallecido? *</label>
+                                            <select name="is_deceased" id="modal_is_deceased" class="form-select rounded-3 shadow-sm border" required>
+                                                <option value="0" @selected(!$selectedPet->getIsDeceased())>No</option>
+                                                <option value="1" @selected($selectedPet->getIsDeceased())>Sí</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="modal_emotional_support" class="form-label small fw-semibold text-secondary">¿Apoyo Emocional? *</label>
+                                            <select name="emotional_support" id="modal_emotional_support" class="form-select rounded-3 shadow-sm border" required>
+                                                <option value="0" @selected(!$selectedPet->getEmotionalSupport())>No</option>
+                                                <option value="1" @selected($selectedPet->getEmotionalSupport())>Sí</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="modal_service_animal" class="form-label small fw-semibold text-secondary">¿Animal de Servicio? *</label>
+                                            <select name="service_animal" id="modal_service_animal" class="form-select rounded-3 shadow-sm border" required>
+                                                <option value="0" @selected(!$selectedPet->getServiceAnimal())>No</option>
+                                                <option value="1" @selected($selectedPet->getServiceAnimal())>Sí</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_last_heat" class="form-label small fw-semibold text-secondary">Último Calor / Celo</label>
+                                            <input type="text" name="last_heat" id="modal_last_heat" value="{{ $selectedPet->getLastHeat() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: Hace 2 meses, N/A">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sección 3: Alimentación y Hábitat -->
+                                <div>
+                                    <h6 class="fw-bold text-pet-green-dark border-bottom pb-2 mb-3">
+                                        <i class="bi bi-house-door me-2"></i>Alimentación, Hábitat y Cuidados
+                                    </h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label for="modal_diet" class="form-label small fw-semibold text-secondary">Alimento (Dieta)</label>
+                                            <input type="text" name="diet" id="modal_diet" value="{{ $selectedPet->getDiet() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: Tenebrios y vegetales">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="modal_diet_quantity" class="form-label small fw-semibold text-secondary">Cantidad de Alimento</label>
+                                            <input type="text" name="diet_quantity" id="modal_diet_quantity" value="{{ $selectedPet->getDietQuantity() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: 50gr diarios">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="modal_diet_frequency" class="form-label small fw-semibold text-secondary">Frecuencia de Alimento</label>
+                                            <input type="text" name="diet_frequency" id="modal_diet_frequency" value="{{ $selectedPet->getDietFrequency() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: 2 veces al día">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_housing" class="form-label small fw-semibold text-secondary">Vivienda (Jaula/Terrario)</label>
+                                            <input type="text" name="housing" id="modal_housing" value="{{ $selectedPet->getHousing() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: Terrario con manta térmica">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_bath_frequency" class="form-label small fw-semibold text-secondary">Frecuencia de Baño</label>
+                                            <input type="text" name="bath_frequency" id="modal_bath_frequency" value="{{ $selectedPet->getBathFrequency() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: Cada 2 meses, No requiere">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_bath_products" class="form-label small fw-semibold text-secondary">Productos de Baño</label>
+                                            <input type="text" name="bath_products" id="modal_bath_products" value="{{ $selectedPet->getBathProducts() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: Champú pH neutro avena">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="modal_other_pets" class="form-label small fw-semibold text-secondary">Otras Mascotas (¿Cuáles?)</label>
+                                            <input type="text" name="other_pets" id="modal_other_pets" value="{{ $selectedPet->getOtherPets() }}" class="form-control rounded-3 shadow-sm border" placeholder="Ej: Un gato, Ninguna">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer border-0 p-3 bg-light rounded-bottom-4">
+                                <button type="button" class="btn btn-outline-secondary px-4 rounded-3 fw-medium" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-pet-green text-white px-4 rounded-3 fw-medium">
+                                    <i class="bi bi-save me-1"></i>Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         @else

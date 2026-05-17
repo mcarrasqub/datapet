@@ -84,7 +84,7 @@
                                                     <div>
                                                         <div class="d-flex align-items-center">
                                                             <h6 class="pet-name mb-0 fw-bold me-2 text-dark fs-90">{{ $pet->getName() }}</h6>
-                                                            @if(strtolower(trim($pet->getNotes() ?? '')) === 'fallecido')
+                                                            @if($pet->getIsDeceased())
                                                                 <span class="badge bg-danger rounded-pill px-2 py-0 fs-65">Fallecido</span>
                                                             @endif
                                                         </div>

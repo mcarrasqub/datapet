@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
 
         // 1. Creación de Usuarios de Prueba
         $admin = User::create([
+            'id' => 1000000001,
             'name' => 'Administrador',
             'lastname' => 'Datapet',
             'email' => 'admin@datapet.com',
@@ -47,6 +48,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $doctor = User::create([
+            'id' => 1000000002,
             'name' => 'Dr. Carlos',
             'lastname' => 'López',
             'email' => 'doctor@datapet.com',
@@ -58,6 +60,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $client1 = User::create([
+            'id' => 1000000003,
             'name' => 'Mariana',
             'lastname' => 'Carrasquilla',
             'email' => 'client@datapet.com',
@@ -69,6 +72,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $client2 = User::create([
+            'id' => 1000000004,
             'name' => 'Juan',
             'lastname' => 'Pérez',
             'email' => 'juan@example.com',
@@ -88,7 +92,20 @@ class DatabaseSeeder extends Seeder
             'age' => 2,
             'gender' => 'male',
             'weight' => 1.20,
-            'notes' => 'Sumamente curioso y escurridizo. Le encanta esconder calcetines. Dieta alta en proteínas animales.',
+            'color' => 'Sable',
+            'size' => 'Pequeña',
+            'reproductive_status' => 'Esterilizado',
+            'is_deceased' => false,
+            'emotional_support' => false,
+            'service_animal' => false,
+            'diet' => 'Alimento balanceado premium para hurones y pollo cocido',
+            'diet_quantity' => '50g al día',
+            'diet_frequency' => '2 veces al día',
+            'housing' => 'Jaula espaciosa de 3 niveles con hamacas y túneles',
+            'bath_frequency' => 'Cada 2 meses',
+            'bath_products' => 'Champú hidratante especial para hurones',
+            'other_pets' => 'Erizo y loro',
+            'last_heat' => 'N/A',
             'available_for_adoption' => false,
         ]);
 
@@ -100,7 +117,20 @@ class DatabaseSeeder extends Seeder
             'age' => 1,
             'gender' => 'male',
             'weight' => 0.45,
-            'notes' => 'Nocturno. Le asustan los ruidos fuertes. Adora los tenebrios (gusanos de la harina) como premio.',
+            'color' => 'Sal y pimienta',
+            'size' => 'Pequeña',
+            'reproductive_status' => 'Entero',
+            'is_deceased' => false,
+            'emotional_support' => false,
+            'service_animal' => false,
+            'diet' => 'Alimento premium para insectívoros y tenebrios',
+            'diet_quantity' => '2 cucharadas de alimento seco y 5 tenebrios',
+            'diet_frequency' => 'Nocturna (1 vez al día)',
+            'housing' => 'Terrario de madera con rueda de ejercicio sin rejilla',
+            'bath_frequency' => 'Mensual (baño de avena tibio)',
+            'bath_products' => 'Champú neutro hipoalergénico de avena',
+            'other_pets' => 'Hurón y loro',
+            'last_heat' => 'N/A',
             'available_for_adoption' => false,
         ]);
 
@@ -112,7 +142,20 @@ class DatabaseSeeder extends Seeder
             'age' => 15,
             'gender' => 'female',
             'weight' => 0.48,
-            'notes' => 'Muy inteligente, repite palabras sencillas. Requiere mucho enriquecimiento cognitivo con juguetes.',
+            'color' => 'Verde brillante con cabeza amarilla',
+            'size' => 'Mediana',
+            'reproductive_status' => 'Entero',
+            'is_deceased' => false,
+            'emotional_support' => false,
+            'service_animal' => false,
+            'diet' => 'Mezcla de semillas, pellets especializados, frutas y verduras frescas',
+            'diet_quantity' => '1 taza al día',
+            'diet_frequency' => 'Diario',
+            'housing' => 'Pajarera amplia con ramas naturales y juguetes cognitivos',
+            'bath_frequency' => 'Semanal (con atomizador de agua tibia)',
+            'bath_products' => 'Solo agua limpia sin químicos',
+            'other_pets' => 'Erizo y huron',
+            'last_heat' => 'N/A',
             'available_for_adoption' => false,
         ]);
 
@@ -124,7 +167,20 @@ class DatabaseSeeder extends Seeder
             'age' => 4,
             'gender' => 'male',
             'weight' => 4.50,
-            'notes' => 'Requiere baños de agua tibia diarios y un terrario amplio con control estricto de humedad.',
+            'color' => 'Verde esmeralda',
+            'size' => 'Grande',
+            'reproductive_status' => 'Entero',
+            'is_deceased' => false,
+            'emotional_support' => false,
+            'service_animal' => false,
+            'diet' => 'Hojas de mostaza, dientes de león, calabacín y frutas tropicales',
+            'diet_quantity' => 'Plato abundante de 300g',
+            'diet_frequency' => 'Diario por la mañana',
+            'housing' => 'Terrario vertical gigante de 2x1.5m con zona de asoleamiento UVB',
+            'bath_frequency' => 'Diario (baño de inmersión en agua tibia de 20 min)',
+            'bath_products' => 'Ninguno (solo agua)',
+            'other_pets' => 'Ninguna',
+            'last_heat' => 'N/A',
             'available_for_adoption' => false,
         ]);
 
@@ -137,7 +193,20 @@ class DatabaseSeeder extends Seeder
             'age' => 2,
             'gender' => 'male',
             'weight' => 0.38,
-            'notes' => 'Le encanta posarse en las ramas bajo la lámpara de calor. Muy dócil y fácil de manipular.',
+            'color' => 'Naranja y amarillo',
+            'size' => 'Mediana',
+            'reproductive_status' => 'Entero',
+            'is_deceased' => false,
+            'emotional_support' => false,
+            'service_animal' => false,
+            'diet' => 'Grillos, cucarachas dubia y ensalada de hojas de mostaza',
+            'diet_quantity' => '10-15 insectos e plato de verduras',
+            'diet_frequency' => 'Interdiario (insectos) / Diario (verduras)',
+            'housing' => 'Terrario desértico de 120x60x60 cm con luces UVB 10.0 y foco de calor',
+            'bath_frequency' => '2 veces por semana (para hidratación y muda)',
+            'bath_products' => 'Ninguno (solo agua)',
+            'other_pets' => 'Ninguna',
+            'last_heat' => 'N/A',
             'available_for_adoption' => true,
             'adoption_description' => 'Spike es un dragón barbudo rescatado, extremadamente manso y habituado al contacto humano. Busca una familia que tenga o pueda instalar un terrario adecuado con luces UVB y control de temperatura caliente.',
         ]);
@@ -150,7 +219,20 @@ class DatabaseSeeder extends Seeder
             'age' => 3,
             'gender' => 'female',
             'weight' => 0.90,
-            'notes' => 'Come ratones descongelados una vez por semana. Excelente temperamento.',
+            'color' => 'Naranja y rojo albino',
+            'size' => 'Mediana (1.2 metros)',
+            'reproductive_status' => 'Entera',
+            'is_deceased' => false,
+            'emotional_support' => false,
+            'service_animal' => false,
+            'diet' => 'Ratones medianos descongelados',
+            'diet_quantity' => '1 ratón mediano',
+            'diet_frequency' => 'Cada 7-10 días',
+            'housing' => 'Terrario seguro a prueba de escapes con manta térmica regulada por termostato',
+            'bath_frequency' => 'No requiere (solo recipiente de agua grande para automudarse)',
+            'bath_products' => 'Ninguno',
+            'other_pets' => 'Ninguna (solitaria)',
+            'last_heat' => 'N/A',
             'available_for_adoption' => true,
             'adoption_description' => 'Cleo es una serpiente del maíz adulta con una hermosa coloración naranja y roja. Es muy tranquila e ideal para principiantes en la herpetología. Requiere un terrario seguro a prueba de fugas y calefacción.',
         ]);

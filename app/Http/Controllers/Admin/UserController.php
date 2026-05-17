@@ -73,6 +73,7 @@ class UserController extends Controller
         $lastName = count($parts) > 1 ? implode(' ', array_slice($parts, 1)) : '';
 
         $user = User::create([
+            'id' => $data['id'],
             'name' => $firstName ?: $data['name'],
             'lastname' => $lastName,
             'email' => $data['email'],

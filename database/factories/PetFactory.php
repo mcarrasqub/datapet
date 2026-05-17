@@ -32,7 +32,20 @@ class PetFactory extends Factory
             'age' => fake()->numberBetween(0, 15),
             'gender' => fake()->randomElement(['male', 'female', 'unknown']),
             'weight' => fake()->randomFloat(2, 1, 50),
-            'notes' => fake()->optional()->sentence(),
+            'color' => fake()->safeColorName(),
+            'size' => fake()->randomElement(['Pequeña', 'Mediana', 'Grande']),
+            'reproductive_status' => fake()->randomElement(['Esterilizado', 'Castrado', 'Entero']),
+            'is_deceased' => false,
+            'emotional_support' => fake()->boolean(10),
+            'service_animal' => fake()->boolean(5),
+            'diet' => fake()->sentence(),
+            'diet_quantity' => '50g al día',
+            'diet_frequency' => '2 veces al día',
+            'housing' => fake()->sentence(),
+            'bath_frequency' => 'Cada mes',
+            'bath_products' => 'Champú neutro',
+            'other_pets' => 'Ninguna',
+            'last_heat' => 'N/A',
         ];
     }
 }

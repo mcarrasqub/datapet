@@ -10,8 +10,8 @@ return new class extends Migration
   public function up(): void
   {
     Schema::table('pets', function (Blueprint $table) {
-      $table->boolean('available_for_adoption')->default(false)->after('notes');
-      $table->text('adoption_description')->nullable()->after('available_for_adoption');
+      $table->boolean('available_for_adoption')->default(false);
+      $table->text('adoption_description')->nullable();
     });
   }
 

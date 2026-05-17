@@ -27,12 +27,15 @@ class User extends Authenticatable
      * this->attributes['role']
      */
 
+    public $incrementing = false;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
+        'id',
         'name',
         'lastname',
         'address',

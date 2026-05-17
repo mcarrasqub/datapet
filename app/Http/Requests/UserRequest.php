@@ -25,12 +25,22 @@ class UserRequest extends FormRequest
         $userId = $this->route('user') ? $this->route('user')->id : null;
 
         return [
+            'id' => $userId ? [] : ['required', 'numeric', 'digits:10', 'unique:users,id'],
             'name' => ['required', 'string', 'max:255'],
             // Ignora el email del usuario actual si se está editando
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $userId],
             'role' => ['required', 'in:admin,doctor,client'],
             // La contraseña es obligatoria solo al crear (store), al actualizar es opcional (nullable)
             'password' => $userId ? ['nullable', 'string', 'min:8'] : ['required', 'string', 'min:8'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'id.required' => 'La cédula es obligatoria.',
+            'id.digits' => 'La cédula debe tener exactamente 10 dígitos.',
+            'id.unique' => 'Esta cédula ya está registrada.',
         ];
     }
 }

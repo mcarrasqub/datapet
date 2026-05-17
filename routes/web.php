@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/medical-records-edit/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@edit')->name('medical_records.edit');
     Route::put('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@update')->name('medical_records.update');
     Route::delete('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@destroy')->name('medical_records.destroy');
+    Route::put('/medical-records/{pet}/update-pet', 'App\Http\Controllers\Doctor\MedicalRecordController@updatePet')->name('medical_records.update_pet');
     Route::post('/medical-records/{medicalRecord}/observations', [ClinicalObservationController::class, 'store'])->name('clinical_observations.store');
     Route::get('/clinical-observations/{clinicalObservation}/edit', [ClinicalObservationController::class, 'edit'])->name('clinical_observations.edit');
     Route::put('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'update'])->name('clinical_observations.update');

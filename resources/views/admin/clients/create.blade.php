@@ -22,10 +22,20 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
+                            <label for="id" class="form-label fw-bold small">Cédula (ID) *</label>
+                            <input id="id" type="number"
+                                class="form-control bg-light border-0 py-2 @error('id') is-invalid @enderror" name="id"
+                                value="{{ old('id') }}" placeholder="Ej: 1020304050" required autofocus>
+                            @error('id')
+                                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
                             <label for="name" class="form-label fw-bold small">Nombre *</label>
                             <input id="name" type="text"
                                 class="form-control bg-light border-0 py-2 @error('name') is-invalid @enderror" name="name"
-                                value="{{ old('name') }}" placeholder="Nombre" required autofocus>
+                                value="{{ old('name') }}" placeholder="Nombre" required>
                             @error('name')
                                 <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                             @enderror

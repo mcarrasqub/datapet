@@ -22,7 +22,20 @@ class PetRequest extends FormRequest
             'gender' => 'required|in:male,female,unknown',
             'weight' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'notes' => 'nullable|string',
+            'color' => 'nullable|string|max:255',
+            'size' => 'nullable|string|max:255',
+            'reproductive_status' => 'nullable|string|max:255',
+            'is_deceased' => 'nullable|boolean',
+            'emotional_support' => 'nullable|boolean',
+            'service_animal' => 'nullable|boolean',
+            'diet' => 'nullable|string|max:1000',
+            'diet_quantity' => 'nullable|string|max:255',
+            'diet_frequency' => 'nullable|string|max:255',
+            'housing' => 'nullable|string|max:1000',
+            'bath_frequency' => 'nullable|string|max:255',
+            'bath_products' => 'nullable|string|max:255',
+            'other_pets' => 'nullable|string|max:255',
+            'last_heat' => 'nullable|string|max:255',
         ];
     }
 }
