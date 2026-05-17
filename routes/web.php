@@ -59,4 +59,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/doctor/appointments', 'App\Http\Controllers\Doctor\AppointmentDoctorController@index')->name('doctor.appointments.index');
     Route::get('/doctor/appointments/events', 'App\Http\Controllers\Doctor\AppointmentDoctorController@events')->name('doctor.appointments.events');
+
+    Route::get('/adoption', 'App\Http\Controllers\AdoptionController@index')->name('adoption.index');
+    Route::get('/adoption/{pet}', 'App\Http\Controllers\AdoptionController@show')->name('adoption.show');
+    Route::post('/adoption', 'App\Http\Controllers\AdoptionController@store')->name('adoption.store');
+    Route::get('/admin/adoption-requests', 'App\Http\Controllers\AdoptionController@adminIndex')->name('adoption.admin.index');
+    Route::patch('/admin/adoption-requests/{adoptionRequest}/approve', 'App\Http\Controllers\AdoptionController@approve')->name('adoption.approve');
+    Route::patch('/admin/adoption-requests/{adoptionRequest}/reject', 'App\Http\Controllers\AdoptionController@reject')->name('adoption.reject');
+    Route::get('/admin/adoptions/create', 'App\Http\Controllers\AdoptionController@create')->name('admin.adoptions.create');
+    Route::post('/admin/adoptions', 'App\Http\Controllers\AdoptionController@storePet')->name('admin.adoptions.store');
 });

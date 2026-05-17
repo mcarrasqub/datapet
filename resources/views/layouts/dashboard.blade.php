@@ -139,6 +139,18 @@
                                 href="{{ route('appointments.index') }}"><i class="bi bi-calendar3 me-2"></i>Citas</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.adoptions.create') ? 'active-pill' : 'text-dark fw-medium' }}"
+                                href="{{ route('admin.adoptions.create') }}">
+                                <i class="bi bi-heart me-2"></i>Crear Adopción
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('adoption.admin.index') ? 'active-pill' : 'text-dark fw-medium' }}"
+                            href="{{ route('adoption.admin.index') }}">
+                            <i class="bi bi-list me-2"></i>Solicitudes Adopción
+                        </a>
+                    </li>
+                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('settings.*') ? 'active-pill' : 'text-dark fw-medium' }}"
                                 href="#"><i class="bi bi-gear me-2"></i>Configuración</a>
                         </li>

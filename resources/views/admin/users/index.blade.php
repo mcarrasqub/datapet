@@ -110,7 +110,7 @@
                                     {{ $user->email }}
                                     <span class="mx-2">•</span>
                                     Creado:
-                                    {{ optional($user->created_at)->locale(app()->getLocale())->translatedFormat('d M Y') }}
+                                    {{ optional(optional($user->created_at)->locale(app()->getLocale()))->translatedFormat('d M Y') ?? 'Sin fecha' }}
                                 </div>
                                 <div class="d-flex flex-wrap gap-2 align-items-start">
                                     @php

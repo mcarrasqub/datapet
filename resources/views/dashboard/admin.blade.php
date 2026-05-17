@@ -6,6 +6,13 @@
             <h4 class="fw-bold mb-1">Panel de Control Administrativo</h4>
             <p class="text-muted">Vista general del sistema y estadísticas de la veterinaria</p>
         </div>
+        <div class="d-flex justify-content-end mb-4">
+            <a href="{{ route('admin.adoptions.create') }}"
+                class="btn text-white fw-bold d-flex align-items-center"
+                style="background-color: #65a34e; border-radius: 8px; padding: 10px 16px;">
+                <i class="bi bi-plus-circle me-2"></i>Crear Mascota en Adopción
+            </a>
+        </div>
 
         <div class="row g-3 mb-4">
             <x-stat-card icon="bi-person" title="Usuarios del Sistema" value="{{ $totalUsers }}"
@@ -20,7 +27,6 @@
         </div>
 
         <div class="row g-3">
-            <!-- Actividad Reciente -->
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm rounded-3 h-100">
                     <div class="card-body p-4">
@@ -39,7 +45,7 @@
                                     <div>
                                         <h6 class="mb-1 fw-bold" style="font-size: 0.95rem;">{{ $activity['title'] }}</h6>
                                         <p class="text-muted small mb-0">{{ $activity['description'] }}<br><span
-                                                style="font-size: 0.75rem;">{{ $activity['time']->diffForHumans() }}</span></p>
+                                                style="font-size: 0.75rem;">{{ optional($activity['time'])->diffForHumans() ?? 'Sin fecha' }}</span></p>
                                     </div>
                                 </div>
                             @empty
