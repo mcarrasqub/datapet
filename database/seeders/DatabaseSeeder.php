@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
         // Reactivar restricciones de clave foránea
         Schema::enableForeignKeyConstraints();
 
-        // 0. Copiar archivos de prueba reales desde public/default-assets a storage
+        // Copiar archivos de prueba reales desde public/default-assets a storage
         $sourceNoodle = public_path('default-assets/fake_noodle_exam.pdf');
         $sourceZiggy = public_path('default-assets/fake_ziggy_exam.pdf');
         
@@ -58,6 +58,21 @@ class DatabaseSeeder extends Seeder
             \Illuminate\Support\Facades\Storage::disk('local')->put('medical_exams/fake_ziggy_exam.pdf', \Illuminate\Support\Facades\File::get($sourceZiggy));
         } else {
             \Illuminate\Support\Facades\Storage::disk('local')->put('medical_exams/fake_ziggy_exam.pdf', '%PDF-1.4 dummy exam');
+        }
+
+        //Copiar Fotos de Mascotas
+        $mascotasNames = ['noodle', 'ziggy', 'coco', 'rex', 'tambor', 'spike', 'cleo'];
+        $fotosMascotas = [];
+        
+        foreach ($mascotasNames as $m) {
+            foreach (['jpg', 'png', 'jpeg', 'webp'] as $ext) {
+                $sourceFoto = public_path("default-assets/foto_{$m}.{$ext}");
+                if (\Illuminate\Support\Facades\File::exists($sourceFoto)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->put("pets/foto_{$m}.{$ext}", \Illuminate\Support\Facades\File::get($sourceFoto));
+                    $fotosMascotas[$m] = "pets/foto_{$m}.{$ext}";
+                    break;
+                }
+            }
         }
 
         // 1. Creación de Usuarios de Prueba
@@ -113,6 +128,7 @@ class DatabaseSeeder extends Seeder
         $noodle = Pet::create([
             'user_id' => $client1->id,
             'name' => 'Noodle',
+            'photo' => $fotosMascotas['noodle'] ?? null,
             'species' => 'Hurón',
             'breed' => 'Sable',
             'age' => 2,
@@ -138,6 +154,7 @@ class DatabaseSeeder extends Seeder
         $ziggy = Pet::create([
             'user_id' => $client1->id,
             'name' => 'Ziggy',
+            'photo' => $fotosMascotas['ziggy'] ?? null,
             'species' => 'Erizo de Tierra',
             'breed' => 'Pigmio Africano',
             'age' => 1,
@@ -163,6 +180,7 @@ class DatabaseSeeder extends Seeder
         $coco = Pet::create([
             'user_id' => $client1->id,
             'name' => 'Coco',
+            'photo' => $fotosMascotas['coco'] ?? null,
             'species' => 'Loro',
             'breed' => 'Cabeza Amarilla',
             'age' => 15,
@@ -188,6 +206,7 @@ class DatabaseSeeder extends Seeder
         $rex = Pet::create([
             'user_id' => $client2->id,
             'name' => 'Rex',
+            'photo' => $fotosMascotas['rex'] ?? null,
             'species' => 'Iguana',
             'breed' => 'Iguana Verde',
             'age' => 4,
@@ -213,6 +232,7 @@ class DatabaseSeeder extends Seeder
         $tambor = Pet::create([
             'user_id' => $client2->id,
             'name' => 'Tambor',
+            'photo' => $fotosMascotas['tambor'] ?? null,
             'species' => 'Conejo',
             'breed' => 'Cabeza de León',
             'age' => 1,
@@ -239,6 +259,7 @@ class DatabaseSeeder extends Seeder
         $spike = Pet::create([
             'user_id' => $admin->id,
             'name' => 'Spike',
+            'photo' => $fotosMascotas['spike'] ?? null,
             'species' => 'Dragón Barbudo',
             'breed' => 'Central',
             'age' => 2,
@@ -265,6 +286,7 @@ class DatabaseSeeder extends Seeder
         $cleo = Pet::create([
             'user_id' => $admin->id,
             'name' => 'Cleo',
+            'photo' => $fotosMascotas['cleo'] ?? null,
             'species' => 'Serpiente',
             'breed' => 'Serpiente del Maíz',
             'age' => 3,
