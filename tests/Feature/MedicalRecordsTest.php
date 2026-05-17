@@ -312,4 +312,89 @@ class MedicalRecordsTest extends TestCase
         $response->assertDontSee('Seguimientos');
         $response->assertDontSee('Remisiones');
     }
+
+    public function test_doctor_can_create_medical_record_with_multiple_photos(): void
+    {
+        Storage::fake('public');
+        $this->actingAs($this->doctor);
+
+        $photo1 = UploadedFile::fake()->image('wound1.jpg');
+        $photo2 = UploadedFile::fake()->image('wound2.jpg');
+
+        $visitData = [
+            'visited_at' => now()->toDateString(),
+            'reason' => 'Herida',
+            'diagnosis' => 'Herida leve',
+            'treatment' => 'Limpieza',
+            'observation' => 'Limpieza',
+            'photos' => [$photo1, $photo2],
+        ];
+
+        $response = $this->post(route('medical_records.store', $this->pet), $visitData);
+        $response->assertRedirect();
+
+        $record = MedicalRecord::latest()->first();
+        $this->assertNotNull($record->photos);
+        $this->assertCount(2, $record->photos);
+        
+        Storage::disk('public')->assertExists($record->photos[0]);
+        Storage::disk('public')->assertExists($record->photos[1]);
+    }
+
+    public function test_doctor_can_update_medical_record_with_photos(): void
+    {
+        Storage::fake('public');
+        $this->actingAs($this->doctor);
+
+        $record = MedicalRecord::create([
+            'pet_id' => $this->pet->id,
+            'doctor_id' => $this->doctor->id,
+            'visited_at' => now(),
+            'reason' => 'Antigua',
+            'diagnosis' => 'Antiguo',
+            'notes' => 'Old',
+            'photos' => ['medical_records/old1.jpg'] // Simulando una foto vieja
+        ]);
+
+        $newPhoto = UploadedFile::fake()->image('new.jpg');
+
+        $response = $this->put(route('medical_records.update', $record), [
+            'visited_at' => now()->toDateString(),
+            'reason' => 'Nueva',
+            'diagnosis' => 'Nuevo',
+            'treatment' => 'Nuevo tratamiento',
+            'observation' => 'New',
+            'photos' => [$newPhoto],
+        ]);
+
+        $response->assertRedirect();
+        
+        $record->refresh();
+        $this->assertEquals('Nueva', $record->reason);
+        $this->assertCount(2, $record->photos); // Conserva la antigua + 1 nueva
+    }
+
+    public function test_doctor_can_delete_medical_record_with_photos(): void
+    {
+        Storage::fake('public');
+        $this->actingAs($this->doctor);
+
+        Storage::disk('public')->put('medical_records/dummy.jpg', 'content');
+
+        $record = MedicalRecord::create([
+            'pet_id' => $this->pet->id,
+            'doctor_id' => $this->doctor->id,
+            'visited_at' => now(),
+            'reason' => 'Borrar',
+            'diagnosis' => 'Borrar',
+            'notes' => 'Borrar',
+            'photos' => ['medical_records/dummy.jpg']
+        ]);
+
+        $response = $this->delete(route('medical_records.destroy', $record));
+        $response->assertRedirect();
+
+        $this->assertDatabaseMissing('medical_records', ['id' => $record->id]);
+        Storage::disk('public')->assertMissing('medical_records/dummy.jpg');
+    }
 }

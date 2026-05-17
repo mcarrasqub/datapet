@@ -128,6 +128,80 @@ class AdoptionAndClientUpdatesTest extends TestCase
         $response->assertStatus(403);
     }
 
+
+    public function test_admin_can_approve_adoption_request(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $this->actingAs($admin);
+
+        $client = User::factory()->create(['role' => 'client']);
+        $pet = Pet::factory()->create(['user_id' => $admin->id, 'available_for_adoption' => true]);
+
+        $request = AdoptionRequest::create([
+            'pet_id' => $pet->id,
+            'user_id' => $client->id,
+            'full_name' => 'Carlos',
+            'phone' => '123',
+            'status' => 'pending',
+        ]);
+
+        $response = $this->patch(route('adoption.approve', $request));
+        $response->assertRedirect();
+        
+        $request->refresh();
+        $this->assertEquals('approved', $request->status);
+    }
+
+    public function test_admin_can_reject_adoption_request(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $this->actingAs($admin);
+
+        $client = User::factory()->create(['role' => 'client']);
+        $pet = Pet::factory()->create(['user_id' => $admin->id, 'available_for_adoption' => true]);
+
+        $request = AdoptionRequest::create([
+            'pet_id' => $pet->id,
+            'user_id' => $client->id,
+            'full_name' => 'Carlos',
+            'phone' => '123',
+            'status' => 'pending',
+        ]);
+
+        $response = $this->patch(route('adoption.reject', $request));
+        $response->assertRedirect();
+        
+        $request->refresh();
+        $this->assertEquals('rejected', $request->status);
+    }
+
+    public function test_admin_can_create_pet_for_adoption_via_store_request(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $this->actingAs($admin);
+        Storage::fake('public');
+
+        $fakePhoto = UploadedFile::fake()->image('new_adopt.jpg');
+
+        $data = [
+            'name' => 'Firulais',
+            'species' => 'Perro',
+            'age' => 2,
+            'weight' => 15,
+            'available_for_adoption' => '1',
+            'adoption_description' => 'Muy juguetón',
+            'photo' => $fakePhoto,
+        ];
+
+        $response = $this->post(route('admin.adoptions.store'), $data);
+        $response->assertRedirect(route('adoption.admin.index'));
+
+        $this->assertDatabaseHas('pets', [
+            'name' => 'Firulais',
+            'available_for_adoption' => true,
+        ]);
+    }
+
     /**
      * Test doctor can update client contact details successfully.
      */
