@@ -52,7 +52,6 @@ class RegisterController extends Controller
             $pet->age = $request->age;
             $pet->gender = $request->gender;
             $pet->weight = $request->weight;
-            $pet->notes = $request->notes;
             $pet->user_id = $user->id;
 
             if ($request->hasFile('photo')) {
@@ -72,6 +71,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
+            'id' => $data['id'],
             'name' => $data['name'],
             'lastname' => $data['lastname'] ?? null,
             'phone' => $data['phone'] ?? null,

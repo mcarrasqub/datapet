@@ -79,6 +79,13 @@ class DashboardController extends Controller
                 ->take(6)
                 ->values();
 
+            $today = now();
+            $agendaHoy = \App\Models\Appointment::with(['pet.owner', 'doctor'])
+                ->where('date', $today->toDateString())
+                ->where('status', 'scheduled')
+                ->orderBy('start_time')
+                ->get();
+
             return view('dashboard.admin', compact(
                 'totalUsers',
                 'totalAdmins',
@@ -87,7 +94,8 @@ class DashboardController extends Controller
                 'consultasSemana',
                 'consultasHoy',
                 'growthPercentage',
-                'recentActivities'
+                'recentActivities',
+                'agendaHoy'
             ));
         } elseif ($user->role === 'doctor') {
             $today = now();

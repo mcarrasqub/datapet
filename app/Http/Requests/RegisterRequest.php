@@ -16,6 +16,7 @@ class RegisterRequest extends FormRequest
         return [
             'registration_type' => ['required', 'in:new_client,existing_client'],
             'user_id' => ['required_if:registration_type,existing_client'],
+            'id' => ['required_if:registration_type,new_client', 'numeric', 'digits:10', 'unique:users,id'],
             'name' => ['required_if:registration_type,new_client', 'string', 'max:255'],
             'lastname' => ['required_if:registration_type,new_client', 'string', 'max:255'],
             'email' => ['required_if:registration_type,new_client', 'string', 'email', 'max:255', 'unique:users,email'],
@@ -42,6 +43,9 @@ class RegisterRequest extends FormRequest
     {
         return [
             'user_id.required_if' => 'Debe seleccionar un cliente existente.',
+            'id.required_if' => 'La cédula es obligatoria para nuevos clientes.',
+            'id.digits' => 'La cédula debe tener exactamente 10 dígitos.',
+            'id.unique' => 'Esta cédula ya está registrada.',
             'name.required_if' => 'El nombre es obligatorio para nuevos clientes.',
             'lastname.required_if' => 'El apellido es obligatorio para nuevos clientes.',
             'email.required_if' => 'El correo electrónico es obligatorio para nuevos clientes.',

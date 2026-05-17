@@ -85,15 +85,7 @@
                 placeholder="Describe comportamiento, cuidados, etc."></textarea>
             </div>
 
-            {{-- Notas --}}
-            <div class="col-12">
-              <label class="form-label fw-bold small">Notas adicionales</label>
-              <textarea 
-                name="notes" 
-                class="form-control" 
-                rows="3"
-                placeholder="Información médica u observaciones"></textarea>
-            </div>
+
 
             {{-- Foto --}}
             <div class="col-12">

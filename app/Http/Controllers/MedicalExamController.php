@@ -37,6 +37,7 @@ class MedicalExamController extends Controller
             MedicalExam::create([
                 'pet_id' => $pet->id,
                 'medical_record_id' => $validated['medical_record_id'] ?? null,
+                'medical_order_id' => $validated['medical_order_id'] ?? null,
                 'uploaded_by' => (int) Auth::id(),
                 'title' => $validated['title'] ?? pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
                 'description' => $validated['description'] ?? null,
@@ -65,22 +66,8 @@ class MedicalExamController extends Controller
     {
         $this->ensureCanAccessPet($medicalExam->pet);
 
-        if (Auth::user()->role === 'doctor' && ! $medicalExam->reviewed_by_doctor_at) {
-            $medicalExam->update([
-                'reviewed_by_doctor_id' => (int) Auth::id(),
-                'reviewed_by_doctor_at' => now(),
-            ]);
-
-            // Marcar la tarea automática de revisión de examen como completada
-            $taskKey = 'doctor:'.Auth::id().':exam:'.$medicalExam->id.':review';
-            $task = DoctorTask::where('task_key', $taskKey)
-                ->where('doctor_id', Auth::id())
-                ->first();
-
-            if ($task) {
-                $task->update(['status' => 'completed']);
-            }
-        }
+        // La visualización ya no marca automáticamente como revisado.
+        // Se debe usar la nueva ruta `completeReview` explícitamente.
 
         if (! Storage::disk('local')->exists($medicalExam->file_path)) {
             abort(404, 'El archivo no existe.');
@@ -103,6 +90,41 @@ class MedicalExamController extends Controller
         }
 
         return response()->download(Storage::disk('local')->path($medicalExam->file_path), $medicalExam->original_name);
+    }
+
+    public function completeReview(MedicalExam $medicalExam): RedirectResponse
+    {
+        $this->ensureCanAccessPet($medicalExam->pet);
+
+        if (Auth::user()->role !== 'doctor') {
+            abort(403, 'Solo los doctores pueden confirmar la revisión clínica.');
+        }
+
+        if (! $medicalExam->reviewed_by_doctor_at) {
+            $medicalExam->update([
+                'reviewed_by_doctor_id' => (int) Auth::id(),
+                'reviewed_by_doctor_at' => now(),
+            ]);
+
+            // Si está enlazado a una orden médica, marcar esa orden como completada
+            if ($medicalExam->medical_order_id) {
+                $medicalExam->medicalOrder()->update(['status' => 'completed']);
+            }
+
+            // Marcar la tarea automática de revisión de examen como completada
+            $taskKey = 'doctor:'.Auth::id().':exam:'.$medicalExam->id.':review';
+            $task = DoctorTask::where('task_key', $taskKey)
+                ->where('doctor_id', Auth::id())
+                ->first();
+
+            if ($task) {
+                $task->update(['status' => 'completed']);
+            }
+
+            return back()->with('success', 'La revisión del examen ha sido confirmada exitosamente.');
+        }
+
+        return back()->with('info', 'Este examen ya había sido revisado.');
     }
 
     private function ensureCanUpload(Pet $pet): void

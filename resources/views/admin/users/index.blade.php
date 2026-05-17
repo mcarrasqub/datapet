@@ -183,7 +183,17 @@
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small">Nombres</label>
+                                <label class="form-label fw-bold small">Cédula (ID) *</label>
+                                <input name="id" value="{{ old('id') }}" type="number"
+                                    class="form-control bg-light border-0 py-2 @error('id') is-invalid @enderror"
+                                    placeholder="Ej: 1020304050" required autofocus>
+                                @error('id')
+                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">Nombres *</label>
                                 <input name="name" value="{{ old('name') }}" type="text"
                                     class="form-control bg-light border-0 py-2 @error('name') is-invalid @enderror"
                                     placeholder="Nombres" required>

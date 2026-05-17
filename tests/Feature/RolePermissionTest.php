@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Pet;
 use App\Models\MedicalExam;
+use App\Models\Pet;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 
 class RolePermissionTest extends TestCase
 {
@@ -21,7 +21,7 @@ class RolePermissionTest extends TestCase
     {
         $admin = User::factory()->create([
             'role' => 'admin',
-            'lastname' => 'Admin'
+            'lastname' => 'Admin',
         ]);
 
         $this->actingAs($admin);
@@ -39,7 +39,7 @@ class RolePermissionTest extends TestCase
     {
         $doctor = User::factory()->create([
             'role' => 'doctor',
-            'lastname' => 'Doctor'
+            'lastname' => 'Doctor',
         ]);
 
         $this->actingAs($doctor);
@@ -56,7 +56,7 @@ class RolePermissionTest extends TestCase
     {
         $client = User::factory()->create([
             'role' => 'client',
-            'lastname' => 'Client'
+            'lastname' => 'Client',
         ]);
 
         $this->actingAs($client);
@@ -94,17 +94,17 @@ class RolePermissionTest extends TestCase
 
         $client = User::factory()->create(['role' => 'client', 'lastname' => 'Owner']);
         $pet = Pet::factory()->create(['user_id' => $client->id]);
-        
+
         // 2. Crear el registro con todos los campos obligatorios
         $exam = MedicalExam::create([
-            'pet_id'        => $pet->id,
-            'title'         => 'Examen de Prueba',
+            'pet_id' => $pet->id,
+            'title' => 'Examen de Prueba',
             'original_name' => 'documento.pdf',
-            'file_path'     => $filePath,
-            'mime_type'     => 'application/pdf',
-            'file_size'     => 2048,
-            'uploaded_by'   => $client->id,
-            'uploaded_at'   => Carbon::now(),
+            'file_path' => $filePath,
+            'mime_type' => 'application/pdf',
+            'file_size' => 2048,
+            'uploaded_by' => $client->id,
+            'uploaded_at' => Carbon::now(),
         ]);
 
         $this->actingAs($client);

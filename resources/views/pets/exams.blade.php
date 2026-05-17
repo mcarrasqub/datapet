@@ -77,6 +77,17 @@
                                 <input type="date" name="exam_date" class="form-control" value="{{ old('exam_date') }}">
                             </div>
                             <div class="col-md-12">
+                                <label class="form-label fw-semibold text-secondary">Vincular a orden médica pendiente (opcional)</label>
+                                <select name="medical_order_id" class="form-select rounded-3">
+                                    <option value="">-- No vincular a ninguna orden --</option>
+                                    @foreach($viewData['pendingOrders'] as $order)
+                                        <option value="{{ $order->id }}">
+                                            Orden del {{ $order->order_date->format('Y-m-d') }} - {{ $order->order_type }}: {{ Str::limit($order->description, 60) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-12">
                                 <label class="form-label">Descripción</label>
                                 <textarea name="description" rows="2" class="form-control"
                                     placeholder="Notas opcionales (ej: examen solicitado por la clínica en laboratorio externo)">{{ old('description') }}</textarea>

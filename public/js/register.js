@@ -98,7 +98,7 @@ function goToStep2() {
     
     // Solo validamos step 1 si estamos creando un cliente nuevo
     if (regType === 'new_client') {
-        const fields = ['name', 'apellido', 'email', 'telefono', 'password', 'password_confirmation'];
+        const fields = ['id', 'name', 'apellido', 'email', 'telefono', 'password', 'password_confirmation'];
         let valid = true;
 
         fields.forEach(id => {

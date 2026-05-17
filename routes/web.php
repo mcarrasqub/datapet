@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\DoctorTaskController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Doctor\ClinicalObservationController;
 use App\Http\Controllers\Doctor\VaccinationController;
-use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\MedicalExamController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/clients', 'App\Http\Controllers\Admin\ClientController@store')->name('clients.store');
 
     Route::get('/doctor/clients', 'App\Http\Controllers\Doctor\ClientDoctorController@index')->name('clients.index');
+    Route::put('/doctor/clients/{client}', [\App\Http\Controllers\Doctor\ClientDoctorController::class, 'update'])->name('doctor.clients.update');
     Route::get('/medical-records', 'App\Http\Controllers\Doctor\MedicalRecordController@index')->name('medical_records.index');
     Route::get('/medical-records/{pet}', 'App\Http\Controllers\Doctor\MedicalRecordController@show')->name('medical_records.show');
     Route::get('/medical-records/{pet}/create', 'App\Http\Controllers\Doctor\MedicalRecordController@create')->name('medical_records.create');
@@ -38,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/medical-records-edit/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@edit')->name('medical_records.edit');
     Route::put('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@update')->name('medical_records.update');
     Route::delete('/medical-records/{medicalRecord}', 'App\Http\Controllers\Doctor\MedicalRecordController@destroy')->name('medical_records.destroy');
+    Route::put('/medical-records/{pet}/update-pet', 'App\Http\Controllers\Doctor\MedicalRecordController@updatePet')->name('medical_records.update_pet');
     Route::post('/medical-records/{medicalRecord}/observations', [ClinicalObservationController::class, 'store'])->name('clinical_observations.store');
     Route::get('/clinical-observations/{clinicalObservation}/edit', [ClinicalObservationController::class, 'edit'])->name('clinical_observations.edit');
     Route::put('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'update'])->name('clinical_observations.update');
@@ -46,6 +48,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pets/{pet}/exams', [MedicalExamController::class, 'store'])->name('medical_exams.store');
     Route::get('/medical-exams/{medicalExam}/view', [MedicalExamController::class, 'view'])->name('medical_exams.view');
     Route::get('/medical-exams/{medicalExam}/download', [MedicalExamController::class, 'download'])->name('medical_exams.download');
+    Route::post('/medical-exams/{medicalExam}/complete-review', [MedicalExamController::class, 'completeReview'])->name('medical_exams.complete_review');
+
+    Route::post('/pets/{pet}/kardex', [\App\Http\Controllers\Doctor\KardexController::class, 'store'])->name('kardex.store');
+    Route::delete('/kardex/{kardexEntry}', [\App\Http\Controllers\Doctor\KardexController::class, 'destroy'])->name('kardex.destroy');
+    Route::post('/pets/{pet}/formulas', [\App\Http\Controllers\Doctor\MedicalFormulaController::class, 'store'])->name('formulas.store');
+    Route::delete('/formulas/{medicalFormula}', [\App\Http\Controllers\Doctor\MedicalFormulaController::class, 'destroy'])->name('formulas.destroy');
+    Route::post('/pets/{pet}/orders', [\App\Http\Controllers\Doctor\MedicalOrderController::class, 'store'])->name('orders.store');
+    Route::patch('/orders/{medicalOrder}/status', [\App\Http\Controllers\Doctor\MedicalOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::delete('/orders/{medicalOrder}', [\App\Http\Controllers\Doctor\MedicalOrderController::class, 'destroy'])->name('orders.destroy');
 
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home.index');
     Route::get('/my-exams', 'App\Http\Controllers\PetController@exams')->name('pets.exams');
@@ -70,4 +81,6 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/admin/adoption-requests/{adoptionRequest}/reject', 'App\Http\Controllers\AdoptionController@reject')->name('adoption.reject');
     Route::get('/admin/adoptions/create', 'App\Http\Controllers\AdoptionController@create')->name('admin.adoptions.create');
     Route::post('/admin/adoptions', 'App\Http\Controllers\AdoptionController@storePet')->name('admin.adoptions.store');
+    Route::get('/admin/adoptions/{pet}/edit', 'App\Http\Controllers\AdoptionController@edit')->name('admin.adoptions.edit');
+    Route::put('/admin/adoptions/{pet}', 'App\Http\Controllers\AdoptionController@updatePet')->name('admin.adoptions.update');
 });

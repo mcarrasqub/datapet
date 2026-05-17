@@ -10,6 +10,7 @@ class MedicalExam extends Model
     protected $fillable = [
         'pet_id',
         'medical_record_id',
+        'medical_order_id',
         'uploaded_by',
         'reviewed_by_doctor_id',
         'title',
@@ -38,6 +39,11 @@ class MedicalExam extends Model
     public function medicalRecord(): BelongsTo
     {
         return $this->belongsTo(MedicalRecord::class, 'medical_record_id');
+    }
+
+    public function medicalOrder(): BelongsTo
+    {
+        return $this->belongsTo(MedicalOrder::class, 'medical_order_id');
     }
 
     public function uploader(): BelongsTo

@@ -72,7 +72,7 @@ class LoginTest extends TestCase
         // Caso Admin -> Dashboard
         $admin = User::factory()->create([
             'role' => 'admin',
-            'lastname' => 'Admin'
+            'lastname' => 'Admin',
         ]);
         $responseAdmin = $this->post('/login', [
             'email' => $admin->email,
@@ -83,7 +83,7 @@ class LoginTest extends TestCase
         // Caso Doctor -> Dashboard
         $doctor = User::factory()->create([
             'role' => 'doctor',
-            'lastname' => 'Doctor'
+            'lastname' => 'Doctor',
         ]);
         $responseDoctor = $this->post('/login', [
             'email' => $doctor->email,
@@ -94,13 +94,13 @@ class LoginTest extends TestCase
         // Caso Cliente
         $client = User::factory()->create([
             'role' => 'client',
-            'lastname' => 'Cliente'
+            'lastname' => 'Cliente',
         ]);
         $responseClient = $this->post('/login', [
             'email' => $client->email,
             'password' => 'password',
         ]);
-        
+
         /**
          * Ajuste AC4: Según tu error, el sistema redirige a /dashboard.
          * Si quieres que vaya a la raíz, debes cambiar el LoginController.
@@ -117,10 +117,10 @@ class LoginTest extends TestCase
         $password = 'secret123';
         $user = User::create([
             'name' => 'User Test',
-            'lastname' => 'LastName Test', 
+            'lastname' => 'LastName Test',
             'email' => 'secure@test.com',
             'password' => Hash::make($password),
-            'role' => 'client'
+            'role' => 'client',
         ]);
 
         $this->assertNotEquals($password, $user->password);

@@ -15,7 +15,9 @@ class DoctorTaskControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private User $doctor;
+
     private Pet $pet;
 
     protected function setUp(): void
@@ -23,7 +25,7 @@ class DoctorTaskControllerTest extends TestCase
         parent::setUp();
         $this->admin = User::factory()->create(['role' => 'admin']);
         $this->doctor = User::factory()->create(['role' => 'doctor']);
-        
+
         $client = User::factory()->create(['role' => 'client']);
         $this->pet = Pet::factory()->create(['user_id' => $client->id]);
     }
@@ -77,17 +79,17 @@ class DoctorTaskControllerTest extends TestCase
             'title' => 'Tarea Test',
             'status' => 'pending',
             'priority' => 'medium',
-            'is_system' => false
+            'is_system' => false,
         ]);
 
         $response = $this->patch(route('tasks.updateStatus', $task), [
-            'status' => 'completed'
+            'status' => 'completed',
         ]);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('doctor_tasks', [
             'id' => $task->id,
-            'status' => 'completed'
+            'status' => 'completed',
         ]);
     }
 
@@ -103,11 +105,11 @@ class DoctorTaskControllerTest extends TestCase
             'title' => 'Mi Tarea',
             'status' => 'pending',
             'priority' => 'low',
-            'is_system' => false
+            'is_system' => false,
         ]);
 
         $response = $this->patch(route('tasks.updateOwnStatus', $task), [
-            'status' => 'completed'
+            'status' => 'completed',
         ]);
 
         $response->assertRedirect();
@@ -125,13 +127,13 @@ class DoctorTaskControllerTest extends TestCase
             'title' => 'Tarea Ajena',
             'status' => 'pending',
             'priority' => 'high',
-            'is_system' => false
+            'is_system' => false,
         ]);
 
         $this->actingAs($this->doctor); // Logueado como doctor A tratando de editar a doctor B
 
         $response = $this->patch(route('tasks.updateOwnStatus', $task), [
-            'status' => 'completed'
+            'status' => 'completed',
         ]);
 
         $response->assertStatus(403);
@@ -149,7 +151,7 @@ class DoctorTaskControllerTest extends TestCase
             'title' => 'Borrar',
             'status' => 'pending',
             'priority' => 'low',
-            'is_system' => false
+            'is_system' => false,
         ]);
 
         $response = $this->delete(route('tasks.destroy', $task));

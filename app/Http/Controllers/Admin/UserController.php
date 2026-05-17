@@ -7,9 +7,9 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -73,6 +73,7 @@ class UserController extends Controller
         $lastName = count($parts) > 1 ? implode(' ', array_slice($parts, 1)) : '';
 
         $user = User::create([
+            'id' => $data['id'],
             'name' => $firstName ?: $data['name'],
             'lastname' => $lastName,
             'email' => $data['email'],
@@ -126,7 +127,7 @@ class UserController extends Controller
         $user->email = $data['email'];
         $user->role = $data['role'];
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $user->password = Hash::make($data['password']);
         }
 
@@ -155,14 +156,14 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
-    
-    if (Auth::user()->role !== 'admin') {
-        abort(403, 'No tienes permisos para realizar esta acción.');
-    }
 
-    $user->delete();
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'No tienes permisos para realizar esta acción.');
+        }
 
-    return redirect()->route('users.index')
-        ->with('success', "Usuario \"{$user->name}\" eliminado correctamente.");
+        $user->delete();
+
+        return redirect()->route('users.index')
+            ->with('success', "Usuario \"{$user->name}\" eliminado correctamente.");
     }
 }

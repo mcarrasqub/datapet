@@ -21,6 +21,7 @@ class ClientController extends Controller
         $data = $request->validated();
 
         User::create([
+            'id' => $data['id'],
             'name' => $data['name'],
             'lastname' => $data['lastname'],
             'email' => $data['email'],

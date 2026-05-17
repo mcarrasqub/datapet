@@ -13,8 +13,11 @@ class AppointmentsTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private User $doctor;
+
     private Pet $pet;
+
     private string $date;
 
     protected function setUp(): void
@@ -55,8 +58,8 @@ class AppointmentsTest extends TestCase
 
         $response->assertRedirect(route('appointments.index'));
         $this->assertDatabaseHas('appointments', [
-            'id' => $appointment->id, 
-            'status' => 'canceled'
+            'id' => $appointment->id,
+            'status' => 'canceled',
         ]);
     }
 
