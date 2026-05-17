@@ -115,6 +115,33 @@ class MedicalExamsTest extends TestCase
         );
     }
 
+    public function test_doctor_can_complete_medical_exam_review(): void
+    {
+        $this->actingAs($this->doctor);
+
+        $exam = MedicalExam::create([
+            'pet_id' => $this->pet->id,
+            'medical_record_id' => $this->medicalRecord->id,
+            'uploaded_by' => $this->doctor->id,
+            'title' => 'Radiografia',
+            'file_path' => 'dummy',
+            'original_name' => 'dummy.pdf',
+            'mime_type' => 'application/pdf',
+            'file_size' => 1024,
+            'uploaded_at' => now(),
+        ]);
+
+        $this->assertNull($exam->reviewed_by_doctor_at);
+
+        $response = $this->post(route('medical_exams.complete_review', $exam));
+
+        $response->assertRedirect();
+        
+        $exam->refresh();
+        $this->assertNotNull($exam->reviewed_by_doctor_at);
+        $this->assertEquals($this->doctor->id, $exam->reviewed_by_doctor_id);
+    }
+
     /**
      * Test de descarga (Download) - Para subir cobertura
      */

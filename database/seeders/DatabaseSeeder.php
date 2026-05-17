@@ -8,6 +8,11 @@ use App\Models\MedicalRecord;
 use App\Models\Vaccination;
 use App\Models\Appointment;
 use App\Models\AdoptionRequest;
+use App\Models\KardexEntry;
+use App\Models\MedicalFormula;
+use App\Models\MedicalOrder;
+use App\Models\MedicalExam;
+use App\Models\DoctorTask;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
@@ -28,11 +33,32 @@ class DatabaseSeeder extends Seeder
         Appointment::truncate();
         Vaccination::truncate();
         MedicalRecord::truncate();
+        KardexEntry::truncate();
+        MedicalFormula::truncate();
+        MedicalOrder::truncate();
+        MedicalExam::truncate();
+        DoctorTask::truncate();
         Pet::truncate();
         User::truncate();
 
         // Reactivar restricciones de clave foránea
         Schema::enableForeignKeyConstraints();
+
+        // 0. Copiar archivos de prueba reales desde public/default-assets a storage
+        $sourceNoodle = public_path('default-assets/fake_noodle_exam.pdf');
+        $sourceZiggy = public_path('default-assets/fake_ziggy_exam.pdf');
+        
+        if (\Illuminate\Support\Facades\File::exists($sourceNoodle)) {
+            \Illuminate\Support\Facades\Storage::disk('local')->put('medical_exams/fake_noodle_exam.pdf', \Illuminate\Support\Facades\File::get($sourceNoodle));
+        } else {
+            \Illuminate\Support\Facades\Storage::disk('local')->put('medical_exams/fake_noodle_exam.pdf', '%PDF-1.4 dummy exam');
+        }
+
+        if (\Illuminate\Support\Facades\File::exists($sourceZiggy)) {
+            \Illuminate\Support\Facades\Storage::disk('local')->put('medical_exams/fake_ziggy_exam.pdf', \Illuminate\Support\Facades\File::get($sourceZiggy));
+        } else {
+            \Illuminate\Support\Facades\Storage::disk('local')->put('medical_exams/fake_ziggy_exam.pdf', '%PDF-1.4 dummy exam');
+        }
 
         // 1. Creación de Usuarios de Prueba
         $admin = User::create([
@@ -184,6 +210,31 @@ class DatabaseSeeder extends Seeder
             'available_for_adoption' => false,
         ]);
 
+        $tambor = Pet::create([
+            'user_id' => $client2->id,
+            'name' => 'Tambor',
+            'species' => 'Conejo',
+            'breed' => 'Cabeza de León',
+            'age' => 1,
+            'gender' => 'male',
+            'weight' => 1.80,
+            'color' => 'Gris',
+            'size' => 'Pequeña',
+            'reproductive_status' => 'Esterilizado',
+            'is_deceased' => false,
+            'emotional_support' => false,
+            'service_animal' => false,
+            'diet' => 'Heno de alfalfa premium, pellets y hojas de diente de león',
+            'diet_quantity' => '100g de heno diario',
+            'diet_frequency' => 'Diario',
+            'housing' => 'Jaula grande con área de juegos libre',
+            'bath_frequency' => 'No se baña (solo cepillado)',
+            'bath_products' => 'Ninguno',
+            'other_pets' => 'Iguana',
+            'last_heat' => 'N/A',
+            'available_for_adoption' => false,
+        ]);
+
         // 3. Creación de Mascotas Exóticas Disponibles para Adopción (asociadas al administrador/albergue)
         $spike = Pet::create([
             'user_id' => $admin->id,
@@ -259,7 +310,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 5. Creación de Vacunas (Vaccinations)
-        // Los hurones son de las pocas mascotas exóticas estándar que sí tienen un protocolo estricto de vacunación (Rabia y Moquillo)
         Vaccination::create([
             'pet_id' => $noodle->id,
             'doctor_id' => $doctor->id,
@@ -308,6 +358,196 @@ class DatabaseSeeder extends Seeder
             'experience' => 'Tengo un terrario completamente equipado de 120x60x60 con luces UVB y control de temperatura de mi anterior iguana.',
             'status' => 'pending',
             'admin_notes' => 'Confirmar si el terrario tiene la ventilación y rango térmico adecuado para un dragón barbudo.',
+        ]);
+
+        // 8. Creación de Registros de Kardex Clínico
+        KardexEntry::create([
+            'pet_id' => $noodle->id,
+            'doctor_id' => $doctor->id,
+            'entry_date' => Carbon::now()->subDays(2)->toDateString(),
+            'animal_type' => 'huron',
+            'parameters' => [
+                'frecuencia_cardiaca' => 220,
+                'frecuencia_respiratoria' => 35,
+                'temperatura' => 38.6,
+                'glicemia' => 85,
+                'hidratacion' => 100,
+            ],
+        ]);
+
+        KardexEntry::create([
+            'pet_id' => $ziggy->id,
+            'doctor_id' => $doctor->id,
+            'entry_date' => Carbon::now()->subDays(1)->toDateString(),
+            'animal_type' => 'erizo',
+            'parameters' => [
+                'frecuencia_cardiaca' => 240,
+                'frecuencia_respiratoria' => 32,
+                'temperatura' => 36.2,
+                'estado_piel_puas' => 'Púas firmes y uniformes, sin descamación',
+                'enrollamiento' => 'Completo/Firme',
+                'peso' => 420,
+            ],
+        ]);
+
+        KardexEntry::create([
+            'pet_id' => $coco->id,
+            'doctor_id' => $doctor->id,
+            'entry_date' => Carbon::now()->subDays(5)->toDateString(),
+            'animal_type' => 'loro',
+            'parameters' => [
+                'frecuencia_respiratoria' => 28,
+                'temperatura_cloacal' => 41.2,
+                'plumaje' => 'Picaje leve en pecho, resto de plumas sanas',
+                'consistencia_heces' => 'Normal',
+                'comportamiento' => 'Activo/Alerta',
+                'estado_buche' => 'Lleno/Normal',
+            ],
+        ]);
+
+        KardexEntry::create([
+            'pet_id' => $rex->id,
+            'doctor_id' => $doctor->id,
+            'entry_date' => Carbon::now()->subDays(3)->toDateString(),
+            'animal_type' => 'iguana',
+            'parameters' => [
+                'frecuencia_cardiaca' => 45,
+                'temperatura_terrario' => 31.5,
+                'muda_piel' => 'Completa y saludable',
+                'hidratacion' => 'Normal/Turgente',
+                'cola_extremidades' => 'Cola completa y sana',
+                'coloracion' => 'Brillante/Verde Intenso',
+            ],
+        ]);
+
+        KardexEntry::create([
+            'pet_id' => $tambor->id,
+            'doctor_id' => $doctor->id,
+            'entry_date' => Carbon::now()->subDays(4)->toDateString(),
+            'animal_type' => 'conejo',
+            'parameters' => [
+                'frecuencia_cardiaca' => 200,
+                'frecuencia_respiratoria' => 40,
+                'temperatura' => 39.1,
+                'motilidad_intestinal' => 'Normal',
+                'cecotrofos' => 'Normal/Heces Firmes',
+                'estado_dental' => 'Perfecto estado',
+            ],
+        ]);
+
+        // 9. Creación de Fórmulas Médicas (Recetas)
+        MedicalFormula::create([
+            'pet_id' => $noodle->id,
+            'doctor_id' => $doctor->id,
+            'formula_date' => Carbon::now()->subDays(2)->toDateString(),
+            'instructions' => 'Administrar los medicamentos mezclados con alimento húmedo premium. Reposo relativo por 5 días.',
+            'medications' => [
+                [
+                    'name' => 'Meloxicam Suspensión 0.5mg/ml',
+                    'dose' => '0.2 ml',
+                    'frequency' => 'Cada 24 horas',
+                    'duration' => '5 días',
+                ],
+                [
+                    'name' => 'Suplemento Multivitamínico Hurón-Plus',
+                    'dose' => '1 gota',
+                    'frequency' => 'Cada 12 horas',
+                    'duration' => '30 días',
+                ],
+            ],
+        ]);
+
+        MedicalFormula::create([
+            'pet_id' => $rex->id,
+            'doctor_id' => $doctor->id,
+            'formula_date' => Carbon::now()->subDays(1)->toDateString(),
+            'instructions' => 'Aplicar una capa muy fina en los dedos afectados por retención de muda y masajear suavemente.',
+            'medications' => [
+                [
+                    'name' => 'Pomada Hidratante Reptil-Shed',
+                    'dose' => 'Capa delgada',
+                    'frequency' => 'Cada 12 horas',
+                    'duration' => '7 días',
+                ],
+            ],
+        ]);
+
+        // 10. Creación de Órdenes Clínicas
+        $order1 = MedicalOrder::create([
+            'pet_id' => $noodle->id,
+            'doctor_id' => $doctor->id,
+            'order_date' => Carbon::now()->subDays(10)->toDateString(),
+            'order_type' => 'Laboratorio',
+            'description' => 'Hemograma completo y panel bioquímico pre-anestésico básico (glucosa, creatinina, GPT).',
+            'status' => 'completed',
+        ]);
+
+        $order2 = MedicalOrder::create([
+            'pet_id' => $rex->id,
+            'doctor_id' => $doctor->id,
+            'order_date' => Carbon::now()->subDays(1)->toDateString(),
+            'order_type' => 'Imagenología',
+            'description' => 'Estudio radiográfico ventrodorsal y lateral de abdomen para descartar distocia obstructiva o impactación fecal.',
+            'status' => 'pending',
+        ]);
+
+        $order3 = MedicalOrder::create([
+            'pet_id' => $coco->id,
+            'doctor_id' => $doctor->id,
+            'order_date' => Carbon::now()->subDays(15)->toDateString(),
+            'order_type' => 'Cirugía / Procedimiento',
+            'description' => 'Procedimiento de limado de pico correctivo bajo sedación inhalatoria.',
+            'status' => 'cancelled',
+        ]);
+
+        $order4 = MedicalOrder::create([
+            'pet_id' => $ziggy->id,
+            'doctor_id' => $doctor->id,
+            'order_date' => Carbon::now()->subDays(3)->toDateString(),
+            'order_type' => 'Laboratorio',
+            'description' => 'Examen coprológico seriado por flotación directa para descarte de parásitos coccidios.',
+            'status' => 'pending',
+        ]);
+
+        // 11. Creación de Exámenes de Laboratorio Subidos Enlazados
+        MedicalExam::create([
+            'pet_id' => $noodle->id,
+            'uploaded_by' => $client1->id,
+            'title' => 'Resultados Bioquímica y Hemograma Noodle',
+            'original_name' => 'bioquimica_preanestesico.pdf',
+            'file_path' => 'medical_exams/fake_noodle_exam.pdf',
+            'mime_type' => 'application/pdf',
+            'file_size' => 1048576,
+            'uploaded_at' => Carbon::now()->subDays(8),
+            'reviewed_by_doctor_id' => $doctor->id,
+            'reviewed_by_doctor_at' => Carbon::now()->subDays(8),
+            'medical_order_id' => $order1->id,
+        ]);
+
+        $examZiggy = MedicalExam::create([
+            'pet_id' => $ziggy->id,
+            'uploaded_by' => $client1->id,
+            'title' => 'Resultado Coprológico Flotación',
+            'original_name' => 'coprologico_flotacion_ziggy.pdf',
+            'file_path' => 'medical_exams/fake_ziggy_exam.pdf',
+            'mime_type' => 'application/pdf',
+            'file_size' => 512000,
+            'uploaded_at' => Carbon::now()->subDays(1),
+            'medical_order_id' => $order4->id,
+        ]);
+
+        // 12. Creación de Tareas de Doctores correspondientes
+        DoctorTask::create([
+            'doctor_id' => $doctor->id,
+            'title' => 'Revisar examen externo: Resultado Coprológico Flotación',
+            'description' => 'El cliente subió un examen para Ziggy y aún no ha sido revisado por el doctor.',
+            'status' => 'pending',
+            'due_date' => Carbon::now()->toDateString(),
+            'priority' => 'high',
+            'is_system' => true,
+            'source_type' => 'medical_exam',
+            'source_id' => $examZiggy->id,
+            'task_key' => 'doctor:'.$doctor->id.':exam:'.$examZiggy->id.':review',
         ]);
     }
 }

@@ -244,7 +244,7 @@ class DoctorTaskController extends Controller
                     'title' => 'Revisar examen externo: '.($exam->title ?: $exam->original_name),
                     'description' => 'El cliente subió un examen para '.$petName.' y aún no ha sido revisado por el doctor.',
                     'status' => 'pending',
-                    'due_date' => optional($exam->uploaded_at)->toDateString(),
+                    'due_date' => $exam->uploaded_at ? $exam->uploaded_at->copy()->addWeekdays(3)->toDateString() : null,
                     'priority' => 'high',
                     'is_system' => true,
                     'source_type' => 'medical_exam',
