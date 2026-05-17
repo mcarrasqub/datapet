@@ -62,14 +62,11 @@ class UserController extends Controller
      */
     public function store(UserRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'role' => ['required', 'in:admin,doctor'],
-            'password' => ['required', 'string', 'min:8'],
-        ]);
+        // Al usar UserRequest, los datos YA vienen validados.
+        // Solo tomamos los datos validados usando $request->validated()
+        $data = $request->validated();
 
-        // Split full name into name and lastname if possible.
+        // Separar nombre completo si es posible
         $fullName = trim($data['name']);
         $parts = preg_split('/\s+/', $fullName);
         $firstName = $parts[0] ?? '';
@@ -86,6 +83,57 @@ class UserController extends Controller
 
         return redirect()->route('users.index')
             ->with('success', "Usuario \"{$user->name}\" creado correctamente.");
+    }
+
+    /**
+     * Show the form for editing the specified user.
+     */
+    public function edit(User $user): View
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'No tienes permisos para editar usuarios.');
+        }
+
+        $roles = [
+            'admin' => 'Administrador',
+            'doctor' => 'Doctor Veterinario',
+            'client' => 'Cliente',
+        ];
+
+        return view('admin.users.edit', compact('user', 'roles'));
+    }
+
+    /**
+     * Update the specified user in storage.
+     */
+    public function update(UserRequest $request, User $user): RedirectResponse
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'No tienes permisos para actualizar usuarios.');
+        }
+
+        // Eliminamos el $request->validate manual que causaba el conflicto.
+        // Ahora usamos las reglas dinámicas del UserRequest
+        $data = $request->validated();
+
+        $fullName = trim($data['name']);
+        $parts = preg_split('/\s+/', $fullName);
+        $firstName = $parts[0] ?? '';
+        $lastName = count($parts) > 1 ? implode(' ', array_slice($parts, 1)) : '';
+
+        $user->name = $firstName ?: $data['name'];
+        $user->lastname = $lastName;
+        $user->email = $data['email'];
+        $user->role = $data['role'];
+
+        if (!empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('users.index')
+            ->with('success', "Usuario \"{$user->name}\" actualizado correctamente.");
     }
 
     /**
