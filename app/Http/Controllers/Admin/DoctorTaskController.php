@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DoctorTaskController extends Controller
@@ -365,7 +365,7 @@ class DoctorTaskController extends Controller
         if ($task->status === 'completed') {
             if ($task->source_type === 'medical_exam' && $task->source_id) {
                 $exam = \App\Models\MedicalExam::find($task->source_id);
-                if ($exam && !$exam->reviewed_by_doctor_at) {
+                if ($exam && ! $exam->reviewed_by_doctor_at) {
                     $exam->update([
                         'reviewed_by_doctor_id' => $task->doctor_id,
                         'reviewed_by_doctor_at' => now(),

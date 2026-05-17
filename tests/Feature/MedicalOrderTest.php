@@ -17,8 +17,11 @@ class MedicalOrderTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private User $doctor;
+
     private User $client;
+
     private Pet $pet;
 
     protected function setUp(): void
@@ -30,7 +33,7 @@ class MedicalOrderTest extends TestCase
         $this->admin = User::factory()->create(['role' => 'admin']);
         $this->doctor = User::factory()->create(['role' => 'doctor']);
         $this->client = User::factory()->create(['role' => 'client']);
-        
+
         $this->pet = Pet::factory()->create([
             'user_id' => $this->client->id,
             'species' => 'Perro',
@@ -189,7 +192,7 @@ class MedicalOrderTest extends TestCase
 
         // 4. Doctor views/reviews the exam, completing the review task and the clinical order automatically
         $this->actingAs($this->doctor);
-        
+
         // Ver el examen ya no completa la revisión automáticamente
         $viewResponse = $this->get(route('medical_exams.view', $exam));
         $viewResponse->assertOk();

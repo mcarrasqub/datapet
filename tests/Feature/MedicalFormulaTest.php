@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Pet;
 use App\Models\MedicalFormula;
+use App\Models\Pet;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,7 +13,9 @@ class MedicalFormulaTest extends TestCase
     use RefreshDatabase;
 
     private User $doctor;
+
     private User $client;
+
     private Pet $pet;
 
     protected function setUp(): void
@@ -22,7 +24,7 @@ class MedicalFormulaTest extends TestCase
 
         $this->doctor = User::factory()->create(['role' => 'doctor']);
         $this->client = User::factory()->create(['role' => 'client']);
-        
+
         $this->pet = Pet::create([
             'user_id' => $this->client->id,
             'name' => 'Kiko',
@@ -54,8 +56,8 @@ class MedicalFormulaTest extends TestCase
                     'dose' => '0.5 ml',
                     'frequency' => 'Cada 12 horas',
                     'duration' => '7 días',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $response = $this->post(route('formulas.store', $this->pet), $formulaData);
@@ -91,8 +93,8 @@ class MedicalFormulaTest extends TestCase
                     'dose' => '0.2 ml',
                     'frequency' => 'Cada 24 horas',
                     'duration' => '5 días',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response = $this->get(route('medical_records.show', $this->pet));
@@ -105,7 +107,7 @@ class MedicalFormulaTest extends TestCase
         $response->assertSee('Cada 24 horas');
         $response->assertSee('5 días');
         $response->assertSee('Dar con abundante agua y heno fresco.');
-        $response->assertSee('Dr(a). ' . $this->doctor->name);
+        $response->assertSee('Dr(a). '.$this->doctor->name);
     }
 
     public function test_validation_fails_when_medications_missing()
@@ -115,7 +117,7 @@ class MedicalFormulaTest extends TestCase
         $formulaData = [
             'formula_date' => '2026-05-17',
             'instructions' => 'Recomendación general',
-            'medications' => []
+            'medications' => [],
         ];
 
         $response = $this->post(route('formulas.store', $this->pet), $formulaData);
@@ -136,8 +138,8 @@ class MedicalFormulaTest extends TestCase
                     'dose' => '0.2 ml',
                     'frequency' => '', // Empty frequency
                     'duration' => '5 días',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $response = $this->post(route('formulas.store', $this->pet), $formulaData);
@@ -161,8 +163,8 @@ class MedicalFormulaTest extends TestCase
                     'dose' => '0.2 ml',
                     'frequency' => 'Cada 24 horas',
                     'duration' => '5 días',
-                ]
-            ]
+                ],
+            ],
         ];
 
         $responseStore = $this->post(route('formulas.store', $this->pet), $formulaData);
@@ -179,8 +181,8 @@ class MedicalFormulaTest extends TestCase
                     'dose' => '0.2 ml',
                     'frequency' => 'Cada 24 horas',
                     'duration' => '5 días',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $responseDelete = $this->delete(route('formulas.destroy', $formula));
@@ -188,7 +190,7 @@ class MedicalFormulaTest extends TestCase
 
         // 3. Guest is redirected
         $this->post(route('logout'));
-        
+
         $responseGuest = $this->post(route('formulas.store', $this->pet), $formulaData);
         $responseGuest->assertRedirect('/login');
     }
@@ -207,8 +209,8 @@ class MedicalFormulaTest extends TestCase
                     'dose' => '0.2 ml',
                     'frequency' => 'Cada 24 horas',
                     'duration' => '5 días',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $this->assertDatabaseHas('medical_formulas', ['id' => $formula->id]);
@@ -217,7 +219,7 @@ class MedicalFormulaTest extends TestCase
 
         $response->assertRedirect(route('medical_records.show', $this->pet));
         $response->assertSessionHas('success', 'Fórmula médica eliminada exitosamente.');
-        
+
         $this->assertDatabaseMissing('medical_formulas', ['id' => $formula->id]);
     }
 }

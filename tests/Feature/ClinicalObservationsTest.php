@@ -11,11 +11,14 @@ use Tests\TestCase;
 
 class ClinicalObservationsTest extends TestCase
 {
-    use RefreshDatabase; 
+    use RefreshDatabase;
 
     private const OBS_GOOD_STATE = 'Paciente presenta buen estado general, mucosas rosadas, capilares llenos.';
+
     private User $doctor;
+
     private Pet $pet;
+
     private MedicalRecord $medicalRecord;
 
     protected function setUp(): void
@@ -51,7 +54,7 @@ class ClinicalObservationsTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        
+
         // Verificamos persistencia
         $this->assertDatabaseHas('clinical_observations', [
             'medical_record_id' => $this->medicalRecord->id,
@@ -83,7 +86,7 @@ class ClinicalObservationsTest extends TestCase
         // Editar la primera
         $observation = ClinicalObservation::first();
         $updatedText = 'Obs 1 Editada';
-        
+
         $response = $this->put(route('clinical_observations.update', $observation), [
             'observation' => $updatedText,
         ]);
@@ -141,7 +144,7 @@ class ClinicalObservationsTest extends TestCase
         ]);
 
         $response = $this->actingAs($client)->delete(route('clinical_observations.destroy', $observation));
-        
+
         $response->assertStatus(403); // Forbidden
         $this->assertDatabaseHas('clinical_observations', ['id' => $observation->id]);
     }

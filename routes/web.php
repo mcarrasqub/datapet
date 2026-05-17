@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\DoctorTaskController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Doctor\ClinicalObservationController;
 use App\Http\Controllers\Doctor\VaccinationController;
-use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\MedicalExamController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/medical-exams/{medicalExam}/view', [MedicalExamController::class, 'view'])->name('medical_exams.view');
     Route::get('/medical-exams/{medicalExam}/download', [MedicalExamController::class, 'download'])->name('medical_exams.download');
     Route::post('/medical-exams/{medicalExam}/complete-review', [MedicalExamController::class, 'completeReview'])->name('medical_exams.complete_review');
-    
+
     Route::post('/pets/{pet}/kardex', [\App\Http\Controllers\Doctor\KardexController::class, 'store'])->name('kardex.store');
     Route::delete('/kardex/{kardexEntry}', [\App\Http\Controllers\Doctor\KardexController::class, 'destroy'])->name('kardex.destroy');
     Route::post('/pets/{pet}/formulas', [\App\Http\Controllers\Doctor\MedicalFormulaController::class, 'store'])->name('formulas.store');

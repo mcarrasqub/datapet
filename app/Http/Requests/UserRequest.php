@@ -28,7 +28,7 @@ class UserRequest extends FormRequest
             'id' => $userId ? [] : ['required', 'numeric', 'digits:10', 'unique:users,id'],
             'name' => ['required', 'string', 'max:255'],
             // Ignora el email del usuario actual si se está editando
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $userId],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$userId],
             'role' => ['required', 'in:admin,doctor,client'],
             // La contraseña es obligatoria solo al crear (store), al actualizar es opcional (nullable)
             'password' => $userId ? ['nullable', 'string', 'min:8'] : ['required', 'string', 'min:8'],

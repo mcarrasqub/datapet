@@ -36,7 +36,7 @@ class ClientDoctorController extends Controller
      */
     public function update(Request $request, User $client): \Illuminate\Http\RedirectResponse
     {
-        if (!auth()->check() || !in_array(auth()->user()->role, ['doctor', 'admin'])) {
+        if (! auth()->check() || ! in_array(auth()->user()->role, ['doctor', 'admin'])) {
             abort(403, 'No autorizado');
         }
 
@@ -47,7 +47,7 @@ class ClientDoctorController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $client->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$client->id,
             'phone' => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
         ], [

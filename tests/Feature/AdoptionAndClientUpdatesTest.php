@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\Pet;
 use App\Models\AdoptionRequest;
+use App\Models\Pet;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -25,7 +25,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
         $pet = Pet::factory()->create([
             'user_id' => $admin->getId(),
             'available_for_adoption' => true,
-            'adoption_description' => 'Un loro muy parlanchín buscando hogar'
+            'adoption_description' => 'Un loro muy parlanchín buscando hogar',
         ]);
 
         $client = User::factory()->create(['role' => 'client']);
@@ -35,7 +35,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
             'user_id' => $client->getId(),
             'full_name' => 'Carlos Cliente',
             'phone' => '1234567890',
-            'status' => 'pending'
+            'status' => 'pending',
         ]);
 
         // Access index
@@ -63,7 +63,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
         $pet = Pet::factory()->create([
             'user_id' => $admin->getId(),
             'available_for_adoption' => true,
-            'adoption_description' => 'Un loro genial'
+            'adoption_description' => 'Un loro genial',
         ]);
 
         Storage::fake('public');
@@ -76,7 +76,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
             'weight' => 1.8,
             'available_for_adoption' => '1',
             'adoption_description' => 'Loro muy cariñoso y de colores brillantes.',
-            'photo' => $fakePhoto
+            'photo' => $fakePhoto,
         ];
 
         $response = $this->put(route('admin.adoptions.update', $pet->getId()), $data);
@@ -91,7 +91,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
             'age' => 4,
             'weight' => 1.8,
             'available_for_adoption' => true,
-            'adoption_description' => 'Loro muy cariñoso y de colores brillantes.'
+            'adoption_description' => 'Loro muy cariñoso y de colores brillantes.',
         ]);
 
         $pet->refresh();
@@ -109,7 +109,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
 
         $pet = Pet::factory()->create([
             'user_id' => $doctor->getId(),
-            'available_for_adoption' => true
+            'available_for_adoption' => true,
         ]);
 
         // Get index
@@ -123,7 +123,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
         // Put update
         $response = $this->put(route('admin.adoptions.update', $pet->getId()), [
             'name' => 'Violación de Seguridad',
-            'species' => 'Intruso'
+            'species' => 'Intruso',
         ]);
         $response->assertStatus(403);
     }
@@ -141,7 +141,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
             'name' => 'Carlos',
             'lastname' => 'Gómez',
             'email' => 'carlos.gomez@example.com',
-            'phone' => '5551234'
+            'phone' => '5551234',
         ]);
 
         $data = [
@@ -149,7 +149,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
             'lastname' => 'Gómez Restrepo',
             'email' => 'carlos.alberto@example.com',
             'phone' => '3009998877',
-            'address' => 'Carrera 45 #80-90'
+            'address' => 'Carrera 45 #80-90',
         ];
 
         $response = $this->put(route('doctor.clients.update', $client->getId()), $data);
@@ -163,7 +163,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
             'lastname' => 'Gómez Restrepo',
             'email' => 'carlos.alberto@example.com',
             'phone' => '3009998877',
-            'address' => 'Carrera 45 #80-90'
+            'address' => 'Carrera 45 #80-90',
         ]);
     }
 
@@ -180,7 +180,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
             'name' => 'Ataque',
             'lastname' => 'Malicioso',
             'email' => 'hacker@example.com',
-            'phone' => '999999'
+            'phone' => '999999',
         ]);
 
         $response->assertStatus(403);
@@ -196,17 +196,17 @@ class AdoptionAndClientUpdatesTest extends TestCase
 
         $client = User::factory()->create([
             'role' => 'client',
-            'email' => 'original@example.com'
+            'email' => 'original@example.com',
         ]);
 
         $otherClient = User::factory()->create([
             'role' => 'client',
-            'email' => 'taken@example.com'
+            'email' => 'taken@example.com',
         ]);
 
         // Scenario A: Missing fields
         $response = $this->put(route('doctor.clients.update', $client->getId()), [
-            'address' => 'Calle 100'
+            'address' => 'Calle 100',
         ]);
         $response->assertSessionHasErrors(['name', 'lastname', 'email', 'phone']);
 
@@ -215,7 +215,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
             'name' => 'Carlos',
             'lastname' => 'Gómez',
             'email' => 'taken@example.com',
-            'phone' => '5551234'
+            'phone' => '5551234',
         ]);
         $response->assertSessionHasErrors(['email']);
     }

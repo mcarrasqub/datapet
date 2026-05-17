@@ -15,6 +15,7 @@ class MedicalRecordsTest extends TestCase
     use RefreshDatabase;
 
     private User $doctor;
+
     private Pet $pet;
 
     protected function setUp(): void
@@ -49,12 +50,12 @@ class MedicalRecordsTest extends TestCase
         }
 
         $response->assertRedirect(route('medical_records.show', $this->pet));
-        
+
         // Verificamos que se guardó como 'notes' (como hace tu controlador)
         $this->assertDatabaseHas('medical_records', [
             'pet_id' => $this->pet->id,
             'diagnosis' => 'Sano',
-            'notes' => 'Paciente en excelente estado' 
+            'notes' => 'Paciente en excelente estado',
         ]);
     }
 
@@ -162,11 +163,11 @@ class MedicalRecordsTest extends TestCase
         $response = $this->put(route('medical_records.update_pet', $this->pet), $updateData);
 
         $response->assertRedirect(route('medical_records.show', $this->pet));
-        
+
         $this->pet->refresh();
         $newPhotoPath = $this->pet->getPhoto();
         $this->assertNotNull($newPhotoPath);
-        
+
         Storage::disk('public')->assertExists($newPhotoPath);
     }
 
@@ -247,7 +248,7 @@ class MedicalRecordsTest extends TestCase
             'start_time' => '10:00:00',
             'end_time' => '11:00:00',
             'status' => 'scheduled',
-            'reason' => 'Chequeo de caparazón'
+            'reason' => 'Chequeo de caparazón',
         ]);
 
         // Create a vaccination
@@ -279,7 +280,7 @@ class MedicalRecordsTest extends TestCase
             'visited_at' => now(),
             'reason' => 'Control de peso',
             'diagnosis' => 'Normal',
-            'notes' => 'Saludable'
+            'notes' => 'Saludable',
         ]);
 
         $response = $this->get(route('medical_records.show', $this->pet));

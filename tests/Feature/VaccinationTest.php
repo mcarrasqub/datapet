@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Pet;
-use App\Models\MedicalRecord;
 use App\Models\ClinicalObservation;
+use App\Models\MedicalRecord;
+use App\Models\Pet;
 use App\Models\User;
 use App\Models\Vaccination;
 use Illuminate\Support\Carbon;

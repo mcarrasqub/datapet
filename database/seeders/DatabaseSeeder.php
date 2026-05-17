@@ -2,21 +2,21 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Pet;
-use App\Models\MedicalRecord;
-use App\Models\Vaccination;
-use App\Models\Appointment;
 use App\Models\AdoptionRequest;
+use App\Models\Appointment;
+use App\Models\DoctorTask;
 use App\Models\KardexEntry;
+use App\Models\MedicalExam;
 use App\Models\MedicalFormula;
 use App\Models\MedicalOrder;
-use App\Models\MedicalExam;
-use App\Models\DoctorTask;
+use App\Models\MedicalRecord;
+use App\Models\Pet;
+use App\Models\User;
+use App\Models\Vaccination;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
-use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
         // Copiar archivos de prueba reales desde public/default-assets a storage
         $sourceNoodle = public_path('default-assets/fake_noodle_exam.pdf');
         $sourceZiggy = public_path('default-assets/fake_ziggy_exam.pdf');
-        
+
         if (\Illuminate\Support\Facades\File::exists($sourceNoodle)) {
             \Illuminate\Support\Facades\Storage::disk('local')->put('medical_exams/fake_noodle_exam.pdf', \Illuminate\Support\Facades\File::get($sourceNoodle));
         } else {
@@ -60,10 +60,10 @@ class DatabaseSeeder extends Seeder
             \Illuminate\Support\Facades\Storage::disk('local')->put('medical_exams/fake_ziggy_exam.pdf', '%PDF-1.4 dummy exam');
         }
 
-        //Copiar Fotos de Mascotas
+        // Copiar Fotos de Mascotas
         $mascotasNames = ['noodle', 'ziggy', 'coco', 'rex', 'tambor', 'spike', 'cleo'];
         $fotosMascotas = [];
-        
+
         foreach ($mascotasNames as $m) {
             foreach (['jpg', 'png', 'jpeg', 'webp'] as $ext) {
                 $sourceFoto = public_path("default-assets/foto_{$m}.{$ext}");

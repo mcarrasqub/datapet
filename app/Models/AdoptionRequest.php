@@ -22,105 +22,105 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class AdoptionRequest extends Model
 {
-  protected $fillable = [
-    'pet_id',
-    'user_id',
-    'full_name',
-    'phone',
-    'experience',
-    'status',
-    'admin_notes',
-  ];
+    protected $fillable = [
+        'pet_id',
+        'user_id',
+        'full_name',
+        'phone',
+        'experience',
+        'status',
+        'admin_notes',
+    ];
 
-  protected $casts = [
-    'created_at' => 'datetime',
-    'updated_at' => 'datetime',
-  ];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
-  public function pet(): BelongsTo
-  {
-    return $this->belongsTo(Pet::class, 'pet_id');
-  }
+    public function pet(): BelongsTo
+    {
+        return $this->belongsTo(Pet::class, 'pet_id');
+    }
 
-  public function user(): BelongsTo
-  {
-    return $this->belongsTo(User::class, 'user_id');
-  }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
-  // Getters
-  public function getId(): int
-  {
-    return $this->attributes['id'];
-  }
+    // Getters
+    public function getId(): int
+    {
+        return $this->attributes['id'];
+    }
 
-  public function getPetId(): int
-  {
-    return $this->attributes['pet_id'];
-  }
+    public function getPetId(): int
+    {
+        return $this->attributes['pet_id'];
+    }
 
-  public function getUserId(): ?int
-  {
-    return $this->attributes['user_id'] ?? null;
-  }
+    public function getUserId(): ?int
+    {
+        return $this->attributes['user_id'] ?? null;
+    }
 
-  public function getFullName(): string
-  {
-    return $this->attributes['full_name'];
-  }
+    public function getFullName(): string
+    {
+        return $this->attributes['full_name'];
+    }
 
-  public function getPhone(): string
-  {
-    return $this->attributes['phone'];
-  }
+    public function getPhone(): string
+    {
+        return $this->attributes['phone'];
+    }
 
-  public function getExperience(): ?string
-  {
-    return $this->attributes['experience'] ?? null;
-  }
+    public function getExperience(): ?string
+    {
+        return $this->attributes['experience'] ?? null;
+    }
 
-  public function getStatus(): string
-  {
-    return $this->attributes['status'];
-  }
+    public function getStatus(): string
+    {
+        return $this->attributes['status'];
+    }
 
-  public function getAdminNotes(): ?string
-  {
-    return $this->attributes['admin_notes'] ?? null;
-  }
+    public function getAdminNotes(): ?string
+    {
+        return $this->attributes['admin_notes'] ?? null;
+    }
 
-  // Setters
-  public function setPetId(int $petId): void
-  {
-    $this->attributes['pet_id'] = $petId;
-  }
+    // Setters
+    public function setPetId(int $petId): void
+    {
+        $this->attributes['pet_id'] = $petId;
+    }
 
-  public function setUserId(?int $userId): void
-  {
-    $this->attributes['user_id'] = $userId;
-  }
+    public function setUserId(?int $userId): void
+    {
+        $this->attributes['user_id'] = $userId;
+    }
 
-  public function setFullName(string $fullName): void
-  {
-    $this->attributes['full_name'] = $fullName;
-  }
+    public function setFullName(string $fullName): void
+    {
+        $this->attributes['full_name'] = $fullName;
+    }
 
-  public function setPhone(string $phone): void
-  {
-    $this->attributes['phone'] = $phone;
-  }
+    public function setPhone(string $phone): void
+    {
+        $this->attributes['phone'] = $phone;
+    }
 
-  public function setExperience(?string $experience): void
-  {
-    $this->attributes['experience'] = $experience;
-  }
+    public function setExperience(?string $experience): void
+    {
+        $this->attributes['experience'] = $experience;
+    }
 
-  public function setStatus(string $status): void
-  {
-    $this->attributes['status'] = $status;
-  }
+    public function setStatus(string $status): void
+    {
+        $this->attributes['status'] = $status;
+    }
 
-  public function setAdminNotes(?string $adminNotes): void
-  {
-    $this->attributes['admin_notes'] = $adminNotes;
-  }
+    public function setAdminNotes(?string $adminNotes): void
+    {
+        $this->attributes['admin_notes'] = $adminNotes;
+    }
 }

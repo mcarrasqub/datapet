@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\KardexEntry;
 use App\Models\Pet;
 use App\Models\User;
-use App\Models\KardexEntry;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
@@ -31,7 +31,7 @@ class KardexTest extends TestCase
                 'temperatura' => 38.6,
                 'glicemia' => 85,
                 'hidratacion' => 100,
-            ]
+            ],
         ];
 
         $response = $this->actingAs($doctor)->post(route('kardex.store', $pet), $huronPayload);
@@ -54,7 +54,7 @@ class KardexTest extends TestCase
                 'consistencia_heces' => 'Normal',
                 'comportamiento' => 'Activo/Alerta',
                 'estado_buche' => 'Lleno/Normal',
-            ]
+            ],
         ];
 
         $response = $this->actingAs($doctor)->post(route('kardex.store', $pet), $loroPayload);
@@ -77,7 +77,7 @@ class KardexTest extends TestCase
                 'motilidad_intestinal' => 'Normal',
                 'cecotrofos' => 'Normal/Heces Firmes',
                 'estado_dental' => 'Perfecto estado',
-            ]
+            ],
         ];
 
         $response = $this->actingAs($doctor)->post(route('kardex.store', $pet), $conejoPayload);
@@ -100,7 +100,7 @@ class KardexTest extends TestCase
                 'estado_piel_puas' => 'Sin descamación',
                 'enrollamiento' => 'Completo/Firme',
                 'peso' => 420,
-            ]
+            ],
         ];
 
         $response = $this->actingAs($doctor)->post(route('kardex.store', $pet), $erizoPayload);
@@ -123,7 +123,7 @@ class KardexTest extends TestCase
                 'hidratacion' => 'Normal/Turgente',
                 'cola_extremidades' => 'Sanas',
                 'coloracion' => 'Brillante/Verde Intenso',
-            ]
+            ],
         ];
 
         $response = $this->actingAs($doctor)->post(route('kardex.store', $pet), $iguanaPayload);
@@ -158,7 +158,7 @@ class KardexTest extends TestCase
                 'temperatura' => 38.9,
                 'glicemia' => 88,
                 'hidratacion' => 95,
-            ]
+            ],
         ]);
 
         $response = $this->actingAs($doctor)->get(route('medical_records.show', $pet));
@@ -200,7 +200,7 @@ class KardexTest extends TestCase
             'parameters' => [
                 'frecuencia_cardiaca' => 200,
                 'frecuencia_respiratoria' => 30,
-            ]
+            ],
         ];
 
         // 1. Unauthorized client cannot store
@@ -214,7 +214,7 @@ class KardexTest extends TestCase
             'doctor_id' => $doctor->id,
             'entry_date' => Carbon::today(),
             'animal_type' => 'huron',
-            'parameters' => ['fc' => 200]
+            'parameters' => ['fc' => 200],
         ]);
 
         // 2. Unauthorized client cannot delete
@@ -238,7 +238,7 @@ class KardexTest extends TestCase
             'doctor_id' => $doctor->id,
             'entry_date' => Carbon::today(),
             'animal_type' => 'huron',
-            'parameters' => ['fc' => 200]
+            'parameters' => ['fc' => 200],
         ]);
 
         $response = $this->actingAs($doctor)->delete(route('kardex.destroy', $entry));

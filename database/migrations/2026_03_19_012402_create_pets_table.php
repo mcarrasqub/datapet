@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('is_deceased')->default(false);
             $table->boolean('emotional_support')->default(false);
             $table->boolean('service_animal')->default(false);
-            
+
             // Diet & Husbandry
             $table->string('diet', 1000)->nullable();
             $table->string('diet_quantity')->nullable();

@@ -26,7 +26,6 @@ class User extends Authenticatable
      * this->attributes['status']
      * this->attributes['role']
      */
-
     public $incrementing = false;
 
     /**

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pet;
 use App\Models\MedicalFormula;
-use Illuminate\Http\Request;
+use App\Models\Pet;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MedicalFormulaController extends Controller
