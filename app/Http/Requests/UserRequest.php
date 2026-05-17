@@ -22,11 +22,16 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Capturamos el ID del usuario si estamos en la ruta de actualización
+        $userId = $this->route('user') ? $this->route('user')->id : null;
+
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            // Ignora el email del usuario actual si se está editando
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $userId],
             'role' => ['required', 'in:admin,doctor,client'],
-            'password' => ['required', 'string', 'min:8'],
+            // La contraseña es obligatoria solo al crear (store), al actualizar es opcional (nullable)
+            'password' => $userId ? ['nullable', 'string', 'min:8'] : ['required', 'string', 'min:8'],
         ];
     }
 }
