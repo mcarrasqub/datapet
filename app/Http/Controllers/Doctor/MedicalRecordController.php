@@ -18,7 +18,7 @@ class MedicalRecordController extends Controller
     {
         $this->ensureDoctorOrAdmin();
 
-        $pets = Pet::with('medicalRecords.doctor', 'medicalRecords.observations.doctor')->get();
+        $pets = Pet::with(['medicalRecords.doctor', 'medicalRecords.observations.doctor', 'appointments.doctor'])->get();
 
         $selectedPet = $pets->first();
         $medicalRecords = $selectedPet
@@ -31,6 +31,9 @@ class MedicalRecordController extends Controller
         $vaccinations = $selectedPet
             ? $selectedPet->vaccinations()->with('doctor')->orderByDesc('vaccinated_at')->get()
             : collect();
+        $appointments = $selectedPet
+            ? $selectedPet->appointments()->with('doctor')->orderByDesc('date')->orderByDesc('start_time')->get()
+            : collect();
 
         $viewData = [];
         $viewData['pets'] = $pets;
@@ -39,6 +42,7 @@ class MedicalRecordController extends Controller
         $viewData['lastVisit'] = $lastVisit;
         $viewData['medicalExams'] = $medicalExams;
         $viewData['vaccinations'] = $vaccinations;
+        $viewData['appointments'] = $appointments;
 
         return view('medical_records.medical_records', $viewData);
     }
@@ -47,7 +51,7 @@ class MedicalRecordController extends Controller
     {
         $this->ensureDoctorOrAdmin();
 
-        $pets = Pet::with('medicalRecords.doctor', 'medicalRecords.observations.doctor')->get();
+        $pets = Pet::with(['medicalRecords.doctor', 'medicalRecords.observations.doctor', 'appointments.doctor'])->get();
         $medicalRecords = $pet->medicalRecords()->with(['doctor', 'observations.doctor'])->orderByDesc('visited_at')->get();
         $lastVisit = $pet->medicalRecords()->orderByDesc('visited_at')->first();
         $medicalExams = $pet->medicalExams()
@@ -58,6 +62,11 @@ class MedicalRecordController extends Controller
             ->with('doctor')
             ->orderByDesc('vaccinated_at')
             ->get();
+        $appointments = $pet->appointments()
+            ->with('doctor')
+            ->orderByDesc('date')
+            ->orderByDesc('start_time')
+            ->get();
 
         $viewData = [];
         $viewData['pets'] = $pets;
@@ -66,6 +75,7 @@ class MedicalRecordController extends Controller
         $viewData['lastVisit'] = $lastVisit;
         $viewData['medicalExams'] = $medicalExams;
         $viewData['vaccinations'] = $vaccinations;
+        $viewData['appointments'] = $appointments;
 
         return view('medical_records.medical_records', $viewData);
     }

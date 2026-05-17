@@ -54,22 +54,11 @@
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary js-pet-section-link"
                                 data-section="vacunas">
                                 <span><i class="bi bi-droplet me-3"></i>Vacunaciones</span>
+                                <span class="badge bg-pet-green rounded-pill">{{ count($vaccinations) }}</span>
                             </a>
                             <a href="#"
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
                                 <span><i class="bi bi-capsule me-3"></i>Fórmulas médicas</span>
-                            </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
-                                <span><i class="bi bi-bug me-3"></i>Desparasitaciones</span>
-                            </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
-                                <span><i class="bi bi-hospital me-3"></i>Hospitalizaciones/a...</span>
-                            </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
-                                <span><i class="bi bi-scissors me-3"></i>Cirugías/procedimie...</span>
                             </a>
                             <a href="#"
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
@@ -79,9 +68,7 @@
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary js-pet-section-link"
                                 data-section="examenes">
                                 <span><i class="bi bi-activity me-3"></i>Exámenes de laboratorio</span>
-                                @if(count($medicalExams) > 0)
-                                    <span class="badge bg-pet-green rounded-pill">{{ count($medicalExams) }}</span>
-                                @endif
+                                <span class="badge bg-pet-green rounded-pill">{{ count($medicalExams) }}</span>
                             </a>
                             <a href="#"
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
@@ -89,23 +76,13 @@
                             </a>
                             <a href="#"
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
-                                <span><i class="bi bi-house-door me-3"></i>Guardería</span>
-                            </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
-                                <span><i class="bi bi-journal-check me-3"></i>Seguimientos</span>
-                            </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
                                 <span><i class="bi bi-file-earmark me-3"></i>Documentos</span>
                             </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary">
-                                <span><i class="bi bi-send me-3"></i>Remisiones</span>
-                            </a>
-                            <a href="#"
-                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 text-secondary">
+                            <a href="#citas"
+                                class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 text-secondary js-pet-section-link"
+                                data-section="citas">
                                 <span><i class="bi bi-calendar3 me-3"></i>Citas</span>
+                                <span class="badge bg-pet-green rounded-pill">{{ count($appointments) }}</span>
                             </a>
                         </div>
                     </div>
@@ -560,8 +537,53 @@
                                     </div>
                                 @endif
                             </div>
-                </div>
-            </div>
+
+                            <div id="citas" class="js-pet-section d-none">
+                                <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+                                    <h6 class="fw-bold mb-0 text-dark">Historial de Citas</h6>
+                                    <span class="badge bg-light text-secondary border">{{ count($appointments) }}</span>
+                                </div>
+
+                                <div class="d-flex flex-column gap-3 mb-4">
+                                    @forelse($appointments as $appointment)
+                                        <div class="border rounded-4 p-4 bg-light position-relative border-start-pet-green-dark">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div>
+                                                    <div class="fw-semibold text-dark fs-110 mb-2">
+                                                        <i class="bi bi-calendar-event text-pet-green-dark me-2"></i>{{ $appointment->getDate() }}
+                                                    </div>
+                                                    <div class="text-dark fw-medium fs-90 mb-1">
+                                                        Hora: <span class="text-secondary fw-normal">{{ substr($appointment->getStartTime(), 0, 5) }} - {{ substr($appointment->getEndTime(), 0, 5) }}</span>
+                                                    </div>
+                                                    <div class="text-dark fw-medium fs-90 mb-1">
+                                                        Doctor Asignado: <span class="text-secondary fw-normal">Dr(a). {{ $appointment->doctor->name }} {{ $appointment->doctor->lastname }}</span>
+                                                    </div>
+                                                    <div class="text-dark fw-medium fs-90 mb-1">
+                                                        Motivo: <span class="text-secondary fw-normal">{{ $appointment->getReason() ?? 'No especificado' }}</span>
+                                                    </div>
+                                                    <div class="text-dark fw-medium fs-90">
+                                                        Estado: 
+                                                        @if($appointment->getStatus() === 'scheduled')
+                                                            <span class="badge bg-success rounded-pill px-3 py-1 fs-75">Programada</span>
+                                                        @elseif($appointment->getStatus() === 'canceled')
+                                                            <span class="badge bg-danger rounded-pill px-3 py-1 fs-75">Cancelada</span>
+                                                        @else
+                                                            <span class="badge bg-secondary rounded-pill px-3 py-1 fs-75">{{ ucfirst($appointment->getStatus()) }}</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="text-center py-5 text-muted bg-light rounded-4">
+                                            <i class="bi bi-calendar-x fs-1 mb-3 d-block text-secondary"></i>
+                                            La mascota no tiene citas registradas.
+                                        </div>
+                                    @endforelse
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
             <!-- MODAL PARA EDITAR MASCOTA -->
             <div class="modal fade" id="editPetModal" tabindex="-1" aria-labelledby="editPetModalLabel" aria-hidden="true">

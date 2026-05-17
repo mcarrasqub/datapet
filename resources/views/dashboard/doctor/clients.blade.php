@@ -88,27 +88,32 @@
                                 <td class="px-3">
                                     <div class="d-flex flex-column gap-2">
                                         @forelse($client->pets as $pet)
-                                            <a href="{{ route('medical_records.show', $pet->getId()) }}" class="pet-hover-card pet-hover-card-bg text-decoration-none d-flex align-items-center justify-content-between p-2 rounded">
-                                                <div class="d-flex align-items-center">
-                                                    @if($pet->getPhoto())
-                                                        <img src="{{ asset('storage/' . $pet->getPhoto()) }}" alt="Foto" class="rounded-circle me-3 object-fit-cover avatar-32">
-                                                    @else
-                                                        <div class="bg-pet-green text-white rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold avatar-32 fs-80">
-                                                            {{ strtoupper(substr($pet->getName(), 0, 2)) }}
+                                            <div class="pet-hover-card-bg d-flex align-items-center justify-content-between p-2 rounded border mb-1">
+                                                <a href="{{ route('medical_records.show', $pet->getId()) }}" class="pet-hover-card text-decoration-none d-flex align-items-center justify-content-between flex-grow-1">
+                                                    <div class="d-flex align-items-center">
+                                                        @if($pet->getPhoto())
+                                                            <img src="{{ asset('storage/' . $pet->getPhoto()) }}" alt="Foto" class="rounded-circle me-3 object-fit-cover avatar-32">
+                                                        @else
+                                                            <div class="bg-pet-green text-white rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold avatar-32 fs-80">
+                                                                {{ strtoupper(substr($pet->getName(), 0, 2)) }}
+                                                            </div>
+                                                        @endif
+                                                        <div>
+                                                            <div class="d-flex align-items-center">
+                                                                <h6 class="pet-name mb-0 fw-bold me-2 text-dark fs-90">{{ $pet->getName() }}</h6>
+                                                                @if($pet->getIsDeceased())
+                                                                    <span class="badge bg-danger rounded-pill px-2 py-0 fs-65">Fallecido</span>
+                                                                @endif
+                                                            </div>
+                                                            <small class="text-muted fs-80">{{ $pet->getSpecies() }} ({{ ucfirst($pet->getGender()) }})</small>
                                                         </div>
-                                                    @endif
-                                                    <div>
-                                                        <div class="d-flex align-items-center">
-                                                            <h6 class="pet-name mb-0 fw-bold me-2 text-dark fs-90">{{ $pet->getName() }}</h6>
-                                                            @if($pet->getIsDeceased())
-                                                                <span class="badge bg-danger rounded-pill px-2 py-0 fs-65">Fallecido</span>
-                                                            @endif
-                                                        </div>
-                                                        <small class="text-muted fs-80">{{ ucfirst($pet->getGender()) }}</small>
                                                     </div>
-                                                </div>
-                                                <i class="bi bi-chevron-right text-muted fs-80"></i>
-                                            </a>
+                                                    <i class="bi bi-chevron-right text-muted fs-80 me-3"></i>
+                                                </a>
+                                                <a href="{{ route('medical_records.show', $pet->getId()) }}" class="btn btn-outline-pet-green bg-white rounded-4 btn-sm px-3 py-1 fw-medium fs-80">
+                                                    Ver detalles
+                                                </a>
+                                            </div>
                                         @empty
                                             <span class="text-muted small">Sin mascotas</span>
                                         @endforelse
@@ -116,14 +121,11 @@
                                 </td>
                                 <td class="px-3">
                                     <div class="d-flex gap-2">
-                                        <a href="{{ $client->pets->isNotEmpty() ? route('medical_records.show', $client->pets->first()->getId()) : '#' }}" class="btn btn-outline-pet-green bg-white rounded-4 btn-sm px-3 py-1 fw-medium fs-85">
-                                            Ver detalles
-                                        </a>
                                         <button type="button" 
-                                            class="btn btn-outline-primary bg-white rounded-4 btn-sm px-3 py-1 fw-medium fs-85"
+                                            class="btn btn-outline-primary bg-white rounded-4 btn-sm px-3 py-1 fw-medium fs-85 w-100"
                                             data-bs-toggle="modal" 
                                             data-bs-target="#editClientModal{{ $client->getId() }}">
-                                            <i class="bi bi-pencil me-1"></i> Editar
+                                            <i class="bi bi-pencil me-1"></i> Editar Cliente
                                         </button>
                                     </div>
 

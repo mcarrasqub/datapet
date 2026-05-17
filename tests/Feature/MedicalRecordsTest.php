@@ -208,4 +208,107 @@ class MedicalRecordsTest extends TestCase
 
         $response->assertSessionHasErrors(['name', 'gender']);
     }
+
+    /**
+     * Test that the doctor can view client list with inline per-pet "Ver detalles" links,
+     * chevron links, and "Editar Cliente" button.
+     */
+    public function test_doctor_can_view_client_list_with_per_pet_details_and_renamed_edit_button(): void
+    {
+        $this->actingAs($this->doctor);
+
+        // Make sure there is a client with a pet
+        $client = User::factory()->create(['role' => 'client', 'name' => 'John', 'lastname' => 'Doe']);
+        $pet = Pet::factory()->create(['user_id' => $client->getId(), 'name' => 'Flippy', 'species' => 'Iguana Verde']);
+
+        $response = $this->get('/doctor/clients');
+
+        $response->assertStatus(200);
+        $response->assertSee('Editar Cliente');
+        $response->assertSee('Ver detalles');
+        $response->assertSee('Flippy');
+        $response->assertSee('Iguana Verde');
+        $response->assertSee(route('medical_records.show', $pet->getId()));
+    }
+
+    /**
+     * Test that the medical records view contains the appointments history,
+     * count badges for all four categories, and doesn't contain deleted tabs.
+     */
+    public function test_medical_records_view_contains_appointments_and_all_badges(): void
+    {
+        $this->actingAs($this->doctor);
+
+        // Create appointments for this pet
+        $appointment = \App\Models\Appointment::create([
+            'doctor_id' => $this->doctor->getId(),
+            'pet_id' => $this->pet->getId(),
+            'date' => '2026-06-01',
+            'start_time' => '10:00:00',
+            'end_time' => '11:00:00',
+            'status' => 'scheduled',
+            'reason' => 'Chequeo de caparazón'
+        ]);
+
+        // Create a vaccination
+        \App\Models\Vaccination::create([
+            'doctor_id' => $this->doctor->getId(),
+            'pet_id' => $this->pet->getId(),
+            'vaccine_type' => 'Vacuna Reptil A',
+            'vaccinated_at' => now(),
+            'next_due_date' => now()->addYear(),
+        ]);
+
+        // Create a medical exam
+        \App\Models\MedicalExam::create([
+            'uploaded_by' => $this->doctor->getId(),
+            'pet_id' => $this->pet->getId(),
+            'title' => 'Radiografía de cola',
+            'original_name' => 'rayos_x.png',
+            'file_path' => 'exams/rayos_x.png',
+            'category' => 'Radiología',
+            'mime_type' => 'image/png',
+            'file_size' => 1234,
+            'uploaded_at' => now(),
+        ]);
+
+        // Create a medical record
+        MedicalRecord::create([
+            'pet_id' => $this->pet->getId(),
+            'doctor_id' => $this->doctor->getId(),
+            'visited_at' => now(),
+            'reason' => 'Control de peso',
+            'diagnosis' => 'Normal',
+            'notes' => 'Saludable'
+        ]);
+
+        $response = $this->get(route('medical_records.show', $this->pet));
+
+        $response->assertStatus(200);
+
+        // Verify counts are loaded in view variables
+        $response->assertViewHas('appointments');
+        $response->assertViewHas('vaccinations');
+        $response->assertViewHas('medicalExams');
+        $response->assertViewHas('medicalRecords');
+
+        // Verify count badge elements exist in html
+        $response->assertSee('Consultas');
+        $response->assertSee('Vacunaciones');
+        $response->assertSee('Exámenes de laboratorio');
+        $response->assertSee('Citas');
+
+        // Verify appointments section details are displayed
+        $response->assertSee('Historial de Citas');
+        $response->assertSee('Chequeo de caparazón');
+        $response->assertSee('Programada');
+
+        // Verify removed tabs are NOT present
+        $response->assertDontSee('Desparasitaciones');
+        $response->assertDontSee('Hospitalizaciones/a...');
+        $response->assertDontSee('Cirugías/procedimie...');
+        $response->assertDontSee('Guardería');
+        $response->assertDontSee('Seguimientos');
+        $response->assertDontSee('Remisiones');
+    }
 }

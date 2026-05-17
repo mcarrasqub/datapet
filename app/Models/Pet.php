@@ -91,6 +91,11 @@ class Pet extends Model
     return $this->hasMany(AdoptionRequest::class, 'pet_id');
   }
 
+  public function appointments(): HasMany
+  {
+    return $this->hasMany(Appointment::class, 'pet_id');
+  }
+
   // Getters
   public function getId(): int
   {
