@@ -46,16 +46,59 @@ class AdoptionController extends Controller
 
   public function adminIndex(): View
   {
+    $this->ensureAdmin();
+
     $viewData = [];
     $viewData['requests'] = AdoptionRequest::with(['pet', 'user'])
+      ->orderByDesc('created_at')
+      ->get();
+
+    $viewData['pets'] = Pet::where('available_for_adoption', true)
+      ->orWhereNotNull('adoption_description')
       ->orderByDesc('created_at')
       ->get();
 
     return view('admin.adoption.index')->with('viewData', $viewData);
   }
 
+  public function edit(Pet $pet): View
+  {
+    $this->ensureAdmin();
+
+    $viewData = [];
+    $viewData['pet'] = $pet;
+
+    return view('admin.adoption.edit')->with('viewData', $viewData);
+  }
+
+  public function updatePet(Pet $pet, \App\Http\Requests\PetStoreRequest $request): RedirectResponse
+  {
+    $this->ensureAdmin();
+
+    $data = $request->validated();
+
+    // Checkbox
+    $data['available_for_adoption'] = $request->has('available_for_adoption');
+
+    // Manejo de imagen
+    if ($request->hasFile('photo')) {
+      // Eliminar foto anterior si existe
+      if ($pet->getPhoto() && \Illuminate\Support\Facades\Storage::disk('public')->exists($pet->getPhoto())) {
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($pet->getPhoto());
+      }
+      $data['photo'] = $request->file('photo')->store('pets', 'public');
+    }
+
+    $pet->update($data);
+
+    return redirect()->route('adoption.admin.index')
+      ->with('success', 'Mascota de adopción actualizada correctamente');
+  }
+
   public function approve(AdoptionRequest $adoptionRequest): RedirectResponse
   {
+    $this->ensureAdmin();
+
     $adoptionRequest->setStatus('approved');
     $adoptionRequest->save();
 
@@ -64,6 +107,8 @@ class AdoptionController extends Controller
 
   public function reject(AdoptionRequest $adoptionRequest): RedirectResponse
   {
+    $this->ensureAdmin();
+
     $adoptionRequest->setStatus('rejected');
     $adoptionRequest->save();
 
@@ -72,11 +117,15 @@ class AdoptionController extends Controller
 
   public function create(): View
   {
+    $this->ensureAdmin();
+
     return view('admin.adoption.create');
   }
 
   public function storePet(PetStoreRequest $request): RedirectResponse
   {
+    $this->ensureAdmin();
+
     $data = $request->validated();
 
     // Asignar usuario creador
@@ -94,5 +143,14 @@ class AdoptionController extends Controller
 
     return redirect()->route('adoption.admin.index')
       ->with('success', 'Mascota creada correctamente');
+  }
+
+  private function ensureAdmin(): void
+  {
+    $role = (string) (Auth::user()->role ?? '');
+
+    if ($role !== 'admin') {
+      abort(403, 'No tienes permisos para acceder a esta sección.');
+    }
   }
 }

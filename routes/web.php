@@ -31,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/clients', 'App\Http\Controllers\Admin\ClientController@store')->name('clients.store');
 
     Route::get('/doctor/clients', 'App\Http\Controllers\Doctor\ClientDoctorController@index')->name('clients.index');
+    Route::put('/doctor/clients/{client}', [\App\Http\Controllers\Doctor\ClientDoctorController::class, 'update'])->name('doctor.clients.update');
     Route::get('/medical-records', 'App\Http\Controllers\Doctor\MedicalRecordController@index')->name('medical_records.index');
     Route::get('/medical-records/{pet}', 'App\Http\Controllers\Doctor\MedicalRecordController@show')->name('medical_records.show');
     Route::get('/medical-records/{pet}/create', 'App\Http\Controllers\Doctor\MedicalRecordController@create')->name('medical_records.create');
@@ -71,4 +72,6 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/admin/adoption-requests/{adoptionRequest}/reject', 'App\Http\Controllers\AdoptionController@reject')->name('adoption.reject');
     Route::get('/admin/adoptions/create', 'App\Http\Controllers\AdoptionController@create')->name('admin.adoptions.create');
     Route::post('/admin/adoptions', 'App\Http\Controllers\AdoptionController@storePet')->name('admin.adoptions.store');
+    Route::get('/admin/adoptions/{pet}/edit', 'App\Http\Controllers\AdoptionController@edit')->name('admin.adoptions.edit');
+    Route::put('/admin/adoptions/{pet}', 'App\Http\Controllers\AdoptionController@updatePet')->name('admin.adoptions.update');
 });

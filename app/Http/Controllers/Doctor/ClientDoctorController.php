@@ -30,4 +30,37 @@ class ClientDoctorController extends Controller
 
         return view('dashboard.doctor.clients', $viewData);
     }
+
+    /**
+     * Update client details by doctor.
+     */
+    public function update(Request $request, User $client): \Illuminate\Http\RedirectResponse
+    {
+        if (!auth()->check() || !in_array(auth()->user()->role, ['doctor', 'admin'])) {
+            abort(403, 'No autorizado');
+        }
+
+        if ($client->role !== 'client') {
+            abort(400, 'Solo se pueden actualizar datos de clientes');
+        }
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $client->id,
+            'phone' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
+        ], [
+            'name.required' => 'El nombre es obligatorio',
+            'lastname.required' => 'El apellido es obligatorio',
+            'email.required' => 'El correo electrónico es obligatorio',
+            'email.email' => 'El correo electrónico debe ser válido',
+            'email.unique' => 'Este correo electrónico ya está registrado',
+            'phone.required' => 'El teléfono es obligatorio',
+        ]);
+
+        $client->update($data);
+
+        return redirect()->back()->with('success', 'Datos del cliente actualizados correctamente.');
+    }
 }
