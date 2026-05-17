@@ -64,14 +64,11 @@ class UserController extends Controller
      */
     public function store(UserRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'role' => ['required', 'in:admin,doctor'],
-            'password' => ['required', 'string', 'min:8'],
-        ]);
+        // Al usar UserRequest, los datos YA vienen validados.
+        // Solo tomamos los datos validados usando $request->validated()
+        $data = $request->validated();
 
-        // Split full name into name and lastname if possible.
+        // Separar nombre completo si es posible
         $fullName = trim($data['name']);
         $parts = preg_split('/\s+/', $fullName);
         $firstName = $parts[0] ?? '';
@@ -117,14 +114,10 @@ class UserController extends Controller
             abort(403, 'No tienes permisos para actualizar usuarios.');
         }
 
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'role' => ['required', 'in:admin,doctor,client'],
-            'password' => ['nullable', 'string', 'min:8'],
-        ]);
+        // Eliminamos el $request->validate manual que causaba el conflicto.
+        // Ahora usamos las reglas dinámicas del UserRequest
+        $data = $request->validated();
 
-        // Split full name into name and lastname if possible.
         $fullName = trim($data['name']);
         $parts = preg_split('/\s+/', $fullName);
         $firstName = $parts[0] ?? '';
