@@ -48,6 +48,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pets/{pet}/exams', [MedicalExamController::class, 'store'])->name('medical_exams.store');
     Route::get('/medical-exams/{medicalExam}/view', [MedicalExamController::class, 'view'])->name('medical_exams.view');
     Route::get('/medical-exams/{medicalExam}/download', [MedicalExamController::class, 'download'])->name('medical_exams.download');
+    
+    Route::post('/pets/{pet}/kardex', [\App\Http\Controllers\Doctor\KardexController::class, 'store'])->name('kardex.store');
+    Route::delete('/kardex/{kardexEntry}', [\App\Http\Controllers\Doctor\KardexController::class, 'destroy'])->name('kardex.destroy');
 
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home.index');
     Route::get('/my-exams', 'App\Http\Controllers\PetController@exams')->name('pets.exams');

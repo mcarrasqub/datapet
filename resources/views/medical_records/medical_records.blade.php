@@ -49,6 +49,7 @@
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary js-pet-section-link"
                                 data-section="kardex">
                                 <span><i class="bi bi-journal-text me-3"></i>Kardex</span>
+                                <span class="badge bg-pet-green rounded-pill">{{ count($kardexEntries) }}</span>
                             </a>
                             <a href="#vacunas"
                                 class="list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center fw-medium py-3 px-3 rounded-3 mb-1 text-secondary js-pet-section-link"
@@ -363,8 +364,106 @@
                             </div>
 
                             <div id="kardex" class="js-pet-section d-none">
-                                <div class="text-center py-5 bg-light rounded-4 text-muted">
-                                    El kardex todavía no tiene contenido.
+                                <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+                                    <h6 class="fw-bold mb-0 text-dark">Kardex Clínico (Mascotas Exóticas)</h6>
+                                    <span class="badge bg-light text-secondary border">{{ count($kardexEntries) }}</span>
+                                </div>
+
+                                <!-- Formulario de registro -->
+                                <div class="card border-0 bg-light rounded-4 p-4 mb-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="bi bi-file-earmark-plus text-pet-green-dark fs-5 me-2"></i>
+                                        <h6 class="fw-bold mb-0 text-dark">Registrar Nueva Ficha de Kardex</h6>
+                                    </div>
+
+                                    <form action="{{ route('kardex.store', $selectedPet) }}" method="POST" id="kardex_form">
+                                        @csrf
+                                        <div class="row g-3 mb-3">
+                                            <div class="col-md-6">
+                                                <label for="kardex_entry_date" class="form-label fw-semibold text-secondary">Fecha del Registro</label>
+                                                <input type="date" name="entry_date" id="kardex_entry_date" class="form-control rounded-3" value="{{ now()->toDateString() }}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="kardex_animal_type" class="form-label fw-semibold text-secondary">Tipo de Animal Exótico</label>
+                                                <select name="animal_type" id="kardex_animal_type" class="form-select rounded-3" required>
+                                                    <option value="" disabled selected>-- Seleccione Especie --</option>
+                                                    <option value="huron">Hurón</option>
+                                                    <option value="loro">Loro</option>
+                                                    <option value="conejo">Conejo</option>
+                                                    <option value="erizo">Erizo</option>
+                                                    <option value="iguana">Iguana</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Campos dinámicos renderizados por JS -->
+                                        <div id="kardex_fields_wrapper" class="border rounded-4 p-3 bg-white mb-3 d-none">
+                                            <h6 class="fw-bold text-pet-green mb-3 fs-90"><i class="bi bi-activity me-1"></i>Parámetros Clínicos Específicos</h6>
+                                            <div id="kardex_dynamic_fields" class="row g-3">
+                                                <!-- Cargado por JS -->
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-pet-green text-white px-4 py-2 fw-semibold rounded-3 shadow-sm" id="kardex_submit_btn" disabled>
+                                                <i class="bi bi-save me-1"></i> Guardar en Kardex
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Listado histórico -->
+                                <div class="d-flex flex-column gap-3">
+                                    <h6 class="fw-bold text-dark mb-1 mt-2"><i class="bi bi-clock-history me-2"></i>Historial de Registros de Kardex</h6>
+                                    @forelse($kardexEntries as $entry)
+                                        <div class="border rounded-4 p-4 bg-light position-relative border-start-pet-green-dark">
+                                            <div class="position-absolute top-0 end-0 p-3 d-flex gap-2 align-items-center">
+                                                <span class="badge bg-pet-green-dark text-white rounded-pill px-3 py-1 fs-75 text-uppercase">
+                                                    {{ $entry->animal_type === 'huron' ? 'Hurón' : ucfirst($entry->animal_type) }}
+                                                </span>
+                                                <form action="{{ route('kardex.destroy', $entry) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-link text-danger p-0 border-0" onclick="return confirm('¿Seguro que deseas eliminar esta entrada del Kardex?')">
+                                                        <i class="bi bi-trash fs-110"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <div class="fw-bold text-dark fs-105 mb-1">
+                                                    <i class="bi bi-calendar-check text-pet-green-dark me-2"></i>{{ $entry->entry_date->format('Y-m-d') }}
+                                                </div>
+                                                <small class="text-muted">Registrado por: Dr(a). {{ $entry->doctor->name }} {{ $entry->doctor->lastname }}</small>
+                                            </div>
+
+                                            <!-- Cuadrícula de parámetros específicos -->
+                                            <div class="row g-2 bg-white rounded-3 p-3 border">
+                                                @foreach($entry->parameters as $key => $value)
+                                                    <div class="col-md-4 col-sm-6">
+                                                        <div class="p-2 border-bottom">
+                                                            <small class="text-muted d-block fs-75 text-capitalize">{{ str_replace('_', ' ', $key) }}:</small>
+                                                            <span class="fw-semibold text-dark fs-90">
+                                                                {{ $value }}
+                                                                @if(in_array($key, ['frecuencia_cardiaca', 'fc'])) lpm
+                                                                @elseif(in_array($key, ['frecuencia_respiratoria', 'fr'])) rpm
+                                                                @elseif(in_array($key, ['temperatura', 'temperatura_cloacal', 'temperatura_terrario'])) °C
+                                                                @elseif(in_array($key, ['glicemia'])) mg/dL
+                                                                @elseif(in_array($key, ['hidratacion'])) %
+                                                                @elseif(in_array($key, ['peso'])) g
+                                                                @endif
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="text-center py-5 text-muted bg-light rounded-4">
+                                            <i class="bi bi-journal-x fs-1 mb-3 d-block text-secondary"></i>
+                                            El kardex todavía no tiene contenido.
+                                        </div>
+                                    @endforelse
                                 </div>
                             </div>
 
@@ -782,6 +881,203 @@
                     activateSection(sectionId);
                 });
             });
+
+            // Dynamic Kardex fields generation based on species select
+            const animalTypeSelect = document.getElementById('kardex_animal_type');
+            const fieldsWrapper = document.getElementById('kardex_fields_wrapper');
+            const dynamicFieldsContainer = document.getElementById('kardex_dynamic_fields');
+            const submitBtn = document.getElementById('kardex_submit_btn');
+
+            if (animalTypeSelect) {
+                animalTypeSelect.addEventListener('change', function () {
+                    const species = this.value;
+                    let html = '';
+
+                    if (species) {
+                        fieldsWrapper.classList.remove('d-none');
+                        submitBtn.removeAttribute('disabled');
+                    } else {
+                        fieldsWrapper.classList.add('d-none');
+                        submitBtn.setAttribute('disabled', 'true');
+                        return;
+                    }
+
+                    if (species === 'huron') {
+                        html = `
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Frecuencia Cardíaca (lpm)</label>
+                                <input type="number" name="parameters[frecuencia_cardiaca]" class="form-control rounded-3" placeholder="Ej: 200 (Normal: 180-250)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Frecuencia Respiratoria (rpm)</label>
+                                <input type="number" name="parameters[frecuencia_respiratoria]" class="form-control rounded-3" placeholder="Ej: 35 (Normal: 30-40)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Temperatura (°C)</label>
+                                <input type="number" step="0.1" name="parameters[temperatura]" class="form-control rounded-3" placeholder="Ej: 38.5 (Normal: 37.8-40)" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-secondary">Glicemia (mg/dL)</label>
+                                <input type="number" name="parameters[glicemia]" class="form-control rounded-3" placeholder="Ej: 90 (Alerta < 60)" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-secondary">Hidratación (%)</label>
+                                <input type="number" name="parameters[hidratacion]" class="form-control rounded-3" placeholder="Ej: 100" required>
+                            </div>
+                        `;
+                    } else if (species === 'loro') {
+                        html = `
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Frecuencia Respiratoria (rpm)</label>
+                                <input type="number" name="parameters[frecuencia_respiratoria]" class="form-control rounded-3" placeholder="Ej: 25 (Normal: 15-40)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Temperatura Cloacal (°C)</label>
+                                <input type="number" step="0.1" name="parameters[temperatura_cloacal]" class="form-control rounded-3" placeholder="Ej: 41.0 (Normal: 40-42)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Estado de Plumaje</label>
+                                <select name="parameters[plumaje]" class="form-select rounded-3" required>
+                                    <option value="Excelente">Excelente</option>
+                                    <option value="Bueno">Bueno</option>
+                                    <option value="Malo/Picaje">Malo / Picaje</option>
+                                    <option value="Mudando">Mudando</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Consistencia de Heces</label>
+                                <select name="parameters[consistencia_heces]" class="form-select rounded-3" required>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Liquida/Diarreica">Líquida / Diarreica</option>
+                                    <option value="Con Uratos Anormales">Con Uratos Anormales</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Comportamiento</label>
+                                <select name="parameters[comportamiento]" class="form-select rounded-3" required>
+                                    <option value="Activo/Alerta">Activo / Alerta</option>
+                                    <option value="Deprimido/Letargico">Deprimido / Letárgico</option>
+                                    <option value="Embolado">Embolado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Estado del Buche</label>
+                                <select name="parameters[estado_buche]" class="form-select rounded-3" required>
+                                    <option value="Vacio">Vacío</option>
+                                    <option value="Lleno/Normal">Lleno / Normal</option>
+                                    <option value="Demorado/Estasis">Demorado / Estasis</option>
+                                </select>
+                            </div>
+                        `;
+                    } else if (species === 'conejo') {
+                        html = `
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Frecuencia Cardíaca (lpm)</label>
+                                <input type="number" name="parameters[frecuencia_cardiaca]" class="form-control rounded-3" placeholder="Ej: 220 (Normal: 130-325)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Frecuencia Respiratoria (rpm)</label>
+                                <input type="number" name="parameters[frecuencia_respiratoria]" class="form-control rounded-3" placeholder="Ej: 45 (Normal: 30-60)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Temperatura (°C)</label>
+                                <input type="number" step="0.1" name="parameters[temperatura]" class="form-control rounded-3" placeholder="Ej: 39.2 (Normal: 38.5-40)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Motilidad Intestinal</label>
+                                <select name="parameters[motilidad_intestinal]" class="form-select rounded-3" required>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Disminuida">Disminuida</option>
+                                    <option value="Ileo Clinico">Íleo Clínico (Alerta)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Heces / Cecotrofos</label>
+                                <select name="parameters[cecotrofos]" class="form-select rounded-3" required>
+                                    <option value="Normal/Heces Firmes">Normal / Heces Firmes</option>
+                                    <option value="Heces Blandas/Diarrea">Heces Blandas / Diarrea</option>
+                                    <option value="Ausencia de heces">Ausencia total (Alerta)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Estado Dental</label>
+                                <input type="text" name="parameters[estado_dental]" class="form-control rounded-3" placeholder="Ej: Incisivos normales" required>
+                            </div>
+                        `;
+                    } else if (species === 'erizo') {
+                        html = `
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Frecuencia Cardíaca (lpm)</label>
+                                <input type="number" name="parameters[frecuencia_cardiaca]" class="form-control rounded-3" placeholder="Ej: 210 (Normal: 180-280)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Frecuencia Respiratoria (rpm)</label>
+                                <input type="number" name="parameters[frecuencia_respiratoria]" class="form-control rounded-3" placeholder="Ej: 35 (Normal: 25-50)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Temperatura (°C)</label>
+                                <input type="number" step="0.1" name="parameters[temperatura]" class="form-control rounded-3" placeholder="Ej: 36.1 (Normal: 35-37.5)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Estado de Piel/Púas</label>
+                                <input type="text" name="parameters[estado_piel_puas]" class="form-control rounded-3" placeholder="Ej: Sin descamación" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Grado de Enrollamiento</label>
+                                <select name="parameters[enrollamiento]" class="form-select rounded-3" required>
+                                    <option value="Completo/Firme">Completo / Firme</option>
+                                    <option value="Debil/Incompleto">Débil / Incompleto</option>
+                                    <option value="Ausente">Ausente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Peso Corporal (g)</label>
+                                <input type="number" name="parameters[peso]" class="form-control rounded-3" placeholder="Ej: 450" required>
+                            </div>
+                        `;
+                    } else if (species === 'iguana') {
+                        html = `
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Frecuencia Cardíaca (lpm)</label>
+                                <input type="number" name="parameters[frecuencia_cardiaca]" class="form-control rounded-3" placeholder="Ej: 50 (Normal: 40-60)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Temperatura Terrario (°C)</label>
+                                <input type="number" step="0.1" name="parameters[temperatura_terrario]" class="form-control rounded-3" placeholder="Ej: 32" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Muda de Piel</label>
+                                <select name="parameters[muda_piel]" class="form-select rounded-3" required>
+                                    <option value="Completa/Saludable">Completa / Saludable</option>
+                                    <option value="Disecdiasis (Muda retenida)">Disecdiasis (Muda retenida)</option>
+                                    <option value="No corresponde">No corresponde</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Hidratación (Pliegues)</label>
+                                <select name="parameters[hidratacion]" class="form-select rounded-3" required>
+                                    <option value="Normal/Turgente">Normal / Turgente</option>
+                                    <option value="Deshidratacion Leve">Deshidratación Leve</option>
+                                    <option value="Deshidratacion Moderada/Severa">Deshidratación Severa</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Cola y Extremidades</label>
+                                <input type="text" name="parameters[cola_extremidades]" class="form-control rounded-3" placeholder="Ej: Integros" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-semibold text-secondary">Coloración / Estrés</label>
+                                <select name="parameters[coloracion]" class="form-select rounded-3" required>
+                                    <option value="Brillante/Verde Intenso">Brillante / Verde Intenso</option>
+                                    <option value="Opaca/Oscura (Estres)">Opaca / Oscura (Estrés)</option>
+                                </select>
+                            </div>
+                        `;
+                    }
+
+                    dynamicFieldsContainer.innerHTML = html;
+                });
+            }
         });
     </script>
 @endpush

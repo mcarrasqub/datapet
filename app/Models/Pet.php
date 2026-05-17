@@ -96,6 +96,11 @@ class Pet extends Model
     return $this->hasMany(Appointment::class, 'pet_id');
   }
 
+  public function kardexEntries(): HasMany
+  {
+    return $this->hasMany(KardexEntry::class, 'pet_id');
+  }
+
   // Getters
   public function getId(): int
   {
