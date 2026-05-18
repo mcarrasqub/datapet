@@ -118,7 +118,7 @@ class VaccinationReminderTest extends TestCase
         $response = $this->actingAs($client)->get(route('home.index'));
 
         $response->assertStatus(200);
-        $response->assertSee('recordatorio de vacuna próximo');
+        $response->assertSee('notificación pendiente');
         $response->assertSee('Ver Notificaciones');
 
         // Assert that the client DOES NOT see the WhatsApp action button or link

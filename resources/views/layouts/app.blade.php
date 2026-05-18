@@ -76,7 +76,7 @@
                                 class="bi bi-file-earmark-text me-2"></i>Historial Clínico</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark fw-medium" href="#"><i
+                        <a class="nav-link {{ request()->routeIs('appointments.client_index') ? 'active-pill' : 'text-dark fw-medium' }}" href="{{ route('appointments.client_index') }}"><i
                                 class="bi bi-calendar4-event me-2"></i>Citas</a>
                     </li>
                     <li class="nav-item">

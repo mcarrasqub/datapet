@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home.index');
     Route::get('/notifications', 'App\Http\Controllers\HomeController@notifications')->name('notifications.index');
+    Route::get('/my-appointments', 'App\Http\Controllers\HomeController@appointments')->name('appointments.client_index');
     Route::get('/my-exams', 'App\Http\Controllers\PetController@exams')->name('pets.exams');
     Route::get('/pets', 'App\Http\Controllers\PetController@index')->name('pets.index');
     Route::get('/pets/create', 'App\Http\Controllers\PetController@create')->name('pets.create');

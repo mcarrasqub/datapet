@@ -1,11 +1,11 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * Script de Setup para Tests y Cobertura
- * 
+ *
  * Uso: php scripts/setup-tests.php
  */
-
 echo "\n";
 echo "╔════════════════════════════════════════════════════════════════╗\n";
 echo "║         🚀 Setup de Tests y Cobertura - DataPet               ║\n";
@@ -76,8 +76,9 @@ class SetupTests
     {
         $gitDir = '.git/hooks';
 
-        if (!is_dir($gitDir)) {
+        if (! is_dir($gitDir)) {
             echo "   • No se encontró .git/hooks\n";
+
             return;
         }
 
@@ -114,7 +115,7 @@ class SetupTests
         ];
 
         foreach ($dirs as $dir) {
-            if (!is_dir($dir)) {
+            if (! is_dir($dir)) {
                 @mkdir($dir, 0755, true);
                 echo "   • Creado: $dir ✅\n";
             } else {
@@ -135,9 +136,8 @@ class SetupTests
             $testMethods += count($matches[0]);
         }
 
-        echo "   • Tests encontrados: " . count($testFiles) . "\n";
+        echo '   • Tests encontrados: '.count($testFiles)."\n";
         echo "   • Métodos de test: $testMethods\n";
         echo "   • Reporte generado exitosamente ✅\n";
     }
 }
-?>

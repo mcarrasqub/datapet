@@ -12,7 +12,7 @@
         <div class="d-flex align-items-center">
           <i class="bi bi-bell-fill text-warning fs-5 me-2 animate-bounce"></i>
           <span class="text-dark small">
-            🐾 Tienes <strong>{{ $viewData['reminders']->count() }}</strong> {{ $viewData['reminders']->count() == 1 ? 'recordatorio de vacuna próximo' : 'recordatorios de vacunas próximos' }} para tus mascotas.
+            🐾 Tienes <strong>{{ $viewData['reminders']->count() }}</strong> {{ $viewData['reminders']->count() == 1 ? 'notificación pendiente' : 'notificaciones pendientes' }} para tus mascotas.
           </span>
         </div>
         <a href="{{ route('notifications.index') }}" class="btn btn-warning btn-sm rounded-pill px-3 fw-bold shadow-sm" style="font-size: 0.85rem;">

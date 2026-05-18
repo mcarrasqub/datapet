@@ -22,7 +22,6 @@ class HomeController extends Controller
         $viewData['pets'] = $viewData['user']->pets;
         $viewData['reminders'] = \App\Models\VaccinationReminder::where('user_id', Auth::id())
             ->whereIn('status', ['sent', 'completed'])
-            ->whereNotNull('vaccination_id')
             ->get();
 
         $layout = Auth::check() && Auth::user()->role !== 'client' ? 'layouts.dashboard' : 'layouts.app';
@@ -38,12 +37,29 @@ class HomeController extends Controller
         $viewData['user'] = Auth::user();
         $viewData['reminders'] = \App\Models\VaccinationReminder::where('user_id', Auth::id())
             ->whereIn('status', ['sent', 'completed'])
-            ->whereNotNull('vaccination_id')
             ->orderByDesc('sent_at')
             ->get();
 
         $layout = Auth::check() && Auth::user()->role !== 'client' ? 'layouts.dashboard' : 'layouts.app';
 
         return view('notifications.index')->with('viewData', $viewData)->with('layout', $layout);
+    }
+
+    public function appointments(): View
+    {
+        $viewData = [];
+        $viewData['user'] = Auth::user();
+
+        $viewData['appointments'] = \App\Models\Appointment::with(['pet', 'doctor'])
+            ->whereHas('pet', function ($query) use ($viewData) {
+                $query->where('user_id', $viewData['user']->id);
+            })
+            ->orderBy('date', 'desc')
+            ->orderBy('start_time', 'desc')
+            ->get();
+
+        $layout = Auth::check() && Auth::user()->role !== 'client' ? 'layouts.dashboard' : 'layouts.app';
+
+        return view('appointments.client_index')->with('viewData', $viewData)->with('layout', $layout);
     }
 }

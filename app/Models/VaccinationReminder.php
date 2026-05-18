@@ -9,6 +9,7 @@ class VaccinationReminder extends Model
 {
     protected $fillable = [
         'vaccination_id',
+        'medical_order_id',
         'pet_id',
         'user_id',
         'phone',
@@ -24,6 +25,11 @@ class VaccinationReminder extends Model
     public function vaccination(): BelongsTo
     {
         return $this->belongsTo(Vaccination::class, 'vaccination_id');
+    }
+
+    public function medicalOrder(): BelongsTo
+    {
+        return $this->belongsTo(MedicalOrder::class, 'medical_order_id');
     }
 
     public function pet(): BelongsTo

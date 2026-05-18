@@ -24,7 +24,6 @@ class AppServiceProvider extends ServiceProvider
             if (auth()->check()) {
                 $notificationCount = \App\Models\VaccinationReminder::where('user_id', auth()->id())
                     ->whereIn('status', ['sent', 'completed'])
-                    ->whereNotNull('vaccination_id')
                     ->count();
             }
             $view->with('notificationCount', $notificationCount);

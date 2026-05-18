@@ -8,14 +8,14 @@ echo "╚═══════════════════════�
 // 1. Ejecutar tests
 echo "\n⏳ Ejecutando tests...\n";
 $baseDir = dirname(__DIR__);
-$output = shell_exec('cd ' . $baseDir . ' && php artisan test 2>&1');
+$output = shell_exec('cd '.$baseDir.' && php artisan test 2>&1');
 
 // Extraer información
 if (preg_match('/Tests:\s+(\d+)\s+passed/', $output, $matches)) {
     $passed = $matches[1];
     $total = 112;
     $percentage = round(($passed / $total) * 100, 2);
-    
+
     echo "✅ Tests: $passed/$total ($percentage%)\n";
 } else {
     echo "❌ No se pudo extraer información de tests\n";
@@ -28,8 +28,8 @@ if (preg_match('/Assertions:\s+(\d+)/', $output, $matches)) {
 // 2. Analizar cobertura por archivos
 echo "\n📁 Analizando cobertura de archivos...\n";
 
-$appDir = $baseDir . '/app';
-$testDir = $baseDir . '/tests';
+$appDir = $baseDir.'/app';
+$testDir = $baseDir.'/tests';
 
 $appFiles = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator($appDir, RecursiveDirectoryIterator::SKIP_DOTS),
@@ -42,7 +42,7 @@ $testedFiles = 0;
 
 foreach ($appFiles as $file) {
     if ($file->isFile() && $file->getExtension() === 'php') {
-        $relativePath = str_replace($appDir . '/', '', $file->getRealPath());
+        $relativePath = str_replace($appDir.'/', '', $file->getRealPath());
         $lines = count(file($file->getRealPath()));
         $coverage[$relativePath] = $lines;
         $totalLines += $lines;
