@@ -1,0 +1,99 @@
+name: Tests & Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: ['8.2']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP with extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+        coverage: pcov
+        tools: composer:v2
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Create SQLite database
+      run: touch database/database.sqlite
+
+    - name: Generate application key
+      run: php artisan key:generate --env=testing
+
+    - name: Run database migrations
+      run: php artisan migrate --env=testing --force --no-interaction
+
+    - name: Run PHPUnit tests
+      run: php artisan test --coverage --coverage-clover=coverage.xml
+
+    - name: Check coverage threshold
+      run: |
+        # Extract coverage percentage from coverage.xml
+        COVERAGE=$(grep -oP 'Lines covered="([0-9]+)" statements="([0-9]+)"' coverage.xml | head -1 | awk '{split($0,a,"="); covered=a[2]; split(covered,b,"\""); total=a[4]; split(total,c,"\""); print int((b[2]/c[2])*100)}')
+        echo "Code Coverage: ${COVERAGE}%"
+        if [ -z "$COVERAGE" ] || [ "$COVERAGE" -lt 80 ]; then
+          echo "❌ Coverage is ${COVERAGE}% (minimum required: 80%)"
+          exit 1
+        fi
+        echo "✅ Coverage meets minimum threshold: ${COVERAGE}%"
+
+    - name: Upload coverage reports
+      if: always()
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Archive coverage report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage-report/
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer:v2
+
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Run Pint (Code Style)
+      run: php ./vendor/bin/pint --test
+      continue-on-error: true
+
+    - name: Run PHPStan (Static Analysis)
+      run: php ./vendor/bin/phpstan analyse app --level=5 || true
+      continue-on-error: true
