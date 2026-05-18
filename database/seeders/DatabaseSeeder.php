@@ -553,7 +553,7 @@ class DatabaseSeeder extends Seeder
             'is_system' => true,
             'source_type' => 'medical_exam',
             'source_id' => $examZiggy->id,
-            'task_key' => 'doctor:' . $doctor->id . ':exam:' . $examZiggy->id . ':review',
+            'task_key' => 'doctor:'.$doctor->id.':exam:'.$examZiggy->id.':review',
         ]);
     }
 }

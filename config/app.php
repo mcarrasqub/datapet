@@ -123,4 +123,14 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Veterinary Contact Information
+    |--------------------------------------------------------------------------
+    |
+    | Phone number for the veterinary clinic, used for WhatsApp links.
+    |
+    */
+    'veterinary_phone' => env('VETERINARY_PHONE', '+573000000000'),
+
 ];

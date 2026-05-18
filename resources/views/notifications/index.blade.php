@@ -26,37 +26,69 @@
 
             <!-- Notifications List -->
             @if(isset($viewData['reminders']) && $viewData['reminders']->count() > 0)
-                <div class="d-flex flex-column gap-3">
-                    @foreach($viewData['reminders'] as $reminder)
-                        <div class="card border-0 shadow-sm rounded-3 overflow-hidden position-relative transition-hover" style="border-left: 5px solid {{ $reminder->status === 'completed' ? '#76a75d' : '#f0ad4e' }} !important;">
+                <div class="d-flex flex-column gap-3">                    @foreach($viewData['reminders'] as $reminder)
+                        @php
+                            $isVaccine = !is_null($reminder->vaccination_id);
+                            $borderLeftColor = $isVaccine 
+                                ? ($reminder->status === 'completed' ? '#76a75d' : '#f0ad4e')
+                                : '#3b82f6';
+                        @endphp
+                        <div class="card border-0 shadow-sm rounded-3 overflow-hidden position-relative transition-hover" style="border-left: 5px solid {{ $borderLeftColor }} !important;">
                             <div class="card-body p-3 p-md-4">
                                 <div class="d-flex align-items-start justify-content-between">
                                     <div class="d-flex align-items-start">
                                         <!-- Icon and Mascot Circle -->
                                         <div class="bg-light rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                            <span class="fs-4">🐾</span>
+                                            @if($isVaccine)
+                                                <span class="fs-4">🐾</span>
+                                            @else
+                                                <span class="fs-4">📋</span>
+                                            @endif
                                         </div>
                                         <div>
-                                            <h6 class="fw-bold mb-1 text-dark" style="font-size: 1.05rem;">
-                                                Alerta de Vacuna para {{ $reminder->pet?->getName() }}
-                                            </h6>
-                                            <p class="text-secondary small mb-2">
-                                                Tu mascota <strong>{{ $reminder->pet?->getName() }}</strong> ({{ $reminder->pet?->getSpecies() }}) tiene programada su vacuna contra <strong>{{ $reminder->vaccination?->vaccine_type }}</strong> para el próximo <strong>{{ $reminder->vaccination?->next_due_date?->format('Y-m-d') }}</strong>.
-                                            </p>
+                                            @if($isVaccine)
+                                                <h6 class="fw-bold mb-1 text-dark" style="font-size: 1.05rem;">
+                                                    Alerta de Vacuna para {{ $reminder->pet?->getName() }}
+                                                </h6>
+                                                <p class="text-secondary small mb-2">
+                                                    Tu mascota <strong>{{ $reminder->pet?->getName() }}</strong> ({{ $reminder->pet?->getSpecies() }}) tiene programada su vacuna contra <strong>{{ $reminder->vaccination?->vaccine_type }}</strong> para el próximo <strong>{{ $reminder->vaccination?->next_due_date?->format('Y-m-d') }}</strong>.
+                                                </p>
+                                            @else
+                                                <h6 class="fw-bold mb-1 text-dark" style="font-size: 1.05rem;">
+                                                    Nueva Orden Clínica para {{ $reminder->pet?->getName() }}
+                                                </h6>
+                                                <p class="text-secondary small mb-2">
+                                                    {{ $reminder->message }}
+                                                </p>
+                                            @endif
                                             
                                             <!-- Status Badges -->
                                             <div class="d-flex flex-wrap gap-2 align-items-center">
-                                                @if($reminder->status === 'completed')
-                                                    <span class="badge bg-success-subtle text-success border border-success border-opacity-10 rounded-pill px-2 py-1 fs-85">
-                                                        <i class="bi bi-check2-circle me-1"></i> Atendido por Clínica
-                                                    </span>
+                                                @if($isVaccine)
+                                                    @if($reminder->status === 'completed')
+                                                        <span class="badge bg-success-subtle text-success border border-success border-opacity-10 rounded-pill px-2 py-1 fs-85">
+                                                            <i class="bi bi-check2-circle me-1"></i> Atendido por Clínica
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning border-opacity-10 rounded-pill px-2 py-1 fs-85">
+                                                            <i class="bi bi-clock-history me-1"></i> Pendiente de Aplicar
+                                                        </span>
+                                                    @endif
                                                 @else
-                                                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning border-opacity-10 rounded-pill px-2 py-1 fs-85">
-                                                        <i class="bi bi-clock-history me-1"></i> Pendiente de Aplicar
+                                                    <span class="badge bg-primary-subtle text-primary border border-primary border-opacity-10 rounded-pill px-2 py-1 fs-85">
+                                                        <i class="bi bi-clipboard-pulse me-1"></i> Orden Emitida
                                                     </span>
                                                 @endif
                                                 <small class="text-muted fs-80"><i class="bi bi-calendar-event me-1"></i> Notificado el {{ $reminder->created_at->format('d/m/Y') }}</small>
                                             </div>
+
+                                            @if(!$isVaccine)
+                                                <div class="mt-2">
+                                                    <a href="{{ route('pets.exams', ['pet_id' => $reminder->pet_id]) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 d-inline-flex align-items-center gap-1 fs-85 transition-all">
+                                                        <i class="bi bi-eye"></i> Ver Orden y Cargar Examen
+                                                    </a>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
 

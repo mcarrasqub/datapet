@@ -1,11 +1,11 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * Script para analizar y reportar cobertura de tests
- * 
+ *
  * Uso: php scripts/analyze-coverage.php
  */
-
 $projectRoot = dirname(__DIR__);
 chdir($projectRoot);
 
@@ -17,18 +17,18 @@ echo "════════════════════════�
 echo "1️⃣  Verificando driver de cobertura...\n";
 $drivers = [];
 if (extension_loaded('pcov')) {
-    $drivers[] = "✅ PCOV";
+    $drivers[] = '✅ PCOV';
 } elseif (extension_loaded('xdebug')) {
-    $drivers[] = "✅ Xdebug";
+    $drivers[] = '✅ Xdebug';
 } else {
     echo "❌ No se encontró PCOV ni Xdebug\n";
     echo "   Instala uno de estos para obtener reportes de cobertura:\n";
     echo "   - PCOV: composer require --dev pcov/clopper\n";
     echo "   - Xdebug: pecl install xdebug\n\n";
-    $drivers[] = "⚠️  Sin driver (tests sin cobertura)";
+    $drivers[] = '⚠️  Sin driver (tests sin cobertura)';
 }
 
-echo "   Driver disponible: " . implode(", ", $drivers) . "\n\n";
+echo '   Driver disponible: '.implode(', ', $drivers)."\n\n";
 
 // 2. Contar tests
 echo "2️⃣  Analizando tests...\n";
@@ -43,8 +43,8 @@ foreach ($testFiles as $file) {
     $testMethods += count($matches[0]);
 }
 
-echo "   Archivos de test encontrados: " . count($testFiles) . "\n";
-echo "   Métodos de test encontrados: " . $testMethods . "\n\n";
+echo '   Archivos de test encontrados: '.count($testFiles)."\n";
+echo '   Métodos de test encontrados: '.$testMethods."\n\n";
 
 // 3. Archivos de código a cubrir
 echo "3️⃣  Código que se debe cubrir:\n";
@@ -70,16 +70,17 @@ foreach ($patterns as $pattern) {
 }
 
 usort($codeFiles, function ($a, $b) {
-    return $b['lines'] <=> $a['lines']; });
+    return $b['lines'] <=> $a['lines'];
+});
 
-echo "   Archivos a cubrir: " . count($codeFiles) . "\n";
-echo "   Total de líneas: " . $totalLines . "\n\n";
+echo '   Archivos a cubrir: '.count($codeFiles)."\n";
+echo '   Total de líneas: '.$totalLines."\n\n";
 
 if (count($codeFiles) > 0) {
     echo "   Top 10 archivos por tamaño:\n";
     foreach (array_slice($codeFiles, 0, 10) as $file) {
         $filename = str_replace('app/', '', $file['file']);
-        echo "      • $filename (" . $file['lines'] . " líneas)\n";
+        echo "      • $filename (".$file['lines']." líneas)\n";
     }
 }
 
@@ -89,10 +90,10 @@ echo "\n4️⃣  Recomendaciones:\n";
 $ratio = count($codeFiles) > 0 ? ($testMethods / count($codeFiles)) : 0;
 
 if ($ratio < 2) {
-    echo "   ⚠️  Tests insuficientes (promedio: " . round($ratio, 2) . " tests/archivo)\n";
+    echo '   ⚠️  Tests insuficientes (promedio: '.round($ratio, 2)." tests/archivo)\n";
     echo "      Se recomienda al menos 2 tests por archivo\n";
 } else {
-    echo "   ✅ Cantidad de tests adecuada (" . round($ratio, 2) . " tests/archivo)\n";
+    echo '   ✅ Cantidad de tests adecuada ('.round($ratio, 2)." tests/archivo)\n";
 }
 
 echo "\n5️⃣  Próximos pasos:\n";
@@ -104,4 +105,3 @@ echo "   4. Mejora los archivos por debajo del 80%\n\n";
 echo "═══════════════════════════════════════════════════════════════\n";
 echo "  ✨ Comienza a escribir tests con alta cobertura\n";
 echo "═══════════════════════════════════════════════════════════════\n";
-?>

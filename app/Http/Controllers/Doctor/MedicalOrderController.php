@@ -24,7 +24,7 @@ class MedicalOrderController extends Controller
             'description' => 'required|string|max:5000',
         ]);
 
-        MedicalOrder::create([
+        $medicalOrder = MedicalOrder::create([
             'pet_id' => $pet->id,
             'doctor_id' => Auth::id(),
             'order_date' => $validated['order_date'],
@@ -32,6 +32,32 @@ class MedicalOrderController extends Controller
             'description' => $validated['description'],
             'status' => 'pending',
         ]);
+
+        // Crear la notificación para el propietario de la mascota
+        $owner = $pet->owner;
+        if ($owner) {
+            $doctorName = Auth::user()->name;
+            $petName = $pet->getName();
+            $orderType = $validated['order_type'];
+
+            $message = sprintf(
+                'El Dr. %s ha emitido una nueva orden clínica de tipo %s para tu mascota %s.',
+                $doctorName,
+                $orderType,
+                $petName
+            );
+
+            \App\Models\VaccinationReminder::create([
+                'vaccination_id' => null,
+                'medical_order_id' => $medicalOrder->id,
+                'pet_id' => $pet->id,
+                'user_id' => $owner->id,
+                'phone' => $owner->phone ?? '3000000000',
+                'message' => $message,
+                'status' => 'sent',
+                'sent_at' => now(),
+            ]);
+        }
 
         return redirect()->route('medical_records.show', $pet)
             ->with('success', 'Orden clínica emitida con éxito.');
