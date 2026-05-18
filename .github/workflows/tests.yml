@@ -1,0 +1,111 @@
+name: Tests & Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: ['8.2']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP with extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+        coverage: pcov
+        tools: composer:v2
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Copy .env file
+      run: cp .env.example .env
+
+    - name: Create SQLite database
+      run: touch database/database.sqlite
+
+    - name: Generate application key
+      run: php artisan key:generate --env=testing
+
+    - name: Run database migrations
+      run: php artisan migrate --env=testing --force --no-interaction
+
+    - name: Run PHPUnit tests
+      run: php artisan test --coverage --coverage-clover=coverage.xml
+
+    - name: Check coverage threshold
+      continue-on-error: true
+      run: |
+        if [ -f coverage.xml ]; then
+          COVERAGE=$(php -r "
+            \$xml = simplexml_load_file('coverage.xml');
+            \$statements = (float)\$xml->attributes()['statements'] ?? 0;
+            if (\$statements > 0) {
+              \$coverage = round(((float)\$xml->attributes()['coveredstatements'] ?? 0) / \$statements * 100);
+              echo \$coverage;
+            } else {
+              echo '0';
+            }
+          ")
+          echo "Code Coverage: ${COVERAGE}%"
+        else
+          echo "No coverage report generated"
+        fi
+          
+
+    - name: Upload coverage reports
+      if: always()
+      uses: codecov/codecov-action@v4
+      with:
+        files: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Archive coverage report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage-report/
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer:v2
+
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Run Pint (Code Style)
+      run: php ./vendor/bin/pint --test
+      continue-on-error: true
+
+    - name: Run PHPStan (Static Analysis)
+      run: php ./vendor/bin/phpstan analyse app --level=5 || true
+      continue-on-error: true

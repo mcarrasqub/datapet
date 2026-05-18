@@ -135,7 +135,6 @@ class DatabaseSeeder extends Seeder
             'gender' => 'male',
             'weight' => 1.20,
             'color' => 'Sable',
-            'size' => 'Pequeña',
             'reproductive_status' => 'Esterilizado',
             'is_deceased' => false,
             'emotional_support' => false,
@@ -148,7 +147,6 @@ class DatabaseSeeder extends Seeder
             'bath_products' => 'Champú hidratante especial para hurones',
             'other_pets' => 'Erizo y loro',
             'last_heat' => 'N/A',
-            'available_for_adoption' => false,
         ]);
 
         $ziggy = Pet::create([
@@ -161,7 +159,6 @@ class DatabaseSeeder extends Seeder
             'gender' => 'male',
             'weight' => 0.45,
             'color' => 'Sal y pimienta',
-            'size' => 'Pequeña',
             'reproductive_status' => 'Entero',
             'is_deceased' => false,
             'emotional_support' => false,
@@ -174,7 +171,6 @@ class DatabaseSeeder extends Seeder
             'bath_products' => 'Champú neutro hipoalergénico de avena',
             'other_pets' => 'Hurón y loro',
             'last_heat' => 'N/A',
-            'available_for_adoption' => false,
         ]);
 
         $coco = Pet::create([
@@ -187,7 +183,6 @@ class DatabaseSeeder extends Seeder
             'gender' => 'female',
             'weight' => 0.48,
             'color' => 'Verde brillante con cabeza amarilla',
-            'size' => 'Mediana',
             'reproductive_status' => 'Entero',
             'is_deceased' => false,
             'emotional_support' => false,
@@ -200,7 +195,6 @@ class DatabaseSeeder extends Seeder
             'bath_products' => 'Solo agua limpia sin químicos',
             'other_pets' => 'Erizo y huron',
             'last_heat' => 'N/A',
-            'available_for_adoption' => false,
         ]);
 
         $rex = Pet::create([
@@ -213,7 +207,6 @@ class DatabaseSeeder extends Seeder
             'gender' => 'male',
             'weight' => 4.50,
             'color' => 'Verde esmeralda',
-            'size' => 'Grande',
             'reproductive_status' => 'Entero',
             'is_deceased' => false,
             'emotional_support' => false,
@@ -226,7 +219,6 @@ class DatabaseSeeder extends Seeder
             'bath_products' => 'Ninguno (solo agua)',
             'other_pets' => 'Ninguna',
             'last_heat' => 'N/A',
-            'available_for_adoption' => false,
         ]);
 
         $tambor = Pet::create([
@@ -239,7 +231,6 @@ class DatabaseSeeder extends Seeder
             'gender' => 'male',
             'weight' => 1.80,
             'color' => 'Gris',
-            'size' => 'Pequeña',
             'reproductive_status' => 'Esterilizado',
             'is_deceased' => false,
             'emotional_support' => false,
@@ -252,7 +243,6 @@ class DatabaseSeeder extends Seeder
             'bath_products' => 'Ninguno',
             'other_pets' => 'Iguana',
             'last_heat' => 'N/A',
-            'available_for_adoption' => false,
         ]);
 
         // 3. Creación de Mascotas Exóticas Disponibles para Adopción (asociadas al administrador/albergue)
@@ -266,7 +256,6 @@ class DatabaseSeeder extends Seeder
             'gender' => 'male',
             'weight' => 0.38,
             'color' => 'Naranja y amarillo',
-            'size' => 'Mediana',
             'reproductive_status' => 'Entero',
             'is_deceased' => false,
             'emotional_support' => false,
@@ -279,8 +268,6 @@ class DatabaseSeeder extends Seeder
             'bath_products' => 'Ninguno (solo agua)',
             'other_pets' => 'Ninguna',
             'last_heat' => 'N/A',
-            'available_for_adoption' => true,
-            'adoption_description' => 'Spike es un dragón barbudo rescatado, extremadamente manso y habituado al contacto humano. Busca una familia que tenga o pueda instalar un terrario adecuado con luces UVB y control de temperatura caliente.',
         ]);
 
         $cleo = Pet::create([
@@ -293,7 +280,6 @@ class DatabaseSeeder extends Seeder
             'gender' => 'female',
             'weight' => 0.90,
             'color' => 'Naranja y rojo albino',
-            'size' => 'Mediana (1.2 metros)',
             'reproductive_status' => 'Entera',
             'is_deceased' => false,
             'emotional_support' => false,
@@ -306,8 +292,6 @@ class DatabaseSeeder extends Seeder
             'bath_products' => 'Ninguno',
             'other_pets' => 'Ninguna (solitaria)',
             'last_heat' => 'N/A',
-            'available_for_adoption' => true,
-            'adoption_description' => 'Cleo es una serpiente del maíz adulta con una hermosa coloración naranja y roja. Es muy tranquila e ideal para principiantes en la herpetología. Requiere un terrario seguro a prueba de fugas y calefacción.',
         ]);
 
         // 4. Creación de Historiales Clínicos (Medical Records)
@@ -569,7 +553,7 @@ class DatabaseSeeder extends Seeder
             'is_system' => true,
             'source_type' => 'medical_exam',
             'source_id' => $examZiggy->id,
-            'task_key' => 'doctor:'.$doctor->id.':exam:'.$examZiggy->id.':review',
+            'task_key' => 'doctor:' . $doctor->id . ':exam:' . $examZiggy->id . ':review',
         ]);
     }
 }

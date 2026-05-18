@@ -39,7 +39,7 @@ class VaccinationController extends Controller
 
         $vaccination->delete();
 
-        return redirect()->route('medical_records.show', $pet)
+        return redirect()->route('medical_records.show', ['pet' => $pet->id])
             ->with('success', 'Vacuna eliminada con éxito');
     }
 
@@ -47,7 +47,7 @@ class VaccinationController extends Controller
     {
         $role = (string) (Auth::user()->role ?? '');
 
-        if (! in_array($role, ['admin', 'doctor'], true)) {
+        if (!in_array($role, ['admin', 'doctor'], true)) {
             abort(403, 'No tienes permisos para registrar vacunas.');
         }
     }

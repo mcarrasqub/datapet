@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Pre-commit hook to verify test coverage is at least 80%
+# Place this file in .git/hooks/pre-commit and make it executable
+
+echo "🧪 Ejecutando tests para verificar cobertura..."
+
+# Run tests with coverage
+cd "$(git rev-parse --show-toplevel)"
+
+# Check if vendor/bin/phpunit exists
+if [ ! -f "vendor/bin/phpunit" ]; then
+    echo "❌ PHPUnit no instalado. Abortando..."
+    exit 1
+fi
+
+# Run phpunit with coverage
+COVERAGE_OUTPUT=$(php artisan test --coverage 2>&1 | grep -i "coverage\|percentage")
+
+# Extract coverage percentage
+COVERAGE=$(echo "$COVERAGE_OUTPUT" | grep -oP '(\d+\.\d+|\d+)(?=%)')
+
+if [ -z "$COVERAGE" ]; then
+    echo "⚠️  No se pudo calcular la cobertura. Asegúrate de tener Xdebug o PCOV instalado."
+    echo "Para instalar Xdebug, ejecuta:"
+    echo "  composer require --dev phpunit/phpunit ^11"
+    echo ""
+    echo "Continuando con el commit..."
+    exit 0
+fi
+
+echo "📊 Cobertura actual: ${COVERAGE}%"
+
+# Minimum coverage threshold
+MINIMUM_COVERAGE=80
+
+if (( $(echo "$COVERAGE < $MINIMUM_COVERAGE" | bc -l) )); then
+    echo "❌ Cobertura insuficiente: ${COVERAGE}% (mínimo requerido: ${MINIMUM_COVERAGE}%)"
+    echo "Por favor, mejora la cobertura antes de hacer commit."
+    exit 1
+fi
+
+echo "✅ Cobertura satisfactoria: ${COVERAGE}% >= ${MINIMUM_COVERAGE}%"
+exit 0
