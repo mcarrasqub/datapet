@@ -336,7 +336,7 @@ class MedicalRecordsTest extends TestCase
         $record = MedicalRecord::latest()->first();
         $this->assertNotNull($record->photos);
         $this->assertCount(2, $record->photos);
-        
+
         Storage::disk('public')->assertExists($record->photos[0]);
         Storage::disk('public')->assertExists($record->photos[1]);
     }
@@ -353,7 +353,7 @@ class MedicalRecordsTest extends TestCase
             'reason' => 'Antigua',
             'diagnosis' => 'Antiguo',
             'notes' => 'Old',
-            'photos' => ['medical_records/old1.jpg'] // Simulando una foto vieja
+            'photos' => ['medical_records/old1.jpg'], // Simulando una foto vieja
         ]);
 
         $newPhoto = UploadedFile::fake()->image('new.jpg');
@@ -368,7 +368,7 @@ class MedicalRecordsTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        
+
         $record->refresh();
         $this->assertEquals('Nueva', $record->reason);
         $this->assertCount(2, $record->photos); // Conserva la antigua + 1 nueva
@@ -388,7 +388,7 @@ class MedicalRecordsTest extends TestCase
             'reason' => 'Borrar',
             'diagnosis' => 'Borrar',
             'notes' => 'Borrar',
-            'photos' => ['medical_records/dummy.jpg']
+            'photos' => ['medical_records/dummy.jpg'],
         ]);
 
         $response = $this->delete(route('medical_records.destroy', $record));

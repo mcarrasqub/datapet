@@ -56,7 +56,7 @@ class DashboardTest extends TestCase
             'consultasHoy',
             'growthPercentage',
             'recentActivities',
-            'agendaHoy'
+            'agendaHoy',
         ]);
     }
 
@@ -89,7 +89,7 @@ class DashboardTest extends TestCase
             'consultasMes',
             'examsPendientes',
             'pendingExams',
-            'agendaHoy'
+            'agendaHoy',
         ]);
     }
 

@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@datapet.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
-            'phone' => '1234567890',
+            'phone' => '123456789010',
             'address' => 'Calle Principal 123',
             'status' => true,
         ]);
@@ -95,7 +95,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'doctor@datapet.com',
             'password' => Hash::make('password'),
             'role' => 'doctor',
-            'phone' => '0987654321',
+            'phone' => '098765435621',
             'address' => 'Avenida Sur 456',
             'status' => true,
         ]);
@@ -107,7 +107,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'client@datapet.com',
             'password' => Hash::make('password'),
             'role' => 'client',
-            'phone' => '3001234567',
+            'phone' => '573233432225',
             'address' => 'El Poblado, Medellín',
             'status' => true,
         ]);
@@ -119,7 +119,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'juan@example.com',
             'password' => Hash::make('password'),
             'role' => 'client',
-            'phone' => '3119876543',
+            'phone' => '573214842344',
             'address' => 'Laureles, Medellín',
             'status' => true,
         ]);

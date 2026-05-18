@@ -21,7 +21,7 @@ class PetModelTest extends TestCase
 
     public function test_pet_getters_and_setters(): void
     {
-        $pet = new Pet();
+        $pet = new Pet;
 
         $pet->setUserId(1);
         $this->assertEquals(1, $pet->getUserId());
@@ -100,7 +100,7 @@ class PetModelTest extends TestCase
     {
         $client = User::factory()->create(['role' => 'client']);
         $doctor = User::factory()->create(['role' => 'doctor']);
-        
+
         $pet = Pet::factory()->create(['user_id' => $client->id]);
 
         $this->assertInstanceOf(User::class, $pet->owner);

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\MedicalExam;
+use App\Models\MedicalOrder;
 use App\Models\MedicalRecord;
 use App\Models\Pet;
 use App\Models\User;
@@ -250,5 +251,187 @@ class MedicalExamsTest extends TestCase
         ]);
 
         $response->assertStatus(403);
+    }
+
+    public function test_client_can_edit_their_own_uploaded_medical_exam(): void
+    {
+        $client = User::factory()->create(['role' => 'client']);
+        $pet = Pet::factory()->create(['user_id' => $client->id]);
+        $this->actingAs($client);
+
+        // 1. Create a dummy file physically in local storage
+        $originalFile = 'original.pdf';
+        $originalPath = 'medical_exams/pet_'.$pet->id.'/'.$originalFile;
+        Storage::disk('local')->put($originalPath, 'Original Content');
+
+        // 2. Create the medical exam record
+        $exam = MedicalExam::create([
+            'pet_id' => $pet->id,
+            'uploaded_by' => $client->id,
+            'title' => 'Examen Original',
+            'category' => 'Original',
+            'file_path' => $originalPath,
+            'original_name' => $originalFile,
+            'mime_type' => 'application/pdf',
+            'file_size' => 1024,
+            'uploaded_at' => now(),
+        ]);
+
+        // Verify we can access the edit page
+        $editResponse = $this->get(route('medical_exams.edit', $exam));
+        $editResponse->assertOk();
+        $editResponse->assertSee('Examen Original');
+
+        // Create a new fake file to replace the old one
+        $newFile = UploadedFile::fake()->create('actualizado.pdf', 500);
+
+        // Update the exam
+        $updateResponse = $this->put(route('medical_exams.update', $exam), [
+            'title' => 'Examen Modificado',
+            'category' => 'Modificado',
+            'exam_date' => now()->toDateString(),
+            'description' => 'Descripcion modificada',
+            'file' => $newFile,
+        ]);
+
+        $updateResponse->assertRedirect(route('pets.exams', ['pet_id' => $pet->id]));
+
+        // Check database
+        $this->assertDatabaseHas('medical_exams', [
+            'id' => $exam->id,
+            'title' => 'Examen Modificado',
+            'category' => 'Modificado',
+            'description' => 'Descripcion modificada',
+            'original_name' => 'actualizado.pdf',
+        ]);
+
+        // Check storage has new file and old file was deleted
+        $exam->refresh();
+        $this->assertTrue(Storage::disk('local')->exists($exam->file_path));
+        $this->assertFalse(Storage::disk('local')->exists($originalPath));
+    }
+
+    public function test_client_cannot_edit_exams_uploaded_by_doctors(): void
+    {
+        $doctor = User::factory()->create(['role' => 'doctor']);
+        $client = User::factory()->create(['role' => 'client']);
+        $pet = Pet::factory()->create(['user_id' => $client->id]);
+
+        $exam = MedicalExam::create([
+            'pet_id' => $pet->id,
+            'uploaded_by' => $doctor->id,
+            'title' => 'Examen Doctor',
+            'category' => 'Clinico',
+            'file_path' => 'dummy_doctor.pdf',
+            'original_name' => 'doctor.pdf',
+            'mime_type' => 'application/pdf',
+            'file_size' => 1024,
+            'uploaded_at' => now(),
+        ]);
+
+        // Client logs in and tries to edit the doctor's uploaded exam
+        $this->actingAs($client);
+
+        $responseGet = $this->get(route('medical_exams.edit', $exam));
+        $responseGet->assertStatus(403);
+
+        $responsePut = $this->put(route('medical_exams.update', $exam), [
+            'title' => 'Hack Attempt',
+        ]);
+        $responsePut->assertStatus(403);
+    }
+
+    public function test_only_order_doctor_gets_assigned_unreviewed_exam_task(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $doctorA = User::factory()->create(['role' => 'doctor']);
+        $doctorB = User::factory()->create(['role' => 'doctor']);
+        $client = User::factory()->create(['role' => 'client']);
+        $pet = Pet::factory()->create(['user_id' => $client->id, 'name' => 'Kira']);
+
+        // Create an order associated with Doctor A
+        $order = MedicalOrder::create([
+            'pet_id' => $pet->id,
+            'doctor_id' => $doctorA->id,
+            'order_date' => now()->toDateString(),
+            'order_type' => 'Laboratorio',
+            'description' => 'Examen de Kira',
+            'status' => 'pending',
+        ]);
+
+        // Client uploads an exam associated with that order
+        $exam = MedicalExam::create([
+            'pet_id' => $pet->id,
+            'medical_order_id' => $order->id,
+            'uploaded_by' => $client->id,
+            'title' => 'Examen Kira',
+            'file_path' => 'kira.pdf',
+            'original_name' => 'kira.pdf',
+            'mime_type' => 'application/pdf',
+            'file_size' => 1024,
+            'uploaded_at' => now(),
+        ]);
+
+        // Log in as admin and sync/trigger automatic tasks by loading index
+        $this->actingAs($admin);
+        $response = $this->get(route('tasks.index'));
+        $response->assertOk();
+
+        // Verify task exists for Doctor A
+        $this->assertDatabaseHas('doctor_tasks', [
+            'doctor_id' => $doctorA->id,
+            'source_id' => $exam->id,
+            'source_type' => 'medical_exam',
+        ]);
+
+        // Verify task DOES NOT exist for Doctor B
+        $this->assertDatabaseMissing('doctor_tasks', [
+            'doctor_id' => $doctorB->id,
+            'source_id' => $exam->id,
+            'source_type' => 'medical_exam',
+        ]);
+    }
+
+    public function test_only_order_doctor_sees_pending_exam_on_dashboard(): void
+    {
+        $doctorA = User::factory()->create(['role' => 'doctor']);
+        $doctorB = User::factory()->create(['role' => 'doctor']);
+        $client = User::factory()->create(['role' => 'client']);
+        $pet = Pet::factory()->create(['user_id' => $client->id, 'name' => 'Kira']);
+
+        // Create an order associated with Doctor A
+        $order = MedicalOrder::create([
+            'pet_id' => $pet->id,
+            'doctor_id' => $doctorA->id,
+            'order_date' => now()->toDateString(),
+            'order_type' => 'Laboratorio',
+            'description' => 'Examen de Kira',
+            'status' => 'pending',
+        ]);
+
+        // Client uploads an exam associated with that order
+        $exam = MedicalExam::create([
+            'pet_id' => $pet->id,
+            'medical_order_id' => $order->id,
+            'uploaded_by' => $client->id,
+            'title' => 'Hemograma Especial Kira',
+            'file_path' => 'kira.pdf',
+            'original_name' => 'kira.pdf',
+            'mime_type' => 'application/pdf',
+            'file_size' => 1024,
+            'uploaded_at' => now(),
+        ]);
+
+        // Doctor A logs in and loads dashboard
+        $this->actingAs($doctorA);
+        $responseA = $this->get(route('dashboard.index'));
+        $responseA->assertOk();
+        $responseA->assertSee('Hemograma Especial Kira');
+
+        // Doctor B logs in and loads dashboard
+        $this->actingAs($doctorB);
+        $responseB = $this->get(route('dashboard.index'));
+        $responseB->assertOk();
+        $responseB->assertDontSee('Hemograma Especial Kira');
     }
 }
