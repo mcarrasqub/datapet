@@ -53,22 +53,25 @@ jobs:
 
     - name: Check coverage threshold
       run: |
-        # Extract coverage percentage from coverage.xml using XML parsing
-        COVERAGE=$(php -r "
-          \$xml = simplexml_load_file('coverage.xml');
-          \$statements = (int)\$xml['statements'];
-          \$coveredstatements = (int)\$xml['coveredstatements'];
-          if (\$statements > 0) {
-            \$coverage = round((\$coveredstatements / \$statements) * 100);
-            echo \$coverage;
-          }
-        ")
-        echo "Code Coverage: ${COVERAGE}%"
-        if [ -z "$COVERAGE" ] || [ "$COVERAGE" -lt 80 ]; then
-          echo "❌ Coverage is ${COVERAGE}% (minimum required: 80%)"
-          exit 1
-        fi
-        echo "✅ Coverage meets minimum threshold: ${COVERAGE}%"
+            # Extract coverage percentage from coverage.xml using XML parsing
+            COVERAGE=$(php -r "
+              \$xml = simplexml_load_file('coverage.xml');
+              \$statements = (float)\$xml->attributes()['statements'] ?? 0;
+              \$coveredstatements = (float)\$xml->attributes()['coveredstatements'] ?? 0;
+              if (\$statements > 0) {
+                \$coverage = round((\$coveredstatements / \$statements) * 100);
+                echo \$coverage;
+              } else {
+                echo '0';
+              }
+            ")
+            echo "Code Coverage: ${COVERAGE}%"
+            if [ -z "$COVERAGE" ] || [ "$COVERAGE" -lt 80 ]; then
+              echo "❌ Coverage is ${COVERAGE}% (minimum required: 80%)"
+              exit 1
+            fi
+            echo "✅ Coverage meets minimum threshold: ${COVERAGE}%"
+          
 
     - name: Upload coverage reports
       if: always()
