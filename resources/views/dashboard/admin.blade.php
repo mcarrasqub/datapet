@@ -26,6 +26,49 @@
                 subtitle="consultas vs mes anterior" />
         </div>
 
+        @if(isset($activeReminders) && $activeReminders->count() > 0)
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm rounded-3">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-1">
+                                <i class="bi bi-whatsapp text-success me-2 fs-5"></i>
+                                <h6 class="fw-bold mb-0">Recordatorios de Vacunación Próximos</h6>
+                            </div>
+                            <p class="text-muted small mb-3">Alertas automáticas para vacunas por vencer en los próximos 3 días. Haz clic en "Enviar" para abrir WhatsApp.</p>
+                            <div class="row g-3">
+                                @foreach($activeReminders as $reminder)
+                                    <div class="col-md-6">
+                                        <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center bg-light">
+                                            <div>
+                                                <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">
+                                                    🐾 {{ $reminder->pet?->getName() }} ({{ $reminder->pet?->getSpecies() }})
+                                                </h6>
+                                                <small class="text-muted d-block">Dueño: {{ $reminder->user?->name }} ({{ $reminder->phone }})</small>
+                                                <small class="text-muted d-block">Vacuna: {{ $reminder->vaccination?->vaccine_type }} (Vence: {{ $reminder->vaccination?->next_due_date?->format('Y-m-d') }})</small>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <a href="https://wa.me/{{ $reminder->phone }}?text={{ urlencode($reminder->message) }}" target="_blank" class="btn btn-success btn-sm rounded-pill px-3 fw-medium d-flex align-items-center">
+                                                    <i class="bi bi-whatsapp me-1"></i> Enviar
+                                                </a>
+                                                <form action="{{ route('reminders.destroy', $reminder) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-medium d-flex align-items-center" title="Marcar como atendido / Eliminar recordatorio">
+                                                        <i class="bi bi-check-lg me-1"></i> Completar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="row g-3">
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm rounded-3 h-100">

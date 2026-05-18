@@ -45,9 +45,14 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'update'])->name('clinical_observations.update');
     Route::delete('/clinical-observations/{clinicalObservation}', [ClinicalObservationController::class, 'destroy'])->name('clinical_observations.destroy');
     Route::post('/pets/{pet}/vaccinations', [VaccinationController::class, 'store'])->name('vaccinations.store');
+    Route::delete('/vaccinations/{vaccination}', [VaccinationController::class, 'destroy'])->name('vaccinations.destroy');
+    Route::delete('/reminders/{reminder}', [\App\Http\Controllers\VaccinationReminderController::class, 'destroy'])->name('reminders.destroy');
+    Route::patch('/reminders/{reminder}/dismiss', [\App\Http\Controllers\VaccinationReminderController::class, 'dismiss'])->name('reminders.dismiss');
     Route::post('/pets/{pet}/exams', [MedicalExamController::class, 'store'])->name('medical_exams.store');
     Route::get('/medical-exams/{medicalExam}/view', [MedicalExamController::class, 'view'])->name('medical_exams.view');
     Route::get('/medical-exams/{medicalExam}/download', [MedicalExamController::class, 'download'])->name('medical_exams.download');
+    Route::get('/medical-exams/{medicalExam}/edit', [MedicalExamController::class, 'edit'])->name('medical_exams.edit');
+    Route::put('/medical-exams/{medicalExam}', [MedicalExamController::class, 'update'])->name('medical_exams.update');
     Route::post('/medical-exams/{medicalExam}/complete-review', [MedicalExamController::class, 'completeReview'])->name('medical_exams.complete_review');
 
     Route::post('/pets/{pet}/kardex', [\App\Http\Controllers\Doctor\KardexController::class, 'store'])->name('kardex.store');
@@ -59,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/orders/{medicalOrder}', [\App\Http\Controllers\Doctor\MedicalOrderController::class, 'destroy'])->name('orders.destroy');
 
     Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home.index');
+    Route::get('/notifications', 'App\Http\Controllers\HomeController@notifications')->name('notifications.index');
     Route::get('/my-exams', 'App\Http\Controllers\PetController@exams')->name('pets.exams');
     Route::get('/pets', 'App\Http\Controllers\PetController@index')->name('pets.index');
     Route::get('/pets/create', 'App\Http\Controllers\PetController@create')->name('pets.create');

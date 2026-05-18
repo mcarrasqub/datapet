@@ -18,6 +18,7 @@
                 subtitle="Historial del mes" />
         </div>
 
+
         <div class="row g-3">
             <!-- Agenda del Día -->
             <div class="col-md-6">

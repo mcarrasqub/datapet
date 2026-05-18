@@ -262,11 +262,11 @@ class DoctorTaskController extends Controller
      */
     private function resolveTargetDoctorIdsForExam(MedicalExam $exam, array $allDoctorIds): array
     {
-        $doctorIds = collect();
-
         if ($exam->medical_order_id && $exam->medicalOrder && $exam->medicalOrder->doctor_id) {
-            $doctorIds->push((int) $exam->medicalOrder->doctor_id);
+            return [(int) $exam->medicalOrder->doctor_id];
         }
+
+        $doctorIds = collect();
 
         if ($exam->medicalRecord && $exam->medicalRecord->doctor_id) {
             $doctorIds->push((int) $exam->medicalRecord->doctor_id);

@@ -128,7 +128,6 @@ class AdoptionAndClientUpdatesTest extends TestCase
         $response->assertStatus(403);
     }
 
-
     public function test_admin_can_approve_adoption_request(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
@@ -147,7 +146,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
 
         $response = $this->patch(route('adoption.approve', $request));
         $response->assertRedirect();
-        
+
         $request->refresh();
         $this->assertEquals('approved', $request->status);
     }
@@ -170,7 +169,7 @@ class AdoptionAndClientUpdatesTest extends TestCase
 
         $response = $this->patch(route('adoption.reject', $request));
         $response->assertRedirect();
-        
+
         $request->refresh();
         $this->assertEquals('rejected', $request->status);
     }

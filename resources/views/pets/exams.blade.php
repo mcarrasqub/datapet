@@ -145,6 +145,10 @@
                                             class="btn btn-sm btn-outline-secondary" target="_blank">Ver</a>
                                         <a href="{{ route('medical_exams.download', $exam->id) }}"
                                             class="btn btn-sm btn-pet-green text-white">Descargar</a>
+                                        @if(auth()->user()->role === 'client' && (int) $exam->uploaded_by === (int) auth()->id())
+                                            <a href="{{ route('medical_exams.edit', $exam->id) }}"
+                                                class="btn btn-sm btn-outline-warning" title="Modificar Examen">Editar</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

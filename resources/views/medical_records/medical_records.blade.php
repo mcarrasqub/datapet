@@ -506,9 +506,18 @@
                                                     <div class="text-secondary fs-90">Siguiente dosis: {{ $vaccination->next_due_date ? $vaccination->next_due_date->format('Y-m-d') : 'No programada' }}</div>
                                                     <div class="text-secondary fs-90">Registrada por: Dr(a). {{ optional($vaccination->doctor)->name }} {{ optional($vaccination->doctor)->lastname }}</div>
                                                 </div>
-                                                @if($vaccination->notes)
-                                                    <span class="badge bg-pet-green-10 text-pet-green-dark rounded-pill">Con notas</span>
-                                                @endif
+                                                <div class="d-flex align-items-center gap-2">
+                                                    @if($vaccination->notes)
+                                                        <span class="badge bg-pet-green-10 text-pet-green-dark rounded-pill">Con notas</span>
+                                                    @endif
+                                                    <form action="{{ route('vaccinations.destroy', $vaccination) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de eliminar esta vacuna?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;" title="Eliminar Vacuna">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                             @if($vaccination->notes)
                                                 <div class="mt-3 text-secondary fs-90">{{ $vaccination->notes }}</div>

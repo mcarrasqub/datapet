@@ -28,6 +28,21 @@ class VaccinationController extends Controller
             ->with('success', 'Vacuna registrada con éxito');
     }
 
+    public function destroy(Vaccination $vaccination): RedirectResponse
+    {
+        $this->ensureDoctorOrAdmin();
+
+        $pet = $vaccination->pet;
+
+        // Eliminar en cascada los recordatorios asociados a esta vacuna
+        \App\Models\VaccinationReminder::where('vaccination_id', $vaccination->id)->delete();
+
+        $vaccination->delete();
+
+        return redirect()->route('medical_records.show', $pet)
+            ->with('success', 'Vacuna eliminada con éxito');
+    }
+
     private function ensureDoctorOrAdmin(): void
     {
         $role = (string) (Auth::user()->role ?? '');

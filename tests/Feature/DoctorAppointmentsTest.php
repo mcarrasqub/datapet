@@ -130,4 +130,65 @@ class DoctorAppointmentsTest extends TestCase
             'pet_name' => 'Luna',
         ]);
     }
+
+    public function test_daily_agenda_syncs_with_calendar_events_in_real_time(): void
+    {
+        $this->actingAs($this->doctor);
+
+        // 1. Create a scheduled appointment for TODAY
+        $todayStr = now()->format('Y-m-d');
+        $appointment = Appointment::create([
+            'doctor_id' => $this->doctor->id,
+            'pet_id' => $this->doctorPet->id,
+            'date' => $todayStr,
+            'start_time' => '14:00',
+            'end_time' => '14:30',
+            'status' => 'scheduled',
+            'reason' => 'Consulta Urgente Luna',
+        ]);
+
+        // Access dashboard, must see "Consulta Urgente Luna"
+        $dashboardResponse = $this->get(route('dashboard.index'));
+        $dashboardResponse->assertOk();
+        $dashboardResponse->assertSee('Consulta Urgente Luna');
+        $dashboardResponse->assertSee('Luna');
+
+        // 2. Cancel the appointment (simulate calendar cancel update)
+        $appointment->update([
+            'status' => 'canceled',
+        ]);
+
+        // Access dashboard, canceled appointments must NOT show up in the active daily agenda
+        $dashboardResponse2 = $this->get(route('dashboard.index'));
+        $dashboardResponse2->assertOk();
+        $dashboardResponse2->assertDontSee('Consulta Urgente Luna');
+
+        // 3. Reschedule the appointment to tomorrow and mark as scheduled (simulate calendar reschedule)
+        $tomorrowStr = now()->addDay()->format('Y-m-d');
+        $appointment->update([
+            'date' => $tomorrowStr,
+            'status' => 'scheduled',
+        ]);
+
+        // Access dashboard, must NOT see the appointment since it's not today
+        $dashboardResponse3 = $this->get(route('dashboard.index'));
+        $dashboardResponse3->assertOk();
+        $dashboardResponse3->assertDontSee('Consulta Urgente Luna');
+
+        // 4. Create another appointment for today
+        Appointment::create([
+            'doctor_id' => $this->doctor->id,
+            'pet_id' => $this->doctorPet->id,
+            'date' => $todayStr,
+            'start_time' => '16:00',
+            'end_time' => '16:30',
+            'status' => 'scheduled',
+            'reason' => 'Corte de uñas Luna',
+        ]);
+
+        // Access dashboard, must see the new active appointment
+        $dashboardResponse4 = $this->get(route('dashboard.index'));
+        $dashboardResponse4->assertOk();
+        $dashboardResponse4->assertSee('Corte de uñas Luna');
+    }
 }

@@ -19,6 +19,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('layouts.app', function ($view) {
+            $notificationCount = 0;
+            if (auth()->check()) {
+                $notificationCount = \App\Models\VaccinationReminder::where('user_id', auth()->id())
+                    ->whereIn('status', ['sent', 'completed'])
+                    ->whereNotNull('vaccination_id')
+                    ->count();
+            }
+            $view->with('notificationCount', $notificationCount);
+        });
     }
 }
