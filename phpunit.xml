@@ -21,7 +21,6 @@
             <directory>app</directory>
         </include>
         <exclude>
-            <directory>app/Console</directory>
             <directory>app/Providers</directory>
         </exclude>
     </source>
