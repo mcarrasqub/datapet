@@ -87,14 +87,16 @@ class DoctorTaskController extends Controller
             return;
         }
 
+        $curdate = $this->getCurdateExpression();
+
         if ($statusFilter === 'overdue') {
-            $query->where(function ($subQuery) {
+            $query->where(function ($subQuery) use ($curdate) {
                 $subQuery->where('status', 'overdue')
-                    ->orWhere(function ($nestedQuery) {
+                    ->orWhere(function ($nestedQuery) use ($curdate) {
                         $nestedQuery->where('status', '!=', 'completed')
                             ->where('status', '!=', 'overdue')
                             ->whereNotNull('due_date')
-                            ->whereRaw('due_date < CURDATE()');
+                            ->whereRaw("due_date < {$curdate}");
                     });
             });
 
@@ -103,15 +105,22 @@ class DoctorTaskController extends Controller
 
         if ($statusFilter === 'pending') {
             $query->where('status', 'pending')
-                ->where(function ($pendingQuery) {
+                ->where(function ($pendingQuery) use ($curdate) {
                     $pendingQuery->whereNull('due_date')
-                        ->orWhereRaw('due_date >= CURDATE()');
+                        ->orWhereRaw("due_date >= {$curdate}");
                 });
 
             return;
         }
 
         $query->where('status', $statusFilter);
+    }
+
+    private function getCurdateExpression(): string
+    {
+        return DB::connection()->getDriverName() === 'sqlite'
+            ? "date('now', 'localtime')"
+            : "CURDATE()";
     }
 
     private function getPriorityOrderExpression(): string
