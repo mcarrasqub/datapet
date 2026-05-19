@@ -7,6 +7,7 @@ use App\Http\Controllers\Doctor\VaccinationController;
 use App\Http\Controllers\MedicalExamController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AppointmentReminderController;
 
 Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home.index');
 
@@ -90,4 +91,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/adoptions', 'App\Http\Controllers\AdoptionController@storePet')->name('admin.adoptions.store');
     Route::get('/admin/adoptions/{pet}/edit', 'App\Http\Controllers\AdoptionController@edit')->name('admin.adoptions.edit');
     Route::put('/admin/adoptions/{pet}', 'App\Http\Controllers\AdoptionController@updatePet')->name('admin.adoptions.update');
+
+    Route::delete('/appointment-reminders/{reminder}', [AppointmentReminderController::class, 'destroy'])
+    ->name('appointment-reminders.destroy');
+
+    Route::patch('/appointment-reminders/{reminder}/dismiss', [AppointmentReminderController::class, 'dismiss'])
+    ->name('appointment-reminders.dismiss');
 });
