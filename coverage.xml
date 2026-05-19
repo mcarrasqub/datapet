@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1779171336">
-  <project timestamp="1779171336" name="Clover Coverage">
+<coverage generated="1779188076">
+  <project timestamp="1779188076" name="Clover Coverage">
     <package name="App\Http\Controllers\Admin">
       <file name="C:\Users\Asus\Desktop\datapet\app\Http\Controllers\Admin\ClientController.php">
         <class name="App\Http\Controllers\Admin\ClientController" namespace="App\Http\Controllers\Admin">
@@ -1944,18 +1944,18 @@
         </class>
         <line num="35" type="method" name="doctor" visibility="public" complexity="1" crap="1" count="3"/>
         <line num="37" type="stmt" count="3"/>
-        <line num="40" type="method" name="pet" visibility="public" complexity="1" crap="1" count="12"/>
-        <line num="42" type="stmt" count="12"/>
-        <line num="46" type="method" name="getId" visibility="public" complexity="1" crap="1" count="8"/>
-        <line num="48" type="stmt" count="8"/>
+        <line num="40" type="method" name="pet" visibility="public" complexity="1" crap="1" count="18"/>
+        <line num="42" type="stmt" count="18"/>
+        <line num="46" type="method" name="getId" visibility="public" complexity="1" crap="1" count="14"/>
+        <line num="48" type="stmt" count="14"/>
         <line num="51" type="method" name="getDoctorId" visibility="public" complexity="1" crap="2" count="0"/>
         <line num="53" type="stmt" count="0"/>
         <line num="56" type="method" name="getPetId" visibility="public" complexity="1" crap="2" count="0"/>
         <line num="58" type="stmt" count="0"/>
-        <line num="61" type="method" name="getDate" visibility="public" complexity="1" crap="1" count="9"/>
-        <line num="63" type="stmt" count="9"/>
-        <line num="66" type="method" name="getStartTime" visibility="public" complexity="1" crap="1" count="11"/>
-        <line num="68" type="stmt" count="11"/>
+        <line num="61" type="method" name="getDate" visibility="public" complexity="1" crap="1" count="15"/>
+        <line num="63" type="stmt" count="15"/>
+        <line num="66" type="method" name="getStartTime" visibility="public" complexity="1" crap="1" count="17"/>
+        <line num="68" type="stmt" count="17"/>
         <line num="71" type="method" name="getEndTime" visibility="public" complexity="1" crap="1" count="5"/>
         <line num="73" type="stmt" count="5"/>
         <line num="76" type="method" name="getStatus" visibility="public" complexity="1" crap="1" count="3"/>
@@ -2129,8 +2129,8 @@
         <class name="App\Models\Pet" namespace="App\Models">
           <metrics complexity="58" methods="58" coveredmethods="58" conditionals="0" coveredconditionals="0" statements="58" coveredstatements="58" elements="116" coveredelements="116"/>
         </class>
-        <line num="69" type="method" name="owner" visibility="public" complexity="1" crap="1" count="20"/>
-        <line num="71" type="stmt" count="20"/>
+        <line num="69" type="method" name="owner" visibility="public" complexity="1" crap="1" count="26"/>
+        <line num="71" type="stmt" count="26"/>
         <line num="74" type="method" name="medicalRecords" visibility="public" complexity="1" crap="1" count="14"/>
         <line num="76" type="stmt" count="14"/>
         <line num="79" type="method" name="medicalExams" visibility="public" complexity="1" crap="1" count="5"/>
@@ -2147,12 +2147,12 @@
         <line num="106" type="stmt" count="5"/>
         <line num="109" type="method" name="medicalOrders" visibility="public" complexity="1" crap="1" count="6"/>
         <line num="111" type="stmt" count="6"/>
-        <line num="115" type="method" name="getId" visibility="public" complexity="1" crap="1" count="15"/>
-        <line num="117" type="stmt" count="15"/>
+        <line num="115" type="method" name="getId" visibility="public" complexity="1" crap="1" count="20"/>
+        <line num="117" type="stmt" count="20"/>
         <line num="120" type="method" name="getUserId" visibility="public" complexity="1" crap="1" count="1"/>
         <line num="122" type="stmt" count="1"/>
-        <line num="125" type="method" name="getName" visibility="public" complexity="1" crap="1" count="28"/>
-        <line num="127" type="stmt" count="28"/>
+        <line num="125" type="method" name="getName" visibility="public" complexity="1" crap="1" count="34"/>
+        <line num="127" type="stmt" count="34"/>
         <line num="130" type="method" name="getSpecies" visibility="public" complexity="1" crap="1" count="12"/>
         <line num="132" type="stmt" count="12"/>
         <line num="135" type="method" name="getBreed" visibility="public" complexity="1" crap="1" count="7"/>
@@ -2251,11 +2251,11 @@
         <class name="App\Models\User" namespace="App\Models">
           <metrics complexity="25" methods="25" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="36" coveredstatements="19" elements="61" coveredelements="30"/>
         </class>
-        <line num="63" type="method" name="casts" visibility="protected" complexity="1" crap="1" count="131"/>
-        <line num="65" type="stmt" count="131"/>
-        <line num="66" type="stmt" count="131"/>
-        <line num="67" type="stmt" count="131"/>
-        <line num="68" type="stmt" count="131"/>
+        <line num="63" type="method" name="casts" visibility="protected" complexity="1" crap="1" count="140"/>
+        <line num="65" type="stmt" count="140"/>
+        <line num="66" type="stmt" count="140"/>
+        <line num="67" type="stmt" count="140"/>
+        <line num="68" type="stmt" count="140"/>
         <line num="71" type="method" name="pets" visibility="public" complexity="1" crap="1" count="4"/>
         <line num="73" type="stmt" count="4"/>
         <line num="76" type="method" name="uploadedMedicalExams" visibility="public" complexity="1" crap="2" count="0"/>
@@ -2395,36 +2395,36 @@
         <class name="App\Services\WhatsAppService" namespace="App\Services">
           <metrics complexity="7" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="28" coveredstatements="21" elements="30" coveredelements="22"/>
         </class>
-        <line num="16" type="method" name="sendMessage" visibility="public" complexity="6" crap="7.16" count="6"/>
-        <line num="18" type="stmt" count="6"/>
-        <line num="20" type="stmt" count="6"/>
-        <line num="21" type="stmt" count="2"/>
-        <line num="22" type="stmt" count="2"/>
-        <line num="24" type="stmt" count="2"/>
+        <line num="16" type="method" name="sendMessage" visibility="public" complexity="6" crap="7.16" count="15"/>
+        <line num="18" type="stmt" count="15"/>
+        <line num="20" type="stmt" count="15"/>
+        <line num="21" type="stmt" count="4"/>
+        <line num="22" type="stmt" count="4"/>
+        <line num="24" type="stmt" count="4"/>
         <line num="25" type="stmt" count="0"/>
         <line num="27" type="stmt" count="0"/>
-        <line num="31" type="stmt" count="2"/>
-        <line num="34" type="stmt" count="2"/>
-        <line num="35" type="stmt" count="2"/>
-        <line num="36" type="stmt" count="2"/>
-        <line num="37" type="stmt" count="2"/>
-        <line num="38" type="stmt" count="2"/>
-        <line num="40" type="stmt" count="2"/>
-        <line num="41" type="stmt" count="2"/>
-        <line num="43" type="stmt" count="2"/>
+        <line num="31" type="stmt" count="4"/>
+        <line num="34" type="stmt" count="4"/>
+        <line num="35" type="stmt" count="4"/>
+        <line num="36" type="stmt" count="4"/>
+        <line num="37" type="stmt" count="4"/>
+        <line num="38" type="stmt" count="4"/>
+        <line num="40" type="stmt" count="4"/>
+        <line num="41" type="stmt" count="4"/>
+        <line num="43" type="stmt" count="4"/>
         <line num="46" type="stmt" count="0"/>
         <line num="48" type="stmt" count="0"/>
         <line num="49" type="stmt" count="0"/>
         <line num="50" type="stmt" count="0"/>
         <line num="52" type="stmt" count="0"/>
-        <line num="56" type="stmt" count="4"/>
-        <line num="62" type="method" name="logMessage" visibility="protected" complexity="1" crap="1" count="4"/>
-        <line num="64" type="stmt" count="4"/>
-        <line num="65" type="stmt" count="4"/>
-        <line num="66" type="stmt" count="4"/>
-        <line num="67" type="stmt" count="4"/>
-        <line num="68" type="stmt" count="4"/>
-        <line num="70" type="stmt" count="4"/>
+        <line num="56" type="stmt" count="11"/>
+        <line num="62" type="method" name="logMessage" visibility="protected" complexity="1" crap="1" count="11"/>
+        <line num="64" type="stmt" count="11"/>
+        <line num="65" type="stmt" count="11"/>
+        <line num="66" type="stmt" count="11"/>
+        <line num="67" type="stmt" count="11"/>
+        <line num="68" type="stmt" count="11"/>
+        <line num="70" type="stmt" count="11"/>
         <metrics loc="73" ncloc="63" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="28" coveredstatements="21" elements="30" coveredelements="22"/>
       </file>
     </package>
