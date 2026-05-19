@@ -76,7 +76,7 @@
                                 class="bi bi-file-earmark-text me-2"></i>Historial Clínico</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark fw-medium" href="#"><i
+                        <a class="nav-link {{ request()->routeIs('appointments.client_index') ? 'active-pill' : 'text-dark fw-medium' }}" href="{{ route('appointments.client_index') }}"><i
                                 class="bi bi-calendar4-event me-2"></i>Citas</a>
                     </li>
                     <li class="nav-item">
@@ -84,12 +84,20 @@
                             href="{{ route('pets.exams') }}"><i class="bi bi-journal-medical me-2"></i>Exámenes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark fw-medium position-relative" href="#">
+                        <a class="nav-link {{ request()->routeIs('notifications.index') ? 'active-pill' : 'text-dark fw-medium' }} position-relative d-flex align-items-center" href="{{ route('notifications.index') }}">
                             <i class="bi bi-bell me-2"></i>Notificaciones
+                            @if(isset($notificationCount) && $notificationCount > 0)
+                                <span class="badge rounded-circle bg-danger badge-pulse ms-2 d-flex align-items-center justify-content-center" style="font-size: 0.7rem; min-width: 18px; height: 18px; padding: 0;">
+                                    {{ $notificationCount }}
+                                </span>
+                            @endif
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark fw-medium" href="#"><i class="bi bi-heart me-2"></i>Adopciones</a>
+                        <a class="nav-link {{ request()->routeIs('adoption.index') ? 'active-pill' : 'text-dark fw-medium' }}" 
+                           href="{{ route('adoption.index') }}">
+                            <i class="bi bi-heart me-2"></i>Adopciones
+                        </a>
                     </li>
                 </ul>
             </div>

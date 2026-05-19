@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Pet;
-use App\Models\MedicalRecord;
 use App\Models\ClinicalObservation;
+use App\Models\MedicalRecord;
+use App\Models\Pet;
 use App\Models\User;
 use App\Models\Vaccination;
 use Illuminate\Support\Carbon;
@@ -188,5 +188,59 @@ class VaccinationTest extends TestCase
         $response = $this->post(route('vaccinations.store', $pet), $payload);
 
         $response->assertRedirect(route('login'));
+    }
+
+    public function test_doctor_can_delete_vaccination()
+    {
+        $doctor = User::factory()->create(['role' => 'doctor', 'lastname' => 'Doctor']);
+        $owner = User::factory()->create(['role' => 'client', 'lastname' => 'Owner']);
+        $pet = Pet::create([
+            'user_id' => $owner->id,
+            'name' => 'Luna',
+            'species' => 'Perro',
+            'gender' => 'female',
+        ]);
+
+        $vaccination = Vaccination::create([
+            'pet_id' => $pet->id,
+            'doctor_id' => $doctor->id,
+            'vaccine_type' => 'Antirrabica',
+            'vaccinated_at' => Carbon::today(),
+            'next_due_date' => Carbon::today()->addYear(),
+            'notes' => 'Refuerzo anual',
+        ]);
+
+        $response = $this->actingAs($doctor)
+            ->delete(route('vaccinations.destroy', $vaccination));
+
+        $response->assertRedirect(route('medical_records.show', $pet));
+        $this->assertDatabaseMissing('vaccinations', ['id' => $vaccination->id]);
+    }
+
+    public function test_client_cannot_delete_vaccination()
+    {
+        $doctor = User::factory()->create(['role' => 'doctor', 'lastname' => 'Doctor']);
+        $owner = User::factory()->create(['role' => 'client', 'lastname' => 'Owner']);
+        $pet = Pet::create([
+            'user_id' => $owner->id,
+            'name' => 'Luna',
+            'species' => 'Perro',
+            'gender' => 'female',
+        ]);
+
+        $vaccination = Vaccination::create([
+            'pet_id' => $pet->id,
+            'doctor_id' => $doctor->id,
+            'vaccine_type' => 'Antirrabica',
+            'vaccinated_at' => Carbon::today(),
+            'next_due_date' => Carbon::today()->addYear(),
+            'notes' => 'Refuerzo anual',
+        ]);
+
+        $response = $this->actingAs($owner)
+            ->delete(route('vaccinations.destroy', $vaccination));
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('vaccinations', ['id' => $vaccination->id]);
     }
 }

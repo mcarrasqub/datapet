@@ -64,8 +64,15 @@
 
           <div class="row g-3">
             <div class="col-md-6">
+              <label for="id" class="form-label fw-bold small">Cédula (ID) *</label>
+              <input id="id" type="number" class="form-control bg-light border-0 py-2 @error('id') is-invalid @enderror" name="id" value="{{ old('id') }}" placeholder="Ej: 1020304050" required autofocus>
+              @error('id')
+                <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+              @enderror
+            </div>
+            <div class="col-md-6">
               <label for="name" class="form-label fw-bold small">Nombre *</label>
-              <input id="name" type="text" class="form-control bg-light border-0 py-2 @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" placeholder="Nombre" required autofocus>
+              <input id="name" type="text" class="form-control bg-light border-0 py-2 @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" placeholder="Nombre" required>
               @error('name')
                 <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
               @enderror
@@ -154,12 +161,8 @@
               </select>
             </div>
             <div class="col-md-6">
-              <label for="breed" class="form-label fw-bold small">Raza</label>
-              <input id="breed" type="text" class="form-control bg-light border-0 py-2" name="breed" placeholder="Ej: Golden Retriever">
-            </div>
-            <div class="col-md-6">
-              <label for="age" class="form-label fw-bold small">Edad (años)</label>
-              <input id="age" type="number" class="form-control bg-light border-0 py-2" name="age" min="0" max="200">
+              <label for="breed" class="form-label fw-bold small">Raza/Subespecie</label>
+              <input id="breed" type="text" class="form-control bg-light border-0 py-2" name="breed" placeholder="Ej: Pigmio Africano">
             </div>
             <div class="col-md-6">
               <label for="gender" class="form-label fw-bold small">Género *</label>
@@ -170,8 +173,77 @@
               </select>
             </div>
             <div class="col-md-6">
+              <label for="color" class="form-label fw-bold small">Color</label>
+              <input id="color" type="text" class="form-control bg-light border-0 py-2" name="color" placeholder="Ej: Sal y pimienta">
+            </div>
+            <div class="col-md-6">
               <label for="weight" class="form-label fw-bold small">Peso (kg)</label>
-              <input id="weight" type="number" step="0.01" class="form-control bg-light border-0 py-2" name="weight" placeholder="5.5">
+              <input id="weight" type="number" step="0.01" class="form-control bg-light border-0 py-2" name="weight" placeholder="0.45">
+            </div>
+            <div class="col-md-6">
+              <label for="size" class="form-label fw-bold small">Talla</label>
+              <input id="size" type="text" class="form-control bg-light border-0 py-2" name="size" placeholder="Ej: Pequeña">
+            </div>
+            <div class="col-md-6">
+              <label for="reproductive_status" class="form-label fw-bold small">E. Reproductivo</label>
+              <input id="reproductive_status" type="text" class="form-control bg-light border-0 py-2" name="reproductive_status" placeholder="Ej: Entero">
+            </div>
+            <div class="col-md-6">
+              <label for="age" class="form-label fw-bold small">Edad (años)</label>
+              <input id="age" type="number" class="form-control bg-light border-0 py-2" name="age" min="0" max="200" placeholder="Ej: 1">
+            </div>
+            <div class="col-md-6">
+              <label for="is_deceased" class="form-label fw-bold small">Fallecido</label>
+              <select id="is_deceased" class="form-select bg-light border-0 py-2" name="is_deceased">
+                <option value="0">No</option>
+                <option value="1">Sí</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="emotional_support" class="form-label fw-bold small">Apoyo emocional</label>
+              <select id="emotional_support" class="form-select bg-light border-0 py-2" name="emotional_support">
+                <option value="0">No</option>
+                <option value="1">Sí</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="service_animal" class="form-label fw-bold small">Animal de servicio</label>
+              <select id="service_animal" class="form-select bg-light border-0 py-2" name="service_animal">
+                <option value="0">No</option>
+                <option value="1">Sí</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="diet" class="form-label fw-bold small">Alimento</label>
+              <input id="diet" type="text" class="form-control bg-light border-0 py-2" name="diet" placeholder="Ej: Alimento premium para insectívoros">
+            </div>
+            <div class="col-md-6">
+              <label for="diet_quantity" class="form-label fw-bold small">Cantidad de alimento</label>
+              <input id="diet_quantity" type="text" class="form-control bg-light border-0 py-2" name="diet_quantity" placeholder="Ej: 2 cucharadas">
+            </div>
+            <div class="col-md-6">
+              <label for="diet_frequency" class="form-label fw-bold small">Frecuencia de alimento</label>
+              <input id="diet_frequency" type="text" class="form-control bg-light border-0 py-2" name="diet_frequency" placeholder="Ej: Nocturna (1 vez al día)">
+            </div>
+            <div class="col-md-6">
+              <label for="housing" class="form-label fw-bold small">Vivienda</label>
+              <input id="housing" type="text" class="form-control bg-light border-0 py-2" name="housing" placeholder="Ej: Terrario de madera">
+            </div>
+            <div class="col-md-6">
+              <label for="bath_frequency" class="form-label fw-bold small">Frecuencia baño</label>
+              <input id="bath_frequency" type="text" class="form-control bg-light border-0 py-2" name="bath_frequency" placeholder="Ej: Mensual (baño de avena tibio)">
+            </div>
+            <div class="col-md-6">
+              <label for="bath_products" class="form-label fw-bold small">Productos de baño</label>
+              <input id="bath_products" type="text" class="form-control bg-light border-0 py-2" name="bath_products" placeholder="Ej: Champú neutro">
+            </div>
+            <div class="col-md-6">
+              <label for="other_pets" class="form-label fw-bold small">Otras mascotas, ¿cuáles?</label>
+              <input id="other_pets" type="text" class="form-control bg-light border-0 py-2" name="other_pets" placeholder="Ej: Hurón y loro">
+            </div>
+            <div class="col-md-6">
+              <label for="last_heat" class="form-label fw-bold small">Último calor</label>
+              <input id="last_heat" type="text" class="form-control bg-light border-0 py-2" name="last_heat" placeholder="Ej: N/A">
             </div>
             <div class="col-md-12">
               <label for="photo" class="form-label fw-bold small">Foto de la Mascota</label>

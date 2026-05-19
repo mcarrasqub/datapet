@@ -4,15 +4,17 @@ namespace Tests\Feature;
 
 use App\Models\DoctorTask;
 use App\Models\User;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DoctorTasksTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     private User $admin;
+
     private User $doctorAaron;
+
     private User $doctorBeatriz;
 
     protected function setUp(): void

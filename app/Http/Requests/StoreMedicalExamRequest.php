@@ -23,6 +23,7 @@ class StoreMedicalExamRequest extends FormRequest
     {
         return [
             'medical_record_id' => ['nullable', 'integer', 'exists:medical_records,id'],
+            'medical_order_id' => ['nullable', 'integer', 'exists:medical_orders,id'],
             'title' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:3000'],
             'category' => ['nullable', 'string', 'max:100'],

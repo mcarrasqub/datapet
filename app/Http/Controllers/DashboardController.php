@@ -79,6 +79,23 @@ class DashboardController extends Controller
                 ->take(6)
                 ->values();
 
+            $today = now();
+            $agendaHoy = \App\Models\Appointment::with(['pet.owner', 'doctor'])
+                ->where('date', $today->toDateString())
+                ->where('status', 'scheduled')
+                ->orderBy('start_time')
+                ->get();
+
+            // Disparador Automático: Escanear y generar recordatorios de vacunas próximas a vencer
+            resolve(\App\Services\VaccinationReminderService::class)->sendUpcomingReminders();
+
+            $activeReminders = \App\Models\VaccinationReminder::with(['pet.owner'])
+                ->where('status', 'sent')
+                ->whereNotNull('vaccination_id')
+                ->orderByDesc('sent_at')
+                ->take(5)
+                ->get();
+
             return view('dashboard.admin', compact(
                 'totalUsers',
                 'totalAdmins',
@@ -87,7 +104,9 @@ class DashboardController extends Controller
                 'consultasSemana',
                 'consultasHoy',
                 'growthPercentage',
-                'recentActivities'
+                'recentActivities',
+                'agendaHoy',
+                'activeReminders'
             ));
         } elseif ($user->role === 'doctor') {
             $today = now();
@@ -106,6 +125,25 @@ class DashboardController extends Controller
                 ->whereNull('reviewed_by_doctor_at')
                 ->whereHas('uploader', function ($query) {
                     $query->where('role', 'client');
+                })
+                ->where(function ($query) use ($user) {
+                    // Si el examen está asociado a una orden médica, solo lo ve el doctor de esa orden
+                    $query->where(function ($q) use ($user) {
+                        $q->whereNotNull('medical_order_id')
+                            ->whereHas('medicalOrder', function ($sub) use ($user) {
+                                $sub->where('doctor_id', $user->id);
+                            });
+                    })
+                    // Si el examen NO está asociado a una orden médica, usar lógica normal
+                        ->orWhere(function ($q) use ($user) {
+                            $q->whereNull('medical_order_id')
+                                ->where(function ($sub) use ($user) {
+                                    $sub->whereHas('pet.medicalRecords', function ($mr) use ($user) {
+                                        $mr->where('doctor_id', $user->id);
+                                    })
+                                        ->orWhereDoesntHave('pet.medicalRecords');
+                                });
+                        });
                 })
                 ->orderByDesc('uploaded_at');
 

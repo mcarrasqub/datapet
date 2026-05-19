@@ -13,7 +13,8 @@
         <div class="d-flex align-items-start justify-content-between mb-4">
             <div></div>
 
-            <button class="btn btn-pet-primary rounded-pill px-4 py-2 fw-bold text-white" data-bs-toggle="modal" data-bs-target="#createUserModal">
+            <button class="btn btn-pet-primary rounded-pill px-4 py-2 fw-bold text-white" data-bs-toggle="modal"
+                data-bs-target="#createUserModal">
                 <i class="bi bi-person-plus me-2 "></i>Crear Usuario
             </button>
         </div>
@@ -62,13 +63,14 @@
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <h5 class="fw-semibold mb-3">Filtros</h5>
-                <form id="filterForm" class="row gy-3 gx-3 align-items-end" method="GET" action="{{ route('users.index') }}">
+                <form id="filterForm" class="row gy-3 gx-3 align-items-end" method="GET"
+                    action="{{ route('users.index') }}">
                     <div class="col-md-8">
                         <label class="form-label">Buscar Usuario</label>
                         <div class="input-group">
                             <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
-                            <input name="search" value="{{ $searchInput }}" type="text"
-                                class="form-control border-start-0" placeholder="Buscar por nombre o correo...">
+                            <input name="search" value="{{ $searchInput }}" type="text" class="form-control border-start-0"
+                                placeholder="Buscar por nombre o correo...">
                         </div>
                     </div>
 
@@ -86,12 +88,12 @@
         </div>
 
         <script>
-            document.getElementById('roleFilter').addEventListener('change', function() {
+            document.getElementById('roleFilter').addEventListener('change', function () {
                 document.getElementById('filterForm').submit();
             });
 
             // Hacer que el campo de búsqueda envíe el formulario con Enter
-            document.querySelector('input[name="search"]').addEventListener('keypress', function(e) {
+            document.querySelector('input[name="search"]').addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     document.getElementById('filterForm').submit();
@@ -110,7 +112,7 @@
                                     {{ $user->email }}
                                     <span class="mx-2">•</span>
                                     Creado:
-                                    {{ optional($user->created_at)->locale(app()->getLocale())->translatedFormat('d M Y') }}
+                                    {{ optional(optional($user->created_at)->locale(app()->getLocale()))->translatedFormat('d M Y') ?? 'Sin fecha' }}
                                 </div>
                                 <div class="d-flex flex-wrap gap-2 align-items-start">
                                     @php
@@ -126,7 +128,7 @@
                             </div>
 
                             <div class="d-flex gap-2 flex-wrap">
-                                <a href="#" class="btn btn-outline-pet-primary btn-sm">
+                                <a href="{{ route('users.edit', $user) }}" class="btn btn-outline-pet-primary btn-sm">
                                     <i class="bi bi-pencil"></i> Editar
                                 </a>
                                 <form action="{{ route('users.toggleStatus', $user) }}" method="POST" class="d-inline">
@@ -181,7 +183,17 @@
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold small">Nombres</label>
+                                <label class="form-label fw-bold small">Cédula (ID) *</label>
+                                <input name="id" value="{{ old('id') }}" type="number"
+                                    class="form-control bg-light border-0 py-2 @error('id') is-invalid @enderror"
+                                    placeholder="Ej: 1020304050" required autofocus>
+                                @error('id')
+                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small">Nombres *</label>
                                 <input name="name" value="{{ old('name') }}" type="text"
                                     class="form-control bg-light border-0 py-2 @error('name') is-invalid @enderror"
                                     placeholder="Nombres" required>
@@ -216,7 +228,8 @@
                                     <option value="" disabled selected>Selecciona un rol</option>
                                     @foreach($roles as $key => $label)
                                         @if($key !== 'client')
-                                            <option value="{{ $key }}" {{ old('role') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                                            <option value="{{ $key }}" {{ old('role') === $key ? 'selected' : '' }}>{{ $label }}
+                                            </option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -238,8 +251,8 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-bold small">Confirmar Contraseña</label>
                                 <input id="password-confirm" type="password" class="form-control bg-light border-0 py-2"
-                                    @error('password_confirmation') is-invalid @enderror name="password_confirmation" required
-                                    autocomplete="new-password" placeholder="Contraseña">
+                                    @error('password_confirmation') is-invalid @enderror name="password_confirmation"
+                                    required autocomplete="new-password" placeholder="Contraseña">
                                 @error('password_confirmation')
                                     <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                                 @enderror
@@ -247,7 +260,8 @@
                         </div>
 
                         <div class="mt-4 d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-pet-primary">Crear Usuario</button>
                         </div>
                     </form>

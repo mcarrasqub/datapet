@@ -18,6 +18,7 @@
                 subtitle="Historial del mes" />
         </div>
 
+
         <div class="row g-3">
             <!-- Agenda del Día -->
             <div class="col-md-6">
@@ -64,10 +65,25 @@
 
                         <div class="d-flex flex-column gap-3">
                             @forelse(($pendingExams ?? collect()) as $exam)
-                                <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center">
+                                @php
+                                    $dueDate = $exam->uploaded_at ? $exam->uploaded_at->copy()->addWeekdays(3)->startOfDay() : null;
+                                    $isOverdue = $dueDate && $dueDate->lt(now()->startOfDay());
+                                    $remainingDays = $dueDate ? (int) now()->startOfDay()->diffInDays($dueDate, false) : null;
+                                @endphp
+                                <div class="border rounded-3 p-3 d-flex justify-content-between align-items-center {{ $isOverdue ? 'border-danger bg-danger bg-opacity-10' : '' }}">
                                     <div>
-                                        <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">
-                                            {{ $exam->pet?->name ?? 'Mascota sin nombre' }}</h6>
+                                        <h6 class="mb-0 fw-bold {{ $isOverdue ? 'text-danger' : '' }}" style="font-size: 0.95rem;">
+                                            {{ $exam->pet?->name ?? 'Mascota sin nombre' }}
+                                            @if($isOverdue)
+                                                <span class="badge bg-danger ms-2" style="font-size: 0.7rem;">Vencido</span>
+                                            @elseif($remainingDays === 0)
+                                                <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem;">Vence hoy</span>
+                                            @elseif($remainingDays === 1)
+                                                <span class="badge bg-info text-dark ms-2" style="font-size: 0.7rem;">Vence mañana</span>
+                                            @elseif($remainingDays > 1)
+                                                <span class="badge bg-secondary ms-2" style="font-size: 0.7rem;">Vence en {{ $remainingDays }} días</span>
+                                            @endif
+                                        </h6>
                                         <small
                                             class="text-muted d-block">{{ $exam->pet?->owner?->name ?? 'Sin propietario' }}</small>
                                         <small class="text-muted d-block">{{ $exam->title ?: $exam->original_name }}</small>
@@ -75,8 +91,16 @@
                                             Subido: {{ optional($exam->uploaded_at)->format('d M Y') ?? 'Sin fecha' }}
                                         </small>
                                     </div>
-                                    <a href="{{ route('medical_exams.view', $exam) }}"
-                                        class="btn btn-pet-green btn-sm px-3 rounded-3">Revisar</a>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('medical_exams.view', $exam) }}" target="_blank"
+                                            class="btn btn-outline-secondary btn-sm px-3 rounded-3">Ver Examen</a>
+                                        <form action="{{ route('medical_exams.complete_review', $exam) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-pet-green btn-sm px-3 rounded-3">
+                                                <i class="bi bi-check2-circle"></i> Confirmar
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             @empty
                                 <div class="border rounded-3 p-4 bg-light text-center">

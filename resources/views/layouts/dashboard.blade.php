@@ -96,21 +96,12 @@
                                 href="{{ route('doctor.appointments.index') }}"><i class="bi bi-calendar4-event me-2"></i>Mis Citas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('clients.*') ? 'active-pill' : 'text-dark fw-medium' }}"
+                            <a class="nav-link {{ (request()->routeIs('clients.*') || request()->routeIs('medical_records.*')) ? 'active-pill' : 'text-dark fw-medium' }}"
                                 href="{{ route('clients.index') }}"><i class="bi bi-people me-2"></i>Clientes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('register') ? 'active-pill' : 'text-dark fw-medium' }}"
                                 href="{{ route('register') }}"><i class="bi bi-person-plus me-2"></i>Nuevo Cliente</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('medical_records.*') ? 'active-pill' : 'text-dark fw-medium' }}"
-                                href="{{ route('medical_records.index') }}"><i
-                                    class="bi bi-journal-medical me-2"></i>Exámenes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('prescriptions.*') ? 'active-pill' : 'text-dark fw-medium' }}"
-                                href="#"><i class="bi bi-prescription me-2"></i>Recetas</a>
                         </li>
                     @endif
 
@@ -138,6 +129,18 @@
                             <a class="nav-link {{ request()->routeIs('appointments.index') ? 'active-pill' : 'text-dark fw-medium' }}"
                                 href="{{ route('appointments.index') }}"><i class="bi bi-calendar3 me-2"></i>Citas</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.adoptions.create') ? 'active-pill' : 'text-dark fw-medium' }}"
+                                href="{{ route('admin.adoptions.create') }}">
+                                <i class="bi bi-heart me-2"></i>Crear Adopción
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('adoption.admin.index') ? 'active-pill' : 'text-dark fw-medium' }}"
+                            href="{{ route('adoption.admin.index') }}">
+                            <i class="bi bi-list me-2"></i>Solicitudes Adopción
+                        </a>
+                    </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('settings.*') ? 'active-pill' : 'text-dark fw-medium' }}"
                                 href="#"><i class="bi bi-gear me-2"></i>Configuración</a>

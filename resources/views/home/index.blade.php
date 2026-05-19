@@ -7,6 +7,20 @@
       <p class="text-muted mb-4" style="font-size: 0.95rem;">Información general de tus mascotas exóticas registradas</p>
     </div>
 
+    @if(isset($viewData['reminders']) && $viewData['reminders']->count() > 0)
+      <div class="alert alert-warning border-0 shadow-sm rounded-3 d-flex align-items-center justify-content-between p-3 mb-4" style="background-color: rgba(240, 173, 78, 0.1);">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-bell-fill text-warning fs-5 me-2 animate-bounce"></i>
+          <span class="text-dark small">
+            🐾 Tienes <strong>{{ $viewData['reminders']->count() }}</strong> {{ $viewData['reminders']->count() == 1 ? 'notificación pendiente' : 'notificaciones pendientes' }} para tus mascotas.
+          </span>
+        </div>
+        <a href="{{ route('notifications.index') }}" class="btn btn-warning btn-sm rounded-pill px-3 fw-bold shadow-sm" style="font-size: 0.85rem;">
+          Ver Notificaciones
+        </a>
+      </div>
+    @endif
+
     @if($viewData['pets']->count() > 0)
       <div class="row g-4 mb-5">
         @foreach($viewData['pets'] as $pet)
@@ -109,7 +123,7 @@
           <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
             <div class="card-body p-4 d-flex flex-column justify-content-between">
               <h6 class="text-muted mb-4">Recordatorios Activos</h6>
-              <h2 class="fw-bold mb-0" style="color: #65a34e;">0</h2>
+              <h2 class="fw-bold mb-0" style="color: #65a34e;">{{ isset($viewData['reminders']) ? $viewData['reminders']->count() : 0 }}</h2>
             </div>
           </div>
         </div>

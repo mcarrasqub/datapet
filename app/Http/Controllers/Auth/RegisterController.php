@@ -52,8 +52,21 @@ class RegisterController extends Controller
             $pet->age = $request->age;
             $pet->gender = $request->gender;
             $pet->weight = $request->weight;
-            $pet->notes = $request->notes;
             $pet->user_id = $user->id;
+            $pet->color = $request->color;
+            $pet->size = $request->size;
+            $pet->reproductive_status = $request->reproductive_status;
+            $pet->is_deceased = $request->boolean('is_deceased');
+            $pet->emotional_support = $request->boolean('emotional_support');
+            $pet->service_animal = $request->boolean('service_animal');
+            $pet->diet = $request->diet;
+            $pet->diet_quantity = $request->diet_quantity;
+            $pet->diet_frequency = $request->diet_frequency;
+            $pet->housing = $request->housing;
+            $pet->bath_frequency = $request->bath_frequency;
+            $pet->bath_products = $request->bath_products;
+            $pet->other_pets = $request->other_pets;
+            $pet->last_heat = $request->last_heat;
 
             if ($request->hasFile('photo')) {
                 $pet->photo = $request->file('photo')->store('pets', 'public');
@@ -72,6 +85,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
+            'id' => $data['id'],
             'name' => $data['name'],
             'lastname' => $data['lastname'] ?? null,
             'phone' => $data['phone'] ?? null,
