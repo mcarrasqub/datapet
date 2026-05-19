@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Appointment;
 use App\Models\AppointmentReminder;
+use App\Services\WhatsAppService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -12,7 +13,7 @@ class SendAppointmentReminders extends Command
     protected $signature   = 'reminders:appointments';
     protected $description = 'Envía recordatorios de WhatsApp para citas próximas (1-2 días antes)';
 
-    public function handle(): void
+    public function handle(WhatsAppService $whatsapp): void
     {
         $in1Day  = Carbon::today()->addDay();
         $in2Days = Carbon::today()->addDays(2);
@@ -47,7 +48,7 @@ class SendAppointmentReminders extends Command
                 continue;
             }
 
-            $this->enviarWhatsApp($phone, $mensaje);
+            $whatsapp->sendMessage($phone, $mensaje);
 
             AppointmentReminder::create([
                 'appointment_id' => $appointment->getId(),
@@ -63,11 +64,5 @@ class SendAppointmentReminders extends Command
         }
 
         $this->info('Proceso finalizado.');
-    }
-
-    private function enviarWhatsApp(string $phone, string $mensaje): void
-    {
-        // Aquí va el mismo código que usó tu compañera
-        // Pregúntale qué hay dentro del método equivalente en VaccinationReminderController
     }
 }
