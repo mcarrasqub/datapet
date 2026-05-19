@@ -36,8 +36,15 @@ jobs:
           DB_DATABASE: ':memory:'
         run: php artisan test --coverage-clover=coverage.xml
 
+      - name: Generate Test Report
+        continue-on-error: true
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
+        run: php artisan test --log-junit=test-report.xml
+
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -46,6 +53,6 @@ jobs:
             -Dsonar.projectKey=mcarrasqub_datapet
             -Dsonar.organization=mcarrasqub
             -Dsonar.php.coverage.reportPaths=coverage.xml
+            -Dsonar.php.tests.reportPath=test-report.xml
             -Dsonar.sources=app
             -Dsonar.tests=tests
-            -Dsonar.verbose=true
